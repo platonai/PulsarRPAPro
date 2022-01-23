@@ -1,0 +1,30 @@
+drop table if exists `paneltech`.`integrated_products002`;
+
+CREATE TABLE `integrated_products002` (
+   `id` int NOT NULL AUTO_INCREMENT,
+   `site` varchar(256) DEFAULT NULL,
+   `big_img_url` varchar(1024) DEFAULT NULL,
+   `product_name` varchar(1024) DEFAULT NULL,
+   `category_path` varchar(256) DEFAULT NULL,
+   `brand` varchar(256) DEFAULT NULL,
+   `model` varchar(256) DEFAULT NULL,
+   `specification` varchar(256) DEFAULT NULL,
+   `material` varchar(256) DEFAULT NULL,
+   `price` double DEFAULT NULL,
+   `min_amount_to_buy` int DEFAULT NULL,
+   `max_amount_to_buy` int DEFAULT NULL,
+   `inventory_amount` int DEFAULT NULL,
+   `sales_volume` int DEFAULT NULL,
+   `favorable_rate` varchar(32) DEFAULT NULL,
+   `product_reviews` varchar(64) DEFAULT NULL,
+   `shop_name` varchar(256) DEFAULT NULL,
+   `shop_url` varchar(1024) DEFAULT NULL,
+   `shop_tel` varchar(256) DEFAULT NULL,
+   `shop_scores` varchar(256) DEFAULT NULL,
+   `delivery_from` varchar(256) DEFAULT NULL,
+   `express_fee` varchar(256) DEFAULT NULL,
+   `stock_prompt` varchar(255) DEFAULT NULL,
+   `uri` varchar(1024) NOT NULL,
+   `create_time` datetime DEFAULT NULL,
+   PRIMARY KEY (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;

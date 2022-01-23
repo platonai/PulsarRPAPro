@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <title>Crawl Task</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
+          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
+          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+    <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+</head>
+
+<body>
+
+<div class="container my-2">
+    <div class="card" th:switch="${task}">
+        <div class="card-body" th:case="*">
+            <div class="row my-5">
+                <div class="col-4">
+                    <dl>
+                        <dt>Id</dt>
+                        <dd th:text="${task.id}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Url</dt>
+                        <dd th:text="${task.url}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Args</dt>
+                        <dd th:text="${task.args}"></dd>
+                    </dl>
+                </div>
+                <div class="col-4">
+                    <dl>
+                        <dt>Start Time</dt>
+                        <dd th:text="${task.startTime}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Status</dt>
+                        <dd th:text="${task.status}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Server Task Id</dt>
+                        <dd th:text="${task.serverTaskId}"></dd>
+                    </dl>
+                </div>
+                <div class="col-4">
+                    <dl>
+                        <dt>Start Time</dt>
+                        <dd th:text="${task.startTime}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Created Time</dt>
+                        <dd th:text="${task.createdDate}"></dd>
+                    </dl>
+                    <dl>
+                        <dt>Modified Time</dt>
+                        <dd th:text="${task.lastModifiedDate}"></dd>
+                    </dl>
+                </div>
+            </div>
+
+            <div class="row">
+                <pre th:text="${task.rule.sqlTemplate}"></pre>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <a th:href="@{/crawl/tasks/}" class="btn btn-primary m-1">
+                <i class="fas fa-list ml-1"></i></a>
+            <a th:href="@{/crawl/tasks/edit/{id}(id=${task.id})}" class="btn btn-primary m-1">
+                <i class="fas fa-edit ml-1"></i></a>
+            <a th:href="@{/crawl/tasks/start/{id}(id=${task.id})}" class="btn btn-primary m-1">
+                <i class="fas fa-play ml-1"></i></a>
+            <a th:href="@{/crawl/tasks/pause/{id}(id=${task.id})}" class="btn btn-primary m-1">
+                <i class="fas fa-pause ml-1"></i></a>
+        </div>
+    </div>
+</div>
+</body>
+</html>
