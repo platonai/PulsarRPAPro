@@ -21,7 +21,7 @@ Exotic shows:
     cd exotic
     mvn clean && mvn
 
-## Run web console
+## Run the standalone server and web console
 
     ./start.sh
 
