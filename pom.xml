@@ -11,12 +11,35 @@
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
+	<version>0.0.2-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
 	<name>Exotic</name>
-	<description>Exotic: the pulsar professional edition</description>
+	<description>Exotic is the professional edition of pulsar</description>
+
+	<licenses>
+		<license>
+			<name>The Apache Software License, Version 2.0</name>
+			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+		</license>
+	</licenses>
+
+	<scm>
+		<connection>scm:git:https://github.com/platonai/pulsar.git</connection>
+		<developerConnection>scm:git:https://github.com/platonai/pulsar.git</developerConnection>
+		<url>https://github.com/platonai/pulsar</url>
+		<tag>v0.0.2</tag>
+	</scm>
+
+	<developers>
+		<developer>
+			<name>Vincent Zhang</name>
+			<email>ivincent.zhang@gmail.com</email>
+			<organization>platon.ai</organization>
+			<timezone>+8</timezone>
+		</developer>
+	</developers>
 
 	<repositories>
 		<repository>
