@@ -19,7 +19,7 @@ Exotic shows:
 ## Build
 
     cd exotic
-    mvnw clean && mvn
+    mvn clean && mvn
 
 ## Run web console
 
