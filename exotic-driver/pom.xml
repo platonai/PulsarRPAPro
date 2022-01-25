@@ -29,7 +29,7 @@
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
             <artifactId>pulsar-kotlin-driver</artifactId>
-            <version>${pulsar.driver.version}</version>
+            <version>${pulsar.kotlin.driver.version}</version>
         </dependency>
 
         <dependency>

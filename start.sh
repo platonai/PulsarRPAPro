@@ -1,2 +1,2 @@
-cd exotic-app/exotic-starter
+cd exotic-standalone
 mvn spring-boot:run

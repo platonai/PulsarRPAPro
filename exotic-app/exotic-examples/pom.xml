@@ -64,7 +64,7 @@
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
             <artifactId>pulsar-site-amazon</artifactId>
-            <version>1.7.0-SNAPSHOT</version>
+            <version>${pulsar.version}</version>
         </dependency>
 
         <!-- for scent-beans/app-context.xml -->
@@ -93,6 +93,27 @@
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-driver</artifactId>
+            <version>0.0.1-SNAPSHOT</version>
+            <scope>compile</scope>
+        </dependency>
     </dependencies>
 
+    <build>
+        <defaultGoal>package</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ai.platon.scent.examples.HarvestExamplesKt</mainClass>
+                    <addResources>true</addResources>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

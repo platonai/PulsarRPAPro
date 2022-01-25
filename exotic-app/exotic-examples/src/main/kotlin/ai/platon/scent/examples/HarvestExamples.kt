@@ -1,5 +1,7 @@
 package ai.platon.scent.examples
 
+import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.pulsar.common.AppPaths
 import ai.platon.scent.ScentContext
 import ai.platon.scent.context.withContext
 import ai.platon.scent.dom.HNormUrl
@@ -45,4 +47,9 @@ class HarvestExamples(context: ScentContext): WebHarvester(context) {
     }
 }
 
-fun main() = withContext { HarvestExamples(it).harvestAll() }
+fun main() = withContext {
+    HarvestExamples(it).harvestAll()
+
+    val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
+    ExoticUtils.openBrowser("$baseDir")
+}

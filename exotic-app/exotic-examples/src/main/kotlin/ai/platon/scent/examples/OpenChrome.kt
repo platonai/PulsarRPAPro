@@ -1,4 +1,4 @@
-package ai.platon.scent.examples.sites
+package ai.platon.scent.examples
 
 import ai.platon.scent.ql.h2.context.withSQLContext
 

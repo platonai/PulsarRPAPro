@@ -1,5 +1,6 @@
 package ai.platon.scent.examples.common
 
+import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
@@ -222,14 +223,18 @@ open class WebHarvester(context: ScentContext): VerboseCrawler(context) {
         val start = Instant.now()
 
         val result = runBlocking { session.harvest(url, options) }
-        session.buildAll(result.tableGroup, options)
+        val exports = session.buildAll(result.tableGroup, options)
 
         val json = session.buildJson(result.tableGroup)
-        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
+        val path = baseDir.resolve("last-page-tables.json")
         Files.writeString(path, json)
 
-        logger.info("Harvest reports: {}", path.parent)
-
         taskTimes[url] = Duration.between(start, Instant.now())
+
+        logger.info("Harvest reports: {}", path.parent)
+        exports.keys.map { it.toString() }
+            .filter { it.matches(".+/tables/.+".toRegex()) }
+            .forEach { ExoticUtils.openBrowser(it) }
     }
 }

@@ -1,13 +1,9 @@
 package ai.platon.exotic
 
-import ai.platon.pulsar.common.AppFiles
-import ai.platon.pulsar.common.AppPaths
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.builder.SpringApplicationBuilder
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ImportResource
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
@@ -24,17 +20,6 @@ class ExoticServerApplication {
     @Bean
     fun javaTimeModule(): JavaTimeModule {
         return JavaTimeModule()
-    }
-
-    @Bean
-    fun commandLineRunner(ctx: ApplicationContext): CommandLineRunner {
-        println("Context: $ctx")
-        return CommandLineRunner { args ->
-            val beans = ctx.beanDefinitionNames.sorted()
-            val s = beans.joinToString("\n") { it }
-            val path = AppPaths.getTmp("exotic-beans.txt")
-            AppFiles.saveTo(s, path)
-        }
     }
 }
 
