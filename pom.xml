@@ -250,7 +250,7 @@
 		<kotlin.version>1.5.32</kotlin.version>
 
 		<mysql.connector.version>5.1.34</mysql.connector.version>
-		<pulsar.version>1.7.1</pulsar.version>
+		<pulsar.version>1.7.2</pulsar.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 		<scent.version>1.6.14</scent.version>
 	</properties>
