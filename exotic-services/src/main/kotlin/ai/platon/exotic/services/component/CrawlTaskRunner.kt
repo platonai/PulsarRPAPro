@@ -8,8 +8,14 @@ import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import ai.platon.exotic.services.persist.CrawlRuleRepository
 import ai.platon.exotic.services.persist.PortalTaskRepository
+import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.common.urls.Urls
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.model.time.ExecutionTime
+import com.cronutils.parser.CronParser
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -31,6 +37,7 @@ class CrawlTaskRunner(
 
     fun startCreatedCrawlRules() {
         val now = LocalDateTime.now()
+        // TODO: findAllByStatusAndStartTime
         val rules = crawlRuleRepository.findAll()
             .filter { it.status == "Created" }
             .filter { it.startTime <= now }
@@ -40,11 +47,42 @@ class CrawlTaskRunner(
 
     fun restartCrawlRulesNextRound() {
         val now = LocalDateTime.now()
+        // TODO: findAllByStatus
         val rules = crawlRuleRepository.findAll()
             .filter { it.status == "Running" || it.status == "Finished" }
             .filter { it.lastCrawlTime + it.period <= now }
 
         rules.forEach { rule -> startCrawl(rule) }
+    }
+
+    fun shouldRun(rule: CrawlRule): Boolean {
+        if (rule.status != "Running" || rule.status != "Finished") {
+            return false
+        }
+
+        if (rule.period.seconds >= 0) {
+            val now = LocalDateTime.now()
+            if (rule.lastCrawlTime + rule.period <= now) {
+                return true
+            }
+        }
+
+        val expression = rule.cronExpression
+        if (expression != null) {
+            val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+            val parser = CronParser(cronDefinition)
+            val quartzCron: Cron = parser.parse(expression)
+            quartzCron.validate()
+            val executionTime = ExecutionTime.forCron(quartzCron)
+
+            val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
+            val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
+            if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
+                return true
+            }
+        }
+
+        return false
     }
 
     fun startCrawl(rule: CrawlRule) {

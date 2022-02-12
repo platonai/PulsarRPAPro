@@ -1,113 +1,151 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Update Rule</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+<head th:replace="layout :: head(~{this :: title}, '', '')">
+    <title>Edit Rule</title>
 </head>
 
 <body>
+
 <div class="container my-5">
-    <h3>Edit Rule</h3>
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/rules/}">Rules</a></li>
+            <li th:text="${rule.name}" class="breadcrumb-item active" aria-current="page"></li>
+        </ol>
+    </nav>
+
     <div class="card">
         <div class="card-body">
-            <div class="col-md-8">
-                <div th:switch="${rule}" class="row">
-                    <dl class="col-1">
-                        <dt>Id</dt><dd th:text="${rule.id}"></dd>
-                    </dl>
-                    <dl class="col">
-                        <dt>Start Time</dt><dd th:text="${rule.startTime}"></dd>
-                    </dl>
-                    <dl class="col">
-                        <dt>Last Crawl Time</dt><dd th:text="${rule.lastCrawlTime}"></dd>
-                    </dl>
-                    <dl class="col">
-                        <dt>Create Time</dt><dd th:text="${rule.createdDate}"></dd>
-                    </dl>
+            <div th:switch="${rule}" class="row">
+                <dl class="col-1">
+                    <dt>Id</dt><dd th:text="${rule.id}"></dd>
+                </dl>
+                <dl class="col">
+                    <dt>Last Crawl Time</dt><dd th:text="${rule.lastCrawlTime}"></dd>
+                </dl>
+                <dl class="col">
+                    <dt>Create Time</dt><dd th:text="${rule.createdDate}"></dd>
+                </dl>
+            </div>
+
+            <form action="#" th:action="@{/crawl/rules/update/{id}(id=${rule.id})}" th:object="${rule}" method="post">
+
+                <div class="row">
+                    <div class="col-md-8">
+                        <div class="form-group">
+                            <label for="sqlTemplate" class="col-form-label">SQL Template</label>
+                            <textarea th:field="*{sqlTemplate}" class="form-control" id="sqlTemplate" rows="5"></textarea>
+                            <span th:if="${#fields.hasErrors('sqlTemplate')}" th:errors="sqlTemplate"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="portalUrls" class="col-form-label">Portal Urls</label>
+                            <textarea th:field="*{portalUrls}" class="form-control" id="portalUrls"></textarea>
+                            <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="portalUrls"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="outLinkSelector" class="col-form-label">Out Link Selector</label>
+                            <input type="text" th:field="*{outLinkSelector}" class="form-control" id="outLinkSelector"
+                                   placeholder="CSS selector for item links">
+                            <span th:if="${#fields.hasErrors('outLinkSelector')}" th:errors="outLinkSelector"
+                                  class="text-danger"></span>
+                        </div>
+                        <div class="form-group">
+                            <label for="nextPageSelector" class="col-form-label">Next Page Selector</label>
+                            <input type="text" th:field="*{nextPageSelector}" class="form-control" id="nextPageSelector"
+                                   placeholder="CSS selector for next page">
+                            <span th:if="${#fields.hasErrors('nextPageSelector')}" th:errors="nextPageSelector"
+                                  class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="name" class="col-form-label">Name</label>
+                                <input type="text" th:field="*{name}" class="form-control" id="name" placeholder="name">
+                                <span th:if="${#fields.hasErrors('name')}" th:errors="name" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col">
+                                <label for="maxPages" class="col-form-label">Max Pages</label>
+                                <!--                                <input type="text" th:field="*{maxPages}" class="form-control" id="maxPages"-->
+                                <!--                                       placeholder="maxPages">-->
+                                <select th:field="*{maxPages}" class="form-control" id="maxPages">
+                                    <option th:each="i : ${#numbers.sequence(0, 200)}" th:value="${i}" th:text="${i}"
+                                            th:selected="${i==30}"></option>
+                                </select>
+                                <span th:if="${#fields.hasErrors('maxPages')}" th:errors="maxPages"
+                                      class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="startTime" class="col-form-label">Start Time</label>
+                                <input type="text" th:field="*{startTime}" class="form-control" id="startTime" placeholder="Start time">
+                                <span th:if="${#fields.hasErrors('startTime')}" th:errors="startTime" class="text-danger"></span>
+                            </div>
+                            <div class="form-group col">
+                                <label for="period" class="col-form-label">Period</label>
+                                <!--                                <input type="text" th:field="*{period}" class="form-control" id="period"-->
+                                <!--                                       placeholder="period">-->
+                                <select th:field="*{period}" class="form-control" id="period">
+                                    <option th:value="'PT87600H'">Once</option>
+                                    <option th:value="'PT10M'">Every 10 minutes</option>
+                                    <option th:value="'PT1H'">Every hour</option>
+                                    <option th:value="'PT12H'">Every 12 hour</option>
+                                    <option th:value="'PT24H'">Every day</option>
+                                    <option th:value="'PT72H'">Every 3 days</option>
+                                    <option th:value="'PT168H'">Every 7 days</option>
+                                </select>
+                                <span th:if="${#fields.hasErrors('period')}" th:errors="period" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="form-group col">
+                                <label for="cronExpression" class="col-form-label">Cron Expression()</label>
+                                <input type="text" th:field="*{cronExpression}" class="form-control" id="cronExpression" placeholder="* * * * * * *">
+                                <span th:if="${#fields.hasErrors('cronExpression')}" th:errors="cronExpression" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="form-group row">
+                            <div class="col">
+                                <label for="labels" class="col-form-label">Labels</label>
+                                <input type="text" th:field="*{label}"
+                                       class="form-control" id="labels" placeholder="Add some descriptive labels">
+                                <span th:if="${#fields.hasErrors('label')}" th:errors="label" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="form-group row">
+                            <div class="col">
+                                <label for="description" class="col-form-label">Description</label>
+                                <input type="text" th:field="*{description}" class="form-control" id="description"
+                                       placeholder="description">
+                                <span th:if="${#fields.hasErrors('description')}" th:errors="description"
+                                      class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
 
-                <form action="#" th:action="@{/crawl/rules/update/{id}(id=${rule.id})}" th:object="${rule}" method="post">
-                    <div class="row">
-                        <div class="form-group col">
-                            <label for="name" class="col-form-label">name</label>
-                            <input type="text" th:field="*{name}" class="form-control" id="name"
-                                   placeholder="name">
-                            <span th:if="${#fields.hasErrors('name')}" th:errors="name"
-                                  class="text-danger"></span>
-                        </div>
-                        <div class="form-group col">
-                            <label for="label" class="col-form-label">label</label>
-                            <input type="text" th:field="*{label}" class="form-control" id="label"
-                                   placeholder="label">
-                            <span th:if="${#fields.hasErrors('label')}" th:errors="label"
-                                  class="text-danger"></span>
-                        </div>
-                        <div class="form-group col">
-                            <label for="period" class="col-form-label">period</label>
-                            <input type="text" th:field="*{period}" class="form-control" id="period"
-                                   placeholder="period">
-                            <span th:if="${#fields.hasErrors('period')}" th:errors="period"
-                                  class="text-danger"></span>
-                        </div>
-                        <div class="form-group col">
-                            <label for="maxPages" class="col-form-label">maxPages</label>
-                            <input type="text" th:field="*{maxPages}" class="form-control" id="maxPages"
-                                   placeholder="maxPages">
-                            <span th:if="${#fields.hasErrors('maxPages')}" th:errors="maxPages"
-                                  class="text-danger"></span>
-                        </div>
-                    </div>
+                <div class="form-group my-3">
+                    <input type="submit" class="btn btn-primary mr-5" value="Save">
 
-                    <div class="form-group">
-                        <label for="description" class="col-form-label">description</label>
-                        <input type="text" th:field="*{description}" class="form-control" id="description"
-                               placeholder="description">
-                        <span th:if="${#fields.hasErrors('description')}" th:errors="description"
-                              class="text-danger"></span>
-                    </div>
+                    <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
+                        <i class="fas fa-list ml-1"></i></a>
+                    <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                        <i class="fas fa-eye ml-1"></i></a>
+                    <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                        <i class="fas fa-play ml-1"></i></a>
+                    <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                        <i class="fas fa-pause ml-1"></i></a>
+                </div>
+            </form>
 
-                    <div class="form-group">
-                        <label for="portalUrls" class="col-form-label">portalUrls</label>
-                        <textarea th:field="*{portalUrls}" class="form-control" id="portalUrls"></textarea>
-                        <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="portalUrls"
-                              class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="outLinkSelector" class="col-form-label">Out Link Selector</label>
-                        <input type="text" th:field="*{outLinkSelector}" class="form-control" id="outLinkSelector"
-                               placeholder="outLinkSelector">
-                        <span th:if="${#fields.hasErrors('outLinkSelector')}" th:errors="outLinkSelector"
-                              class="text-danger"></span>
-                    </div>
-                    <div class="form-group">
-                        <label for="sqlTemplate" class="col-form-label">SQL Template</label>
-                        <textarea th:field="*{sqlTemplate}" class="form-control" id="sqlTemplate"></textarea>
-                        <span th:if="${#fields.hasErrors('sqlTemplate')}" th:errors="sqlTemplate"
-                              class="text-danger"></span>
-                    </div>
-
-                    <div class="form-group">
-                        <input type="submit" class="btn btn-primary mr-5" value="保存">
-
-                        <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
-                            <i class="fas fa-list ml-1"></i></a>
-                        <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                            <i class="fas fa-eye ml-1"></i></a>
-                        <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                            <i class="fas fa-play ml-1"></i></a>
-                        <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                            <i class="fas fa-pause ml-1"></i></a>
-                    </div>
-                </form>
-
-            </div>
         </div>
     </div>
 </div>

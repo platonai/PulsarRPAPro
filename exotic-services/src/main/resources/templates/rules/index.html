@@ -1,22 +1,32 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>Crawl Rules</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+<head th:replace="layout :: head(~{this :: title}, '', '')">
+    <title>Rule List</title>
 </head>
 
 <body>
+
 <div class="container-fluid my-2">
+
+    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Rules</li>
+        </ol>
+    </nav>
+
     <div class="card">
         <div class="card-header">
             <a th:href="@{'/crawl/rules/add'}" class="btn btn-primary">
-                <i class="fas fa-user-plus ml-2"> Add Rule</i>
+                <i class="fas fa-plus-square ml-2"> Add Rule</i>
+            </a>
+            <a th:href="@{'/crawl/rules/jd/add'}" class="btn btn-primary">
+                <i class="fas fa-plus-circle ml-2"> Add Rule(jd.com)</i>
+            </a>
+            <a th:href="@{'/crawl/tasks/'}" class="btn btn-primary">
+                <i class="fas fa-th-list ml-2"> List Tasks</i>
             </a>
         </div>
         <div class="card-body">
@@ -35,10 +45,7 @@
                                 <th>Status</th>
                                 <th>Start At</th>
                                 <th>Last Crawl</th>
-                                <th>View</th>
-                                <th>Edit</th>
-                                <th>Run Now</th>
-                                <th>Pause</th>
+                                <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -51,14 +58,16 @@
                                 <td th:text="${rule.status}"></td>
                                 <td th:text="${rule.startTime}"></td>
                                 <td th:text="${rule.lastCrawlTime}"></td>
-                                <td><a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary">
-                                    <i class="fas fa-eye ml-1"></i></a></td>
-                                <td><a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" class="btn btn-primary">
-                                    <i class="fas fa-edit ml-1"></i></a></td>
-                                <td><a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary">
-                                    <i class="fas fa-play ml-1"></i></a></td>
-                                <td><a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary">
-                                    <i class="fas fa-pause ml-1"></i></a></td>
+                                <td>
+                                    <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" title="View" class="btn btn-primary">
+                                        <i class="fas fa-eye ml-1"></i></a>
+                                    <a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" title="Edit" class="btn btn-primary">
+                                        <i class="fas fa-edit ml-1"></i></a>
+                                    <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" title="Run Now" class="btn btn-primary">
+                                        <i class="fas fa-play ml-1"></i></a>
+                                    <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" title="Pause" class="btn btn-primary">
+                                        <i class="fas fa-pause ml-1"></i></a>
+                                </td>
                             </tr>
                             </tbody>
                         </table>

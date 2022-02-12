@@ -151,10 +151,10 @@ open class TaskSubmitter(
             roundTimeoutTasks.forEach { pendingTasks.remove(it.key) }
         }
 
-        val nextCheckTime = responses.filter { !it.isDone }.minOfOrNull { it.estimatedWaitTime } ?: collectTimerPeriod
+        val nextCheckTime = responses.filter { !it.isDone }.minOfOrNull { it.estimatedWaitTime } ?: collectTimerPeriod.seconds
         val elapsedTime = Duration.between(startTime, Instant.now())
         logger.info(
-            "Collected {}/{}/{}/{}/{} responses in {}, next check: {}",
+            "Collected {}/{}/{}/{}/{} responses in {}, next check: {}s",
             fc, rc, responses.size, checkingIds.size, pendingTasks.size, elapsedTime, nextCheckTime
         )
 

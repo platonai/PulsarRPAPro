@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<!--/* Head takes 3 arguments that are fragments */-->
+<head th:fragment="head(title, links, scripts)">
+
+    <!--/*  Title will be replaced by their respective titles in the calling template. */-->
+    <title th:replace="${title}">Exotic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+    <!--/* Default links; can be replaced by the calling templates */-->
+
+    <link href="../static/css/core.css" rel="stylesheet" media="screen"
+          th:href="@{/css/core.css}" />
+    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"
+          th:href="@{/css/bootstrap.min.css}"/>
+<!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
+    <link href="../static/css/fontawesome/all.css" rel="stylesheet" media="screen"
+          th:href="@{/css/fontawesome/all.css}"/>
+
+    <!--/* Per-page placeholder for additional links */-->
+    <th:block th:replace="${links}" />
+
+    <!--/* Default scripts; can be replaced by the calling templates */-->
+    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
+    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+
+    <!--/* Per-page placeholder for additional scripts */-->
+    <th:block th:replace="${scripts}" />
+
+</head>
+
+<body>
+<!--/* Header fragment */-->
+
+<nav aria-label="breadcrumb" th:fragment="header(breadcrumb)">
+    <ol class="breadcrumb">
+        <li><a href="#">Fake</a></li>
+    </ol>
+</nav>
+
+<!--/* The value passed from calling template will be inserted in this element */-->
+<div class="container" th:fragment="content(value)" th:insert="${value}">
+    <!-- ============================================================================ -->
+    <!-- This content is only used for static prototyping purposes (natural templates)-->
+    <!-- and is therefore entirely optional.                                          -->
+    <!-- ============================================================================ -->
+    <h1>Static content for prototyping purposes only</h1>
+    <p>
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+        Phasellus et placerat elit. Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+        Praesent scelerisque neque neque, ac elementum quam dignissim interdum.
+        Phasellus et placerat elit.
+    </p>
+</div>
+<!--/* Footer fragment */-->
+<footer th:fragment="footer" class="text-center">&copy; 2022 Default Footer</footer>
+</body>
+</html>

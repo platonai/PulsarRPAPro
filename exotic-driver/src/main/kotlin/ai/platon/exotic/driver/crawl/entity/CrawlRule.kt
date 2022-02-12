@@ -2,8 +2,8 @@ package ai.platon.exotic.driver.crawl.entity
 
 import ai.platon.exotic.driver.common.EPOCH_LDT
 import ai.platon.exotic.driver.common.DOOMSDAY
+import ai.platon.exotic.driver.common.NameGenerator
 import ai.platon.pulsar.common.DateTimes
-import org.apache.commons.lang3.RandomStringUtils
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -63,6 +63,9 @@ class CrawlRule {
     @Column(name = "period")
     var period: Duration = Duration.ofDays(3650)
 
+    @Column(name = "cron_expression")
+    var cronExpression: String? = null
+
     /**
      * Enum: Created, Running, Paused
      * */
@@ -93,9 +96,12 @@ class CrawlRule {
     }
 
     final fun randomName(): String {
-        return "T" + RandomStringUtils.randomAlphanumeric(6).lowercase()
+        return NameGenerator.gen()
     }
 
+    /**
+     * TODO: use EntityListeners
+     * */
     final fun adjustFields() {
         period = period.truncatedTo(ChronoUnit.MINUTES)
         startTime = startTime.truncatedTo(ChronoUnit.SECONDS)

@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-    <meta charset="utf-8">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <title>规则详情</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
-          integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
-    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css"
-          integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
-    <!-- <link rel="stylesheet" href="../css/shards.min.css"> -->
+<head th:replace="layout :: head(~{this :: title}, '', '')">
+    <title>View Rule</title>
 </head>
 
 <body>
 
 <div class="container my-2">
-    <h3>View Rule</h3>
+
+    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/rules/}">Rules</a></li>
+            <li th:text="${rule.name}" class="breadcrumb-item active" aria-current="page"></li>
+        </ol>
+    </nav>
+
     <div class="card" th:switch="${rule}">
         <div class="card-body" th:case="*">
             <div class="row my-5">

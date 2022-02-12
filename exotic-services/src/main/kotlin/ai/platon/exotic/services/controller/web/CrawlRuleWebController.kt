@@ -39,8 +39,28 @@ class CrawlRuleWebController(
     }
 
     @GetMapping("/add")
-    fun showAddForm(rule: CrawlRule): String {
+    fun showAddForm(model: Model): String {
+        val rule = CrawlRule()
+        rule.sqlTemplate = """
+select
+    dom_base_uri(dom) as `url`,
+    dom_first_text(dom, '#productTitle') as `title`
+from load_and_select('{{url}}', ':root');
+        """.trimIndent()
+        rule.portalUrls = """
+https://channel1.example.com/
+https://channel2.example.com/
+        """.trimIndent()
+
+        model.addAttribute("rule", rule)
+
         return "rules/add"
+    }
+
+    @GetMapping("/jd/add")
+    fun showJdAddForm(model: Model): String {
+        model.addAttribute("rule", CrawlRule())
+        return "rules/jd/add"
     }
 
     @PostMapping("/add")
@@ -50,6 +70,17 @@ class CrawlRuleWebController(
         }
 
         println(prettyScentObjectWritter().writeValueAsString(rule))
+
+        rule.adjustFields()
+        repository.save(rule)
+        return "redirect:/crawl/rules/"
+    }
+
+    @PostMapping("/add3")
+    fun add3(rule: CrawlRule, result: BindingResult, model: Model): String {
+        if (result.hasErrors()) {
+            return "rules/add3"
+        }
 
         rule.adjustFields()
         repository.save(rule)
