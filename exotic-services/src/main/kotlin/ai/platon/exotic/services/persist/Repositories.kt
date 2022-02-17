@@ -16,6 +16,8 @@ import java.util.*
 
 @Repository
 interface CrawlRuleRepository : JpaRepository<CrawlRule, Serializable> {
+    fun findAllByStatusIn(status: List<String>, pageable: Pageable): Page<CrawlRule>
+    fun findAllByStatusNot(status: String, pageable: Pageable): Page<CrawlRule>
 }
 
 @Repository

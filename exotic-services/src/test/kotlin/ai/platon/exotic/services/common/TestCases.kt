@@ -1,6 +1,10 @@
 package ai.platon.exotic.services.common
 
 import ai.platon.exotic.services.entity.converters.ModelConverter
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.parser.CronParser
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDateTime
@@ -16,6 +20,8 @@ class TestCases {
         println(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
         println(ZoneId.systemDefault())
         println(LocalDateTime.parse("2200-01-01T08:00"))
+
+        println(Instant.now())
     }
 
     @Test
@@ -31,5 +37,14 @@ class TestCases {
         IntRange(100, 100).forEach {
             println(it)
         }
+    }
+
+    @Test
+    fun testCron() {
+        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+        val parser = CronParser(cronDefinition)
+        val quartzCron: Cron = parser.parse("0 0 * * * ?")
+        quartzCron.validate()
+        println(quartzCron.asString())
     }
 }

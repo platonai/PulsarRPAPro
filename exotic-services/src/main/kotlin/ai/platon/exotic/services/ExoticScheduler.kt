@@ -21,7 +21,6 @@ import org.springframework.stereotype.Component
 import java.time.ZoneId
 import java.time.ZonedDateTime
 
-
 @Component
 @EnableScheduling
 class ExoticScheduler(

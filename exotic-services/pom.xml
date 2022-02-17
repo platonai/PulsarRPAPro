@@ -67,6 +67,11 @@
 			<groupId>com.fasterxml.jackson.module</groupId>
 			<artifactId>jackson-module-kotlin</artifactId>
 		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-java8time</artifactId>
+			<version>3.0.4.RELEASE</version>
+		</dependency>
 
 		<dependency>
 			<groupId>com.h2database</groupId>
@@ -131,13 +136,6 @@
 				<configuration>
 					<addResources>true</addResources>
 				</configuration>
-				<dependencies>
-					<dependency>
-						<groupId>org.springframework</groupId>
-						<artifactId>springloaded</artifactId>
-						<version>1.2.6.RELEASE</version>
-					</dependency>
-				</dependencies>
 			</plugin>
 		</plugins>
 	</build>

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="layout :: head(~{this :: title}, '', '')">
+<head th:replace="layout :: head(~{this :: title}, null, null)">
     <title>Task List</title>
 </head>
 
@@ -11,13 +11,13 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/rules/}">Rules</a></li>
+            <li class="breadcrumb-item active">Tasks</li>
         </ol>
     </nav>
 
     <div class="card">
         <div class="card-body">
-            <div th:switch="${tasks}" class="my-5">
+            <div th:switch="${tasks}">
                 <div>
                     <h2 th:case="null">No task yet</h2>
                     <div th:case="*">
@@ -34,6 +34,8 @@
                                 <th>Finished</th>
 
                                 <th>Start Time</th>
+                                <th>Rule</th>
+
                                 <th>Actions</th>
                             </tr>
                             </thead>
@@ -47,6 +49,13 @@
                                 <td th:text="${task.failedCount}"></td>
                                 <td th:text="${task.finishedCount}"></td>
                                 <td th:text="${task.startTime}"></td>
+                                <td>
+                                    <a th:href="@{/crawl/rules/view/{id}(id=${task.rule.id})}"
+                                       th:text="${task.rule.name}"
+                                       title="Rule">
+                                    </a>
+                                </td>
+
                                 <td><a th:href="@{/crawl/tasks/view/{id}(id=${task.id})}" title="View" class="btn btn-primary">
                                     <i class="fas fa-eye ml-1"></i></a>
                                     <a th:href="@{/crawl/tasks/start/{id}(id=${task.id})}" title="Run Now" class="btn btn-primary">

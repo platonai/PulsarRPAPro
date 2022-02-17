@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="layout :: head(~{this :: title}, '', '')">
+<head th:replace="layout :: head(~{this :: title}, null, null)">
     <title>View Rule</title>
 </head>
 
@@ -12,7 +12,8 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a href="#">Home</a></li>
-            <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/rules/}">Rules</a></li>
+            <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/tasks/}">Tasks</a></li>
+            <li th:text="${task.id}" class="breadcrumb-item active" aria-current="page"></li>
         </ol>
     </nav>
 

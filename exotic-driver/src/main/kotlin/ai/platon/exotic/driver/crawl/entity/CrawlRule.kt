@@ -3,12 +3,16 @@ package ai.platon.exotic.driver.crawl.entity
 import ai.platon.exotic.driver.common.EPOCH_LDT
 import ai.platon.exotic.driver.common.DOOMSDAY
 import ai.platon.exotic.driver.common.NameGenerator
+import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.Duration
+import java.time.Instant
 import java.time.LocalDateTime
+import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import javax.persistence.*
 
@@ -49,13 +53,15 @@ class CrawlRule {
     var maxPages: Int = 30
 
     @Column(name = "start_time")
-    var startTime: LocalDateTime = EPOCH_LDT.truncatedTo(ChronoUnit.SECONDS)
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ssZ")
+    var startTime: Instant = Instant.EPOCH
 
     @Column(name = "dead_time")
-    var deadTime: LocalDateTime = DOOMSDAY
+    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ssZ")
+    var deadTime: Instant = DateTimes.doomsday
 
     @Column(name = "last_crawl_time")
-    var lastCrawlTime: LocalDateTime = EPOCH_LDT.truncatedTo(ChronoUnit.SECONDS)
+    var lastCrawlTime: Instant = Instant.EPOCH
 
     @Column(name = "crawl_history", length = 1024)
     var crawlHistory: String = ""
@@ -70,18 +76,28 @@ class CrawlRule {
      * Enum: Created, Running, Paused
      * */
     @Column(name = "status", length = 8)
-    var status: String = "Created"
+    var status: String = RuleStatus.Created.toString()
+
+    /**
+     * TODO: use DateTimes.zoneOffset for the default value
+     * The time difference, in minutes, between UTC time and local time.
+     * */
+    @Column(name = "timezone_offset")
+    var timezoneOffset: Int = -480
 
     @CreatedDate
     @Column(name = "created_date")
-    var createdDate: LocalDateTime = EPOCH_LDT
+    var createdDate: Instant = Instant.EPOCH
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    var lastModifiedDate: LocalDateTime = EPOCH_LDT
+    var lastModifiedDate: Instant = Instant.EPOCH
 
-    @OneToMany(fetch = FetchType.LAZY)
+//    @OneToMany(fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "rule", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val portalTasks: MutableList<PortalTask> = mutableListOf()
+
+//    fun zoneOffset() = ZoneOffset.ofHoursMinutes(0, timezoneOffset)
 
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
@@ -89,7 +105,7 @@ class CrawlRule {
         val taskIdSuffix = id ?: formattedTime
         val taskId = "r$taskIdSuffix"
         var args = "-taskId $taskId -taskTime $taskTime"
-        if (deadTime != DOOMSDAY) {
+        if (deadTime != DateTimes.doomsday) {
             args += " -deadTime $deadTime"
         }
         return args
@@ -109,7 +125,12 @@ class CrawlRule {
         createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS)
         lastModifiedDate = lastModifiedDate.truncatedTo(ChronoUnit.SECONDS)
 
-        if (startTime == EPOCH_LDT) {
+        val count = cronExpression?.split(" ") ?: 0
+        if (count == 5) {
+            cronExpression = "0 $cronExpression"
+        }
+
+        if (startTime == Instant.EPOCH) {
             startTime = lastCrawlTime
         }
 

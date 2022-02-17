@@ -5,6 +5,14 @@ import ai.platon.pulsar.driver.ScrapeResponse
 import java.time.Duration
 import java.time.Instant
 
+enum class RuleStatus {
+    Created,
+    Running,
+    Paused,
+    Finished,
+    Archived
+}
+
 enum class TaskStatus(
     private val value: Int,
     private val series: Series,

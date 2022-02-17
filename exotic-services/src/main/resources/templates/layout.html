@@ -20,14 +20,18 @@
           th:href="@{/css/fontawesome/all.css}"/>
 
     <!--/* Per-page placeholder for additional links */-->
-    <th:block th:replace="${links}" />
+    <th:block th:if="${links} != null">
+        <th:block th:replace="${links}" />
+    </th:block>
 
     <!--/* Default scripts; can be replaced by the calling templates */-->
     <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
 
     <!--/* Per-page placeholder for additional scripts */-->
-    <th:block th:replace="${scripts}" />
+    <th:block th:if="${scripts} != null">
+        <th:block th:replace="${scripts}" />
+    </th:block>
 
 </head>
 

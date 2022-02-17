@@ -7,7 +7,7 @@
     cursor: pointer;
 }
 .cron-button-save {
-    background-image: url('images/jquery/cron/disk.png');
+    background-image: url('../../images/jquery/cron/disk.png');
 }
 .cron-changed {
     padding-top: 5px;
@@ -20,5 +20,5 @@
     font-size: 0.9em;
 }
 .cron-controls > span.cron-loading {
-    background-image: url('images/jquery/cron/loading.gif');
+    background-image: url('../../images/jquery/cron/loading.gif');
 }
