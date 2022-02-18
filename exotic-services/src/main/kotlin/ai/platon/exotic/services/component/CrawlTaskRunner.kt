@@ -128,6 +128,13 @@ class CrawlTaskRunner(
         }
     }
 
+    fun loadAndSubmitPortalTask(task: PortalTask) {
+        task.startTime = Instant.now()
+        task.status = TaskStatus.LOADED
+        portalTaskRepository.save(task)
+        scraper.scrapeOutPages(createListenablePortalTask(task, true))
+    }
+
     fun loadAndSubmitPortalTasks(limit: Int) {
         val order = Sort.Order.asc("id")
         val pageRequest = PageRequest.of(0, limit, Sort.by(order))
@@ -137,7 +144,7 @@ class CrawlTaskRunner(
         }
 
         portalTasks.forEach {
-            it.startTime = LocalDateTime.now()
+            it.startTime = Instant.now()
             it.status = TaskStatus.LOADED
         }
         portalTaskRepository.saveAll(portalTasks)

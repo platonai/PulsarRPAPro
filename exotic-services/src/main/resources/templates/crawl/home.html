@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Rule List</title>
+</head>
+
+<body>
+
+<div class="container-fluid my-2">
+
+    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Home</a></li>
+        </ol>
+    </nav>
+
+    <div>
+        <ol>
+            <li>
+                <a th:href="@{/crawl/rules/}" class="m-1">Rules</a>
+            </li>
+            <li>
+                <a th:href="@{/crawl/tasks/}" class="m-1">Tasks</a>
+            </li>
+        </ol>
+    </div>
+</div>
+</body>
+
+</html>

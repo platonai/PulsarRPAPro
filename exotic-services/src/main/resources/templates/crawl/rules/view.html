@@ -12,7 +12,7 @@
     <!--/* The element with breadcrumb class will be passed to the header fragment */-->
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="#">Home</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
             <li class="breadcrumb-item"><a href="#" th:href="@{/crawl/rules/}">Rules</a></li>
             <li th:text="${rule.name}" class="breadcrumb-item active" aria-current="page"></li>
         </ol>
@@ -143,8 +143,8 @@
 
                                 <td><a th:href="@{/crawl/tasks/view/{id}(id=${task.id})}" title="View" class="btn btn-primary">
                                     <i class="fas fa-eye ml-1"></i></a>
-                                    <a th:href="@{/crawl/tasks/start/{id}(id=${task.id})}" title="Run Now" class="btn btn-primary">
-                                        <i class="fas fa-play ml-1"></i></a>
+<!--                                    <a th:href="@{/crawl/tasks/start/{id}(id=${task.id})}" title="Run Now" class="btn btn-primary">-->
+<!--                                        <i class="fas fa-play ml-1"></i></a>-->
                                 </td>
                             </tr>
                             </tbody>

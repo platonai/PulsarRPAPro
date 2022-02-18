@@ -5,6 +5,7 @@ import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
+import java.time.Instant
 import java.time.LocalDateTime
 import javax.persistence.*
 
@@ -44,13 +45,13 @@ class PortalTask(
 
     var finishedCount: Int = 0
 
-    var startTime: LocalDateTime = EPOCH_LDT
+    var startTime: Instant = Instant.now()
 
     var status: TaskStatus = TaskStatus.CREATED
 
     @CreatedDate
-    var createdDate: LocalDateTime = LocalDateTime.now()
+    var createdDate: Instant = Instant.now()
 
     @LastModifiedDate
-    var lastModifiedDate: LocalDateTime = EPOCH_LDT
+    var lastModifiedDate: Instant = Instant.now()
 }
