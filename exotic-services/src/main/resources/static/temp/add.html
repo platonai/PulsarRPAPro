@@ -1,15 +1,46 @@
 
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8"/>
-    <title>京东类目</title>
 
-    <link href="../css/bootstrap/bootstrap.min.css" rel="stylesheet" />
-    <link href="https://static.jstree.com/3.3.12/assets/dist/themes/default/style.min.css" rel="stylesheet" />
-    <link href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
+<head>
+
+
+    <title>Categories - JD.com</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <meta charset="utf-8">
+    <meta http-equiv="x-ua-compatible" content="ie=edge">
+
+
+
+    <link href="../css/core.css" rel="stylesheet" media="screen" />
+    <link href="../css/bootstrap.min.css" rel="stylesheet" media="screen"/>
+    <!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
+    <link href="../css/fontawesome/all.css" rel="stylesheet" media="screen"/>
+
+
+
+    <link class="custom-link" href="../css/jquery/jquery.datetimepicker.css" rel="stylesheet" /><link class="custom-link" href="../css/jquery/jquery-cron-quartz.css" rel="stylesheet" /><link class="custom-link" href="../css/jstree/themes/default/style.css" rel="stylesheet" />
+
+
+
+    <script src="../js/jquery.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
+    <script src="../js/crawl-common.js"></script>
+
+
+
+    <script class="custom-script" src="../js/jquery/jquery.datetimepicker.js"></script><script class="custom-script" src="../js/moment.js"></script><script class="custom-script" src="../js/jquery/jquery-cron-quartz.js"></script><script class="custom-script" src="../js/jstree/jstree.js"></script>
+
 
 </head>
+
+<!--<head th:replace="layout :: head(~{this :: title}, '', '')">-->
+<!--    <title>Rule List</title>-->
+
+<!--    <link href="https://static.jstree.com/3.3.12/assets/dist/themes/default/style.min.css" rel="stylesheet" />-->
+<!--    <link href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-startTime/jquery.startTime.css" rel="stylesheet" />-->
+<!--</head>-->
+
 <body>
 
 <div class="container mh-100">
@@ -18,8 +49,7 @@
             <h2>京东采集配置器</h2>
         </div>
         <div class="col-1">
-            <a href="/crawl/rule/" target="_blank">规则列表</a>
-            <!--                <a href="w/crawl/rule/" target="_blank">规则列表</a>-->
+            <a href="../crawl/rules/" target="_blank">规则列表</a>
         </div>
     </div>
     <div class="row h-50 mt-2">
@@ -7963,7 +7993,7 @@
             </div>
             <div class="row start-time mt-1">
                 <div class="col-1">时间：</div>
-                <div class="col-11"><input type="text" id="datetimepicker" /></div>
+                <div class="col-11"><input type="text" id="startTime" /></div>
             </div>
             <div class="row mt-1">
                 <div class="col-1">标签：</div>
@@ -7971,7 +8001,7 @@
             </div>
             <div class="row mt-1">
                 <div class="col-1">描述：</div>
-                <div class="col-11"><textarea cols="70" rows="3" id="description1"></textarea></div>
+                <div class="col-11"><textarea cols="70" rows="3" id="description"></textarea></div>
             </div>
         </div>
         <div class="crawl mt-2">
@@ -7985,15 +8015,10 @@
     </div>
 </div>
 
-<script src="../js/bootstrap/bootstrap.bundle.js"></script>
-<script src="../js/moment.js"></script>
-
-<!-- 4 include the jQuery library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-<!-- 5 include the minified jstree source -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-
-<script src="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.js"></script>
+<div class="visually-hidden" style="display: none">
+    <a id="addRuleUrl" href="../api/crawl/rules/add">&nbsp;</a>
+    <a id="redirectUrl" href="../crawl/rules/">&nbsp;</a>
+</div>
 
 <script>
     function makeId(length) {
@@ -8024,13 +8049,12 @@
 
         $('#name').val('T' + makeId(6))
 
-        $('#datetimepicker').datetimepicker({
+        $('#startTime').datetimepicker({
             inline: false
         })
 
-
-        let d = moment().format('YYYY/MM/DD hh:mm')
-        $('#datetimepicker').val(d)
+        let d = moment().format('YYYY/MM/DD')
+        $('#startTime').val(d + ' 00:00')
 
         // 7 bind to events triggered on the tree
         $('#jstree').on("changed.jstree", function (e, data) {
@@ -8063,17 +8087,27 @@
         $("button#save").on('click', function () {
             $("button#save").hide()
 
-            let period = $('input[name=period]:checked').val();
-            let startTime = $('#datetimepicker').val();
-            startTime = moment(startTime, 'YYYY/MM/DD HH:mm').format("YYYY-MM-DDTHH:mm")
-            alert(startTime)
-            let categoryUrls = [];
+            let period = $('input[name=period]:checked').val()
+
+            correctDateTime('#startTime')
+
+            let startTime = $('#startTime').val()
+            // startTime = moment(startTime, 'YYYY/MM/DD HH:mm').format("YYYY-MM-DDTHH:mm")
+            let name = $('#name').val()
+            let label = $('#label').val()
+            let description = $('#description').val()
+
+            let portalUrls = []
             $('#result .categories li a').each((i, e) => {
-                categoryUrls.push(e.getAttribute("href"))
+                portalUrls.push(e.getAttribute("href"))
             })
 
-            let data = {period: period, startTime: startTime, categoryUrls: categoryUrls }
-            let url = '/api/crawl/rule/add'
+            let data = {
+                label: label, name: name, description: description,
+                period: period, startTime: startTime, portalUrls: portalUrls.join("\n")
+            }
+
+            let url = $('#addRuleUrl').attr('href')
 
             $.ajax({
                 type: 'POST',
@@ -8082,10 +8116,10 @@
                 contentType: "application/json; charset=utf-8",
                 success: function(data) {
                     // $('.saved-rule pre').html(JSON.stringify(data, null, 2))
-                    location = "/crawl/rules/"
+                    location = $('#redirectUrl').attr('href')
                 },
                 error: function(errMsg) {
-                    alert(errMsg);
+                    $('.saved-rule pre').html(errMsg)
                     $("button#save").show()
                 }
             })

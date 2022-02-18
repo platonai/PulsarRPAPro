@@ -5,15 +5,23 @@ import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
+import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import ai.platon.exotic.services.persist.CrawlRuleRepository
 import ai.platon.exotic.services.persist.PortalTaskRepository
+import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.common.urls.Urls
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.model.time.ExecutionTime
+import com.cronutils.parser.CronParser
 import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
+import java.time.Instant
 import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
@@ -30,33 +38,64 @@ class CrawlTaskRunner(
     }
 
     fun startCreatedCrawlRules() {
-        val now = LocalDateTime.now()
-        val rules = crawlRuleRepository.findAll()
-            .filter { it.status == "Created" }
+        val now = Instant.now()
+
+        val status = listOf(RuleStatus.Created).map { it.toString() }
+        val sort = Sort.by(Sort.Order.desc("id"))
+        val page = PageRequest.of(0, 1000, sort)
+
+        val rules = crawlRuleRepository.findAllByStatusIn(status, page)
             .filter { it.startTime <= now }
 
         rules.forEach { rule -> startCrawl(rule) }
     }
 
     fun restartCrawlRulesNextRound() {
-        val now = LocalDateTime.now()
-        val rules = crawlRuleRepository.findAll()
-            .filter { it.status == "Running" || it.status == "Finished" }
-            .filter { it.lastCrawlTime + it.period <= now }
+        val status = listOf(RuleStatus.Running, RuleStatus.Finished).map { it.toString() }
+        val sort = Sort.by(Sort.Order.desc("id"))
+        val page = PageRequest.of(0, 1000, sort)
+        val rules = crawlRuleRepository.findAllByStatusIn(status, page)
+            .filter { shouldRun(it) }
 
         rules.forEach { rule -> startCrawl(rule) }
     }
 
+    fun shouldRun(rule: CrawlRule): Boolean {
+        if (rule.period.seconds > 0) {
+            val now = Instant.now()
+            if (rule.lastCrawlTime + rule.period <= now) {
+                return true
+            }
+        }
+
+        val expression = rule.cronExpression
+        if (expression != null) {
+            val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+            val parser = CronParser(cronDefinition)
+            val quartzCron: Cron = parser.parse(expression)
+            quartzCron.validate()
+            val executionTime = ExecutionTime.forCron(quartzCron)
+
+            val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
+            val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
+            if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
+                return true
+            }
+        }
+
+        return false
+    }
+
     fun startCrawl(rule: CrawlRule) {
         try {
-            rule.status = "Running"
-            rule.lastCrawlTime = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
-            rule.lastModifiedDate = LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS)
+            rule.status = RuleStatus.Running.toString()
+            rule.lastCrawlTime = Instant.now().truncatedTo(ChronoUnit.SECONDS)
+            rule.lastModifiedDate = Instant.now().truncatedTo(ChronoUnit.SECONDS)
 
             val portalUrls = rule.portalUrls
 
             if (portalUrls.isBlank()) {
-                rule.status = "Finished"
+                rule.status = RuleStatus.Finished.toString()
                 logger.info("No portal urls in rule #{}", rule.id)
                 return
             }
@@ -64,7 +103,11 @@ class CrawlTaskRunner(
             val maxPages = if (IS_DEVELOPMENT) 2 else rule.maxPages
             val pagedPortalUrls = portalUrls.split("\n")
                 .filter { Urls.isValidUrl(it) }
-                .flatMap { url -> IntRange(1, maxPages).map { pg -> "$url&page=$pg" } }
+                .flatMap { url ->
+                    if (url.contains("{{page}}")) {
+                        IntRange(1, maxPages).map { pg -> url.replace("{{page}}", pg.toString()) }
+                    } else listOf(url)
+                }
             if (pagedPortalUrls.isEmpty()) {
                 logger.info("No portal urls in rule #{}", rule.id)
             }
@@ -85,6 +128,13 @@ class CrawlTaskRunner(
         }
     }
 
+    fun loadAndSubmitPortalTask(task: PortalTask) {
+        task.startTime = Instant.now()
+        task.status = TaskStatus.LOADED
+        portalTaskRepository.save(task)
+        scraper.scrapeOutPages(createListenablePortalTask(task, true))
+    }
+
     fun loadAndSubmitPortalTasks(limit: Int) {
         val order = Sort.Order.asc("id")
         val pageRequest = PageRequest.of(0, limit, Sort.by(order))
@@ -94,7 +144,7 @@ class CrawlTaskRunner(
         }
 
         portalTasks.forEach {
-            it.startTime = LocalDateTime.now()
+            it.startTime = Instant.now()
             it.status = TaskStatus.LOADED
         }
         portalTaskRepository.saveAll(portalTasks)

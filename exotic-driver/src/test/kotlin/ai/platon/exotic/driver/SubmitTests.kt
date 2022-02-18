@@ -1,6 +1,7 @@
 package ai.platon.exotic.driver
 
 import org.junit.jupiter.api.Test
+import java.time.Duration
 
 class SubmitTests {
 //    @MockK
@@ -8,6 +9,7 @@ class SubmitTests {
 
     @Test
     fun testScrapeResponse() {
+        println(Duration.ofDays(3650))
     }
 
     @Test

@@ -1,8 +1,11 @@
 package ai.platon.exotic.standalone
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
+import ai.platon.pulsar.browser.driver.BrowserSettings
 import ai.platon.pulsar.common.AppFiles
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.boot.autoconfigure.persist.CrawlSeedV3Repository
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
@@ -17,6 +20,7 @@ import org.springframework.context.annotation.ImportResource
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
+import java.awt.GraphicsEnvironment
 
 @SpringBootApplication(
     scanBasePackages = [
@@ -39,6 +43,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
 @EnableJpaAuditing
 class ExoticStandalone(
+    val conf: ImmutableConfig,
     val env: Environment,
     val crawlSeedV3Repository: CrawlSeedV3Repository
 ) {

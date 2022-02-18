@@ -4,6 +4,7 @@ import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.services.persist.CrawlRuleRepository
 import ai.platon.pulsar.common.ResourceLoader
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 import java.time.LocalDateTime
 
 @RestController
@@ -18,7 +19,7 @@ class CrawlRuleController(
 
     @PostMapping("add")
     fun add(@RequestBody rule: CrawlRule): CrawlRule {
-        rule.createdDate = LocalDateTime.now()
+        rule.createdDate = Instant.now()
         rule.lastModifiedDate = rule.createdDate
 
         if (rule.portalUrls.contains("jd.com")) {

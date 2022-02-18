@@ -1,11 +1,19 @@
 package ai.platon.exotic.driver.common
 
+import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.browser.Browsers
+import java.nio.file.Files
 
 object ExoticUtils {
     fun openBrowser(url: String) {
         val chromeBinary = Browsers.searchChromeBinary()
-        ProcessLauncher.launch("$chromeBinary", listOf(url))
+        val dataDir = AppPaths.getTmp("exotic-chrome")
+        val args = listOf(url,
+            "--user-data-dir=$dataDir",
+            "--no-first-run",
+            "--no-default-browser-check"
+        )
+        ProcessLauncher.launch("$chromeBinary", args)
     }
 }
