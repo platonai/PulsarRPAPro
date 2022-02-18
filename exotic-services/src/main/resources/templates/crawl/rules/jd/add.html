@@ -1,14 +1,20 @@
-
 <!DOCTYPE html>
 <html lang="zh">
-<head>
-    <meta charset="UTF-8"/>
-    <title>京东类目</title>
 
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"
-          th:href="@{/css/bootstrap.min.css}"/>
-    <link href="https://static.jstree.com/3.3.12/assets/dist/themes/default/style.min.css" rel="stylesheet" />
-    <link href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />
+<head th:replace="layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})">
+    <title>Categories - JD.com</title>
+    <!-- Custom links for this page only -->
+    <!--    <link class="custom-link" href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-startTime/jquery.startTime.css" rel="stylesheet" />-->
+    <link class="custom-link" href="../../../../static/css/jquery/jquery.datetimepicker.css" th:href="@{/css/jquery/jquery.datetimepicker.css}" rel="stylesheet" />
+    <link class="custom-link" href="../../../../static/css/jquery/jquery-cron-quartz.css" th:href="@{/css/jquery/jquery-cron-quartz.css}" rel="stylesheet" />
+
+    <link class="custom-link" href="../../../../static/css/jstree/themes/default/style.css" th:href="@{/css/jstree/themes/default/style.css}" rel="stylesheet" />
+
+    <!-- Custom scripts for this page only -->
+    <script class="custom-script" src="../../../../static/js/jquery/jquery.datetimepicker.js" th:src="@{/js/jquery/jquery.datetimepicker.js}"></script>
+    <script class="custom-script" src="../../../../static/js/moment.js" th:src="@{'/js/moment.js'}"></script>
+    <script class="custom-script" src="../../../../static/js/jquery/jquery-cron-quartz.js" th:src="@{'/js/jquery/jquery-cron-quartz.js'}"></script>
+    <script class="custom-script" src="../../../../static/js/jstree/jstree.js" th:src="@{'/js/jstree/jstree.js'}"></script>
 
 </head>
 
@@ -16,7 +22,7 @@
 <!--    <title>Rule List</title>-->
 
 <!--    <link href="https://static.jstree.com/3.3.12/assets/dist/themes/default/style.min.css" rel="stylesheet" />-->
-<!--    <link href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />-->
+<!--    <link href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-startTime/jquery.startTime.css" rel="stylesheet" />-->
 <!--</head>-->
 
 <body>
@@ -7971,7 +7977,7 @@
             </div>
             <div class="row start-time mt-1">
                 <div class="col-1">时间：</div>
-                <div class="col-11"><input type="text" id="datetimepicker" /></div>
+                <div class="col-11"><input type="text" id="startTime" /></div>
             </div>
             <div class="row mt-1">
                 <div class="col-1">标签：</div>
@@ -7997,16 +8003,6 @@
     <a id="addRuleUrl" th:href="@{'/api/crawl/rules/add'}">&nbsp;</a>
     <a id="redirectUrl" th:href="@{'/crawl/rules/'}">&nbsp;</a>
 </div>
-
-<script th:src="@{'/js/bootstrap/bootstrap.bundle.js'}"></script>
-<script th:src="@{'/js/moment.js'}"></script>
-
-<!-- 4 include the jQuery library -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/1.12.1/jquery.min.js"></script>
-<!-- 5 include the minified jstree source -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jstree/3.2.1/jstree.min.js"></script>
-
-<script src="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.js"></script>
 
 <script>
     function makeId(length) {
@@ -8037,12 +8033,12 @@
 
         $('#name').val('T' + makeId(6))
 
-        $('#datetimepicker').datetimepicker({
+        $('#startTime').datetimepicker({
             inline: false
         })
 
         let d = moment().format('YYYY/MM/DD')
-        $('#datetimepicker').val(d + ' 00:00')
+        $('#startTime').val(d + ' 00:00')
 
         // 7 bind to events triggered on the tree
         $('#jstree').on("changed.jstree", function (e, data) {
@@ -8076,8 +8072,11 @@
             $("button#save").hide()
 
             let period = $('input[name=period]:checked').val()
-            let startTime = $('#datetimepicker').val()
-            startTime = moment(startTime, 'YYYY/MM/DD HH:mm').format("YYYY-MM-DDTHH:mm")
+
+            correctDateTime('#startTime')
+
+            let startTime = $('#startTime').val()
+            // startTime = moment(startTime, 'YYYY/MM/DD HH:mm').format("YYYY-MM-DDTHH:mm")
             let name = $('#name').val()
             let label = $('#label').val()
             let description = $('#description').val()
