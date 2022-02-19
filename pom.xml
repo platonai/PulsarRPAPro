@@ -49,7 +49,7 @@
 
 		<repository>
 			<id>platon.ai</id>
-			<url>http://platonic.fun/repo/</url>
+			<url>http://static.platonic.fun/repo/</url>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>

@@ -6,7 +6,6 @@ import ai.platon.scent.examples.common.VerboseCrawler
 import java.util.concurrent.atomic.AtomicInteger
 
 fun main() {
-    Systems.loadAllProperties("config/sites/amazon/other/application-p1d1.properties")
     val seeds = arrayOf(
             "http://category.dangdang.com/cid4004279.html"
     )

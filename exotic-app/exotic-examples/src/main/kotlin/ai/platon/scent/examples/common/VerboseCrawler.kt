@@ -3,6 +3,7 @@ package ai.platon.scent.examples.common
 import ai.platon.pulsar.common.NetUtil
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.Urls
+import ai.platon.pulsar.crawl.JsEventHandler
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
@@ -20,12 +21,17 @@ open class VerboseCrawler(
 
     val session: ScentSession = ScentContexts.createSession()
 
-    fun load(url: String, args: String) {
-        return load(url, session.options(args))
+    fun load(url: String, args: String, eventHandler: JsEventHandler? = null) {
+        val options = session.options(args)
+        eventHandler?.let { options.conf.putBean(it) }
+        load(url, options)
+        eventHandler?.let { options.conf.removeBean(it) }
     }
 
-    fun load(url: String, options: LoadOptions) {
+    fun load(url: String, options: LoadOptions, eventHandler: JsEventHandler? = null) {
+        eventHandler?.let { options.conf.putBean(it) }
         val page = session.load(url)
+        eventHandler?.let { options.conf.removeBean(it) }
         val doc = session.parse(page)
         doc.absoluteLinks()
         doc.stripScripts()
