@@ -2,16 +2,12 @@ package ai.platon.scent.examples.common
 
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.ql.ResultSets
-import ai.platon.pulsar.ql.h2.H2MemoryDb
 import ai.platon.pulsar.ql.h2.utils.ResultSetUtils
-import ai.platon.scent.ScentContext
 import ai.platon.scent.ql.h2.context.ScentSQLContext
 import ai.platon.scent.ql.h2.context.support.AbstractScentSQLContext
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
-import java.sql.Connection
 import java.sql.ResultSet
-import java.util.concurrent.ArrayBlockingQueue
 
 /**
  * The base class for all tests.
@@ -69,7 +65,7 @@ open class VerboseSqlExtractor(context: ScentSQLContext): VerboseCrawler(context
     }
 
     override fun close() {
-        connectionPool.forEach { it.runCatching { it.close() }.onFailure { log.warn(it.message) } }
+        connectionPool.forEach { it.runCatching { it.close() }.onFailure { logger.warn(it.message) } }
         super.close()
     }
 }

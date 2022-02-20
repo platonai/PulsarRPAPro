@@ -1,6 +1,5 @@
 package ai.platon.scent.examples.sites.simuwang
 
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.crawl.AbstractJsEventHandler
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.persist.WebPage
@@ -13,8 +12,8 @@ class LoginJsEventHandler: AbstractJsEventHandler() {
     override suspend fun onAfterComputeFeature(page: WebPage, driver: WebDriver): Any? {
         val expressions = """
             let message = "Start choose district";
-            document.querySelector(".comp-login input.comp-login-input").value = '18621538660';
-            document.querySelector(".comp-login input#GLUXZipUpdateInput").value = 'Nichang2';
+            document.querySelector(".comp-login input.comp-login-input").value = '';
+            document.querySelector(".comp-login input#GLUXZipUpdateInput").value = '';
             document.querySelector(".comp-login button#comp-login-btn").click();
         """.trimIndent()
 
@@ -27,9 +26,8 @@ fun main() {
     val args = "-i 1s -ii 10d -ol a[href~=roadshow] -tl 100"
 
     withSQLContext {
-        System.setProperty(CapabilityTypes.BROWSER_LAUNCH_NO_SANDBOX, "false")
         val crawler = VerboseCrawler(it)
-        crawler.load(seed, args, LoginJsEventHandler())
+        crawler.load(seed, "$args -refresh", LoginJsEventHandler())
         crawler.loadOutPages(seed, args)
     }
 }

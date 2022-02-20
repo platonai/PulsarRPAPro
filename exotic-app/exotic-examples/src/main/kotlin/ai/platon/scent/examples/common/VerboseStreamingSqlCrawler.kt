@@ -34,7 +34,7 @@ open class VerboseStreamingSqlCrawler(
                 launch(context) {
                     withTimeout(taskTimeout.toMillis()) {
                         page = session.runCatching { loadDeferred(url, options) }
-                                .onFailure { exception = it; log.warn("Load failed - $it") }
+                                .onFailure { exception = it; logger.warn("Load failed - $it") }
                                 .getOrNull()
                         page?.also {
                             onLoadComplete(it)
@@ -44,12 +44,12 @@ open class VerboseStreamingSqlCrawler(
                 }
 
                 if (exception is ProxyVendorUntrustedException) {
-                    log.error(exception?.message?:"Unexpected error")
+                    logger.error(exception?.message?:"Unexpected error")
                     return@supervisorScope
                 }
             }
         }
 
-        log.info("All done. Total $numTasks tasks")
+        logger.info("All done. Total $numTasks tasks")
     }
 }

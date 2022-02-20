@@ -23,7 +23,7 @@ class HarvestExamples(context: ScentContext): WebHarvester(context) {
 
     fun arrangeLinks() {
         listOf(seeds, testedSeeds).flatten().filter { it.isNotBlank() }.forEach { url ->
-            log.info("Arranging links in page $url")
+            logger.info("Arranging links in page $url")
             val normUrl = HNormUrl.parse(url, i.sessionConfig.toVolatileConfig())
             val doc = i.load(url).let { i.parse(it) }
             i.arrangeLinks(normUrl, doc)

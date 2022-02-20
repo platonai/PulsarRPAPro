@@ -251,8 +251,8 @@
 		<mysql.connector.version>5.1.34</mysql.connector.version>
 		<cron-utils.version>9.1.5</cron-utils.version>
 
-		<pulsar.version>1.7.3</pulsar.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<scent.version>1.6.14</scent.version>
+		<pulsar.version>1.7.4-SNAPSHOT</pulsar.version>
+		<scent.version>1.7.0-SNAPSHOT</scent.version>
 	</properties>
 </project>
