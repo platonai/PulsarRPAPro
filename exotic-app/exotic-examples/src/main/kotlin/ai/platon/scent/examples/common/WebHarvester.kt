@@ -4,14 +4,10 @@ import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
-import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
-import ai.platon.scent.dom.Level2FeatureCalculator
 import ai.platon.scent.dom.nodes.annotateNodes
-import com.google.common.collect.Lists
 import kotlinx.coroutines.runBlocking
 import java.nio.file.Files
 import java.time.Duration
@@ -23,7 +19,6 @@ open class WebHarvester(context: ScentContext): VerboseCrawler(context) {
 
     var i = context.createSession()
 
-    private val logger = getLogger(WebHarvester::class.java)
     private val counter = AtomicInteger(0)
     private val taskTimes = ConcurrentHashMap<String, Duration>()
 
@@ -201,7 +196,7 @@ open class WebHarvester(context: ScentContext): VerboseCrawler(context) {
         val portalPage = i.load(normUrl)
         val portalDocument = i.parse(portalPage)
         val anchorGroups = i.arrangeLinks(normUrl, portalDocument)
-        log.info("------------------------------")
+        logger.info("------------------------------")
         anchorGroups.take(1).forEach {
             it.urlStrings.shuffled().take(10).forEachIndexed { i, url -> println("${1 + i}.\t$url") }
             it.urlStrings.take(options.topLinks)
