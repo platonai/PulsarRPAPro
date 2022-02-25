@@ -38,7 +38,8 @@ class CrawlRuleWebController(
         val rule = repository.getById(id)
 
         model.addAttribute("rule", rule)
-        model.addAttribute("tasks", rule.portalTasks)
+        val tasks = rule.portalTasks.sortedByDescending { it.id }
+        model.addAttribute("tasks", tasks)
 
         return "crawl/rules/view"
     }
@@ -100,23 +101,12 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
         model: Model
     ): String? {
         if (result.hasErrors()) {
-            rule.id = id
             return "crawl/rules/edit"
         }
 
-        val fullRule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
-        fullRule.name = rule.name
-        fullRule.label = rule.label
-        fullRule.period = rule.period
-        fullRule.maxPages = rule.maxPages
-        fullRule.description = rule.description
+        rule.adjustFields()
 
-        fullRule.outLinkSelector = rule.outLinkSelector
-        fullRule.sqlTemplate = rule.sqlTemplate
-
-        fullRule.adjustFields()
-
-        repository.save(fullRule)
+        repository.save(rule)
 
         return "redirect:/crawl/rules/view/$id"
     }

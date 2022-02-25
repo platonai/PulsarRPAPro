@@ -7,6 +7,7 @@ import ai.platon.pulsar.driver.ScrapeException
 import ai.platon.pulsar.driver.ScrapeResponse
 import ai.platon.pulsar.driver.utils.SQLTemplate
 import com.google.gson.Gson
+import org.apache.commons.lang3.RandomStringUtils
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -19,6 +20,7 @@ open class TaskSubmitter(
     private val autoCollect: Boolean = true,
 ) {
     var logger: Logger = LoggerFactory.getLogger(TaskSubmitter::class.java)
+    var dryRun = true
     var driver = Driver(driverSettings)
 
     private val pendingTasks: MutableMap<String, ListenableScrapeTask> = ConcurrentSkipListMap()
@@ -71,7 +73,11 @@ open class TaskSubmitter(
         val configuredUrl = task.url.trim() + " " + task.args.trim()
         val sql = SQLTemplate(task.sqlTemplate).createSQL(configuredUrl)
         try {
-            val id = driver.submit(sql, task.priority, false)
+            val id = if (dryRun) {
+                "mock." + RandomStringUtils.randomAlphanumeric(10)
+            } else {
+                driver.submit(sql, task.priority, false)
+            }
             task.serverTaskId = id
 
             listenableTask.onSubmitted()
@@ -91,6 +97,10 @@ open class TaskSubmitter(
 
     @Throws(InterruptedException::class)
     private fun collectTasks(): List<ScrapeResponse> {
+        if (dryRun) {
+            return listOf()
+        }
+
         if (pendingTasks.isEmpty()) {
             return listOf()
         }

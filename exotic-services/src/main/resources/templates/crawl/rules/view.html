@@ -61,9 +61,11 @@
                             <dd th:text="${rule.period}"></dd>
                         </th:block>
 
-                        <dt>Cron</dt>
-                        <dd>minute, hour, dom, month, dow</dd>
-                        <dd th:text="${rule.cronExpression}"></dd>
+                        <th:block th:if="${rule.cronExpression} != ''">
+                            <dt>Cron</dt>
+                            <dd>minute, hour, dom, month, dow</dd>
+                            <dd th:text="${rule.cronExpression}"></dd>
+                        </th:block>
 
                         <dt>Max Pages</dt>
                         <dd th:text="${rule.maxPages}"></dd>
@@ -99,8 +101,8 @@
         </div>
     </div>
 
-    <div class="card">
-        <div class="card-header">Related Tasks</div>
+    <div class="card my-3">
+        <div class="card-header">Related Portal Tasks</div>
         <div class="card-body">
             <div th:switch="${tasks}">
                 <div>
@@ -141,7 +143,7 @@
                                     </a>
                                 </td>
 
-                                <td><a th:href="@{/crawl/tasks/view/{id}(id=${task.id})}" title="View" class="btn btn-primary">
+                                <td><a th:href="@{/crawl/portal-tasks/view/{id}(id=${task.id})}" title="View" class="btn btn-primary">
                                     <i class="fas fa-eye ml-1"></i></a>
 <!--                                    <a th:href="@{/crawl/tasks/start/{id}(id=${task.id})}" title="Run Now" class="btn btn-primary">-->
 <!--                                        <i class="fas fa-play ml-1"></i></a>-->

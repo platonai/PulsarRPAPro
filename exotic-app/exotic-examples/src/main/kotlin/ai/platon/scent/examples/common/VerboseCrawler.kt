@@ -3,6 +3,7 @@ package ai.platon.scent.examples.common
 import ai.platon.pulsar.common.NetUtil
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.Urls
+import ai.platon.pulsar.context.PulsarContext
 import ai.platon.pulsar.crawl.JsEventHandler
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.scent.ScentContext
@@ -15,22 +16,28 @@ import java.util.concurrent.atomic.AtomicBoolean
 open class VerboseCrawler(
     val context: ScentContext
 ): AutoCloseable {
-    protected val logger = LoggerFactory.getLogger(VerboseCrawler::class.java)
+    val logger = LoggerFactory.getLogger(VerboseCrawler::class.java)
     private val closed = AtomicBoolean()
-
-    val isAppActive get() = !closed.get() && session.isActive
 
     val session: ScentSession = ScentContexts.createSession()
 
-    fun load(url: String, args: String, eventHandler: JsEventHandler? = null) {
+    val isAppActive get() = !closed.get() && session.isActive
+
+    // trigger loop start
+    val crawlLoop = session.context.crawlLoops
+
+    var eventHandler: JsEventHandler? = null
+
+    fun load(url: String, args: String) {
         val options = session.options(args)
-        load(url, options, eventHandler)
+        load(url, options)
     }
 
-    fun load(url: String, options: LoadOptions, eventHandler: JsEventHandler? = null) {
-        eventHandler?.let { options.conf.putBean(it) }
+    fun load(url: String, options: LoadOptions) {
+        options.addEventHandler(eventHandler)
         val page = session.load(url, options)
-        eventHandler?.let { options.conf.removeBean(it) }
+        options.removeEventHandler(eventHandler)
+
         val doc = session.parse(page)
         doc.absoluteLinks()
         doc.stripScripts()
@@ -51,11 +58,15 @@ open class VerboseCrawler(
     }
 
     fun loadOutPages(portalUrl: String, args: String): Collection<WebPage> {
-        return loadOutPages(portalUrl, session.options(args))
+        return loadOutPages(portalUrl, LoadOptions.parse(args, session.sessionConfig))
     }
 
     fun loadOutPages(portalUrl: String, options: LoadOptions): Collection<WebPage> {
+        options.addEventHandler(eventHandler)
         val page = session.load(portalUrl, options)
+        options.removeEventHandler(eventHandler)
+
+//        val page = session.load(portalUrl, options)
         if (!page.protocolStatus.isSuccess) {
             logger.warn("Failed to load page | {}", portalUrl)
         }
@@ -66,13 +77,17 @@ open class VerboseCrawler(
         val path = session.export(document)
         logger.info("Portal page is exported to: file://$path")
 
-        val links = document.select(options.outLinkSelector) { it.attr("abs:href") }
-                .mapTo(mutableSetOf()) { session.normalize(it, options) }
-                .take(options.topLinks).map { it.spec }
+        val links = document.select(options.correctedOutLinkSelector) { it.attr("abs:href") }
+            .mapTo(mutableSetOf()) { session.normalize(it, options) }
+            .take(options.topLinks).map { it.spec }
         logger.info("Total {} items to load", links.size)
 
         val itemOptions = options.createItemOptions(session.sessionConfig).apply { parse = true }
-        return session.loadAll(links, itemOptions)
+        options.addEventHandler(eventHandler)
+        val pages = session.loadAll(links, itemOptions)
+        options.removeEventHandler(eventHandler)
+
+        return pages
     }
 
     fun loadAllNews(portalUrl: String, options: LoadOptions) {
@@ -85,13 +100,13 @@ open class VerboseCrawler(
     fun extractAds() {
         val url = "https://wuhan.baixing.com/xianhualipin/a1100414743.html"
         val doc = session.loadDocument(url, "")
-        doc.select("a[href~=mssp.baidu]").map {  }
+        doc.select("a[href~=mssp.baidu]").map { }
     }
 
     fun scan(baseUri: String) {
         // val contractBaseUri = "http://www.ccgp-hubei.gov.cn:8040/fcontractAction!download.action?path="
         session.context.scan(baseUri).iterator().forEachRemaining {
-            val size = it.content?.array()?.size?:0
+            val size = it.content?.array()?.size ?: 0
             println(size)
         }
     }

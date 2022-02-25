@@ -9,12 +9,18 @@ import ai.platon.scent.ql.h2.context.withSQLContext
 class LoginJsEventHandler: AbstractJsEventHandler() {
     override var verbose = true
 
-    override suspend fun onAfterComputeFeature(page: WebPage, driver: WebDriver): Any? {
+    override suspend fun onBeforeComputeFeature(page: WebPage, driver: WebDriver): Any? {
+        val username = System.getenv("EXOTIC_SIMUWANG_USERNAME")
+        val password = System.getenv("EXOTIC_SIMUWANG_PASSWORD")
+
         val expressions = """
-            let message = "Start choose district";
-            document.querySelector(".comp-login input.comp-login-input").value = '';
-            document.querySelector(".comp-login input#GLUXZipUpdateInput").value = '';
-            document.querySelector(".comp-login button#comp-login-btn").click();
+let message = "Login in ...";
+document.querySelector("button.comp-login-b2").click();
+document.querySelector("input[name=username]").value = '$username';
+document.querySelector("input[name=username]").dispatchEvent(new Event('input'));
+document.querySelector("input[type=password]").value = '$password';
+document.querySelector("input[type=password]").dispatchEvent(new Event('input'));
+document.querySelector("button.comp-login-btn").click();
         """.trimIndent()
 
         return evaluate(driver, expressions.split(";"))
@@ -27,7 +33,8 @@ fun main() {
 
     withSQLContext {
         val crawler = VerboseCrawler(it)
-        crawler.load(seed, "$args -refresh", LoginJsEventHandler())
+        crawler.eventHandler = LoginJsEventHandler()
+        crawler.load(seed, "$args -refresh")
         crawler.loadOutPages(seed, args)
     }
 }

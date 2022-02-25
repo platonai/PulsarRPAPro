@@ -22,7 +22,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.time.LocalDateTime
 import java.time.temporal.ChronoUnit
 
 @Component
@@ -61,6 +60,15 @@ class CrawlTaskRunner(
     }
 
     fun shouldRun(rule: CrawlRule): Boolean {
+        return try {
+            shouldRun0(rule)
+        } catch (e: Exception) {
+            logger.warn(e.stringify())
+            false
+        }
+    }
+
+    private fun shouldRun0(rule: CrawlRule): Boolean {
         if (rule.period.seconds > 0) {
             val now = Instant.now()
             if (rule.lastCrawlTime + rule.period <= now) {
@@ -69,18 +77,20 @@ class CrawlTaskRunner(
         }
 
         val expression = rule.cronExpression
-        if (expression != null) {
-            val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
-            val parser = CronParser(cronDefinition)
-            val quartzCron: Cron = parser.parse(expression)
-            quartzCron.validate()
-            val executionTime = ExecutionTime.forCron(quartzCron)
+        if (expression.isNullOrBlank()) {
+            return false
+        }
 
-            val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
-            val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
-            if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
-                return true
-            }
+        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+        val parser = CronParser(cronDefinition)
+        val quartzCron: Cron = parser.parse(expression)
+        quartzCron.validate()
+        val executionTime = ExecutionTime.forCron(quartzCron)
+
+        val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
+        val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
+        if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
+            return true
         }
 
         return false
@@ -102,18 +112,16 @@ class CrawlTaskRunner(
 
             val maxPages = if (IS_DEVELOPMENT) 2 else rule.maxPages
             val pagedPortalUrls = portalUrls.split("\n")
+                .map { it.trim() }
                 .filter { Urls.isValidUrl(it) }
-                .flatMap { url ->
-                    if (url.contains("{{page}}")) {
-                        IntRange(1, maxPages).map { pg -> url.replace("{{page}}", pg.toString()) }
-                    } else listOf(url)
-                }
+                .flatMap { url -> createPagedUrls(url, maxPages) }
             if (pagedPortalUrls.isEmpty()) {
                 logger.info("No portal urls in rule #{}", rule.id)
             }
 
+            // the client controls the retry
             val portalTasks = pagedPortalUrls.map {
-                PortalTask(it, "-refresh", 3).also {
+                PortalTask(it, "-refresh -nMaxRetry 0", 3).also {
                     it.rule = rule
                     it.status = TaskStatus.CREATED
                 }
@@ -240,5 +248,11 @@ class CrawlTaskRunner(
 
             },
         )
+    }
+
+    private fun createPagedUrls(url: String, maxPages: Int): List<String> {
+        return if (url.contains("{{page}}")) {
+            IntRange(1, maxPages).map { pg -> url.replace("{{page}}", pg.toString()) }
+        } else listOf(url)
     }
 }

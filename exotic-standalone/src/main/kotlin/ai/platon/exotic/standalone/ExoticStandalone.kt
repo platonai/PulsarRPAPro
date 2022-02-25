@@ -1,26 +1,20 @@
 package ai.platon.exotic.standalone
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
-import ai.platon.pulsar.browser.driver.BrowserSettings
-import ai.platon.pulsar.common.AppFiles
-import ai.platon.pulsar.common.AppPaths
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.boot.autoconfigure.persist.CrawlSeedV3Repository
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
-import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
-import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.ImportResource
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
-import java.awt.GraphicsEnvironment
+
 
 @SpringBootApplication(
     scanBasePackages = [
@@ -56,6 +50,7 @@ class ExoticStandalone(
     fun exoticCrawler(): ExoticCrawler {
         return ExoticCrawler(env)
     }
+
 }
 
 fun main(args: Array<String>) {

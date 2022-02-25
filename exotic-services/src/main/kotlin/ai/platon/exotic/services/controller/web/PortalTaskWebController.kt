@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RequestParam
 
 @Controller
-@RequestMapping("crawl/tasks")
-class CrawlTaskWebController(
+@RequestMapping("crawl/portal-tasks")
+class PortalTaskWebController(
     private val repository: PortalTaskRepository
 ) {
     @GetMapping("/")
@@ -25,12 +25,12 @@ class CrawlTaskWebController(
         val sortProperty = "id"
         val pageable = PageRequest.of(pageNumber, pageSize, sort, sortProperty)
         model.addAttribute("tasks", repository.findAll(pageable))
-        return "crawl/tasks/index"
+        return "crawl/portal-tasks/index"
     }
 
     @GetMapping("/view/{id}")
     fun view(@PathVariable id: Long, model: Model): String {
         model.addAttribute("task", repository.getById(id))
-        return "crawl/tasks/view"
+        return "crawl/portal-tasks/view"
     }
 }

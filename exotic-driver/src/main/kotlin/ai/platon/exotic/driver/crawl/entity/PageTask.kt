@@ -7,18 +7,11 @@ import org.springframework.data.jpa.domain.support.AuditingEntityListener
 import java.time.Instant
 import javax.persistence.*
 
-/**
- * A portal task is a task start with a portal url
- * */
-@Table(name = "portal_tasks")
+@Table(name = "page_tasks")
 @Entity
 @EntityListeners(AuditingEntityListener::class)
-class PortalTask(
-    var url: String,
-
-    var args: String = "",
-
-    var priority: Int = 0,
+class PageTask(
+    var url: String
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,30 +19,17 @@ class PortalTask(
     var id: Long? = null
 
     @ManyToOne
-    var rule: CrawlRule? = null
-
-    /**
-     * The server side id
-     * */
-    var serverTaskId: String = ""
-
-    var submittedCount: Int = 0
-
-    var successCount: Int = 0
+    var portalTask: PortalTask? = null
 
     var retryCount: Int = 0
-
-    var failedCount: Int = 0
-
-    var finishedCount: Int = 0
 
     var startTime: Instant = Instant.now()
 
     var status: TaskStatus = TaskStatus.CREATED
 
     @CreatedDate
-    var createdDate: Instant = Instant.now()
+    var createdTime: Instant = Instant.now()
 
     @LastModifiedDate
-    var lastModifiedDate: Instant = Instant.now()
+    var lastModifiedTime: Instant = Instant.now()
 }

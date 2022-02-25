@@ -1,7 +1,5 @@
 package ai.platon.exotic.driver.crawl.entity
 
-import ai.platon.exotic.driver.common.EPOCH_LDT
-import ai.platon.exotic.driver.common.DOOMSDAY
 import ai.platon.exotic.driver.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
@@ -79,11 +77,10 @@ class CrawlRule {
     var status: String = RuleStatus.Created.toString()
 
     /**
-     * TODO: use DateTimes.zoneOffset for the default value
      * The time difference, in minutes, between UTC time and local time.
      * */
-    @Column(name = "timezone_offset")
-    var timezoneOffset: Int = -480
+    @Column(name = "timezone_offset_minutes")
+    var timezoneOffsetMinutes: Int? = -480
 
     @CreatedDate
     @Column(name = "created_date")
@@ -97,7 +94,11 @@ class CrawlRule {
     @OneToMany(mappedBy = "rule", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
     val portalTasks: MutableList<PortalTask> = mutableListOf()
 
-//    fun zoneOffset() = ZoneOffset.ofHoursMinutes(0, timezoneOffset)
+    val zoneOffset: ZoneOffset
+        get() {
+            val minutes = timezoneOffsetMinutes ?: -480
+            return ZoneOffset.ofHoursMinutes(minutes % 60, minutes / 60)
+        }
 
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
