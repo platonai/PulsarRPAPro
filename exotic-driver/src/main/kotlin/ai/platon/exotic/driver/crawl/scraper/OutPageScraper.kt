@@ -4,14 +4,16 @@ import ai.platon.exotic.driver.common.DEV_MAX_OUT_PAGES
 import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
+import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.pulsar.common.urls.Urls
 import ai.platon.pulsar.driver.DriverSettings
+import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 
 open class OutPageScraper(
-    driverSettings: DriverSettings
+    val driverSettings: DriverSettings
 ) {
     var logger: Logger = LoggerFactory.getLogger(OutPageScraper::class.java)
 
@@ -101,23 +103,24 @@ open class OutPageScraper(
             return
         }
 
-        val urls = createOutLinks(scrapeTask)
+        val urls = createOutLinks(portalTask, scrapeTask)
         val args = buildItemArgs(rule, portalTask.args.contains("-refresh"))
         val tasks = createChildTasks(listenablePortalTask, urls, sqlTemplate, args)
 
         taskSubmitter.scrapeAll(tasks)
     }
 
-    private fun createOutLinks(scrapeTask: ListenableScrapeTask): List<String> {
+    private fun createOutLinks(portalTask: PortalTask, scrapeTask: ListenableScrapeTask): List<String> {
         val resultSet = scrapeTask.task.response.resultSet
         if (resultSet == null || resultSet.isEmpty()) {
-            logger.info("No result set | {} {}", scrapeTask.task.url, scrapeTask.task.args)
+            logger.info("No result set | {}", scrapeTask.task.configuredUrl)
             return listOf()
         }
 
+        val outLinkSelector = portalTask.rule?.outLinkSelector
         var hrefs = resultSet[0]["hrefs"]?.toString()
         if (hrefs.isNullOrBlank()) {
-            logger.info("No hrefs | {} {}", scrapeTask.task.url, scrapeTask.task.args)
+            logger.info("No hrefs in task #{} | {}", portalTask.id, scrapeTask.task.configuredUrl)
             return listOf()
         }
 
@@ -131,7 +134,8 @@ open class OutPageScraper(
             .toList()
 
         if (urls.isEmpty()) {
-            logger.info("No url in portal task {} | {}", scrapeTask.task.serverTaskId, scrapeTask.task.url)
+            logger.info("No out links in task #{} | <{}> | {}",
+                portalTask.id, outLinkSelector, scrapeTask.task.configuredUrl)
         }
 
         return urls
@@ -161,12 +165,14 @@ open class OutPageScraper(
     private fun buildPortalArgs(rule: CrawlRule, refresh: Boolean): String {
         var args = rule.buildArgs()
         args += if (refresh) " -refresh" else ""
+        args += " -authToken " + driverSettings.authToken
         return args
     }
 
     private fun buildItemArgs(rule: CrawlRule, portalRefresh: Boolean): String {
         var args = rule.buildArgs() + " -scrollCount 20"
         args += if (portalRefresh) " -expires 2h" else " -expires 3600d"
+        args += " -authToken " + driverSettings.authToken
         return args
     }
 }

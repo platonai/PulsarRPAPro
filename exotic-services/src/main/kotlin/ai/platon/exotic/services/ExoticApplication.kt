@@ -34,8 +34,6 @@ class ExoticApplication(
 
     @Bean
     fun defaultTemplateResolver(): ITemplateResolver? {
-        println("templatesRoot: " + templatesRoot)
-
         val resolver = FileTemplateResolver()
         resolver.suffix = properties.suffix
         resolver.prefix = templatesRoot
