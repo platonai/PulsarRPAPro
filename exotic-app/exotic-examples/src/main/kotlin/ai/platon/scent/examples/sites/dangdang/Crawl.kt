@@ -1,6 +1,5 @@
 package ai.platon.scent.examples.sites.dangdang
 
-import ai.platon.pulsar.common.Systems
 import ai.platon.scent.context.withContext
 import ai.platon.scent.examples.common.VerboseCrawler
 import java.util.concurrent.atomic.AtomicInteger

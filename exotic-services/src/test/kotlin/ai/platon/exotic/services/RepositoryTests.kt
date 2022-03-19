@@ -5,23 +5,22 @@ import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import ai.platon.exotic.services.entity.SysProp
-import ai.platon.exotic.services.persist.FullFieldProductRepository
-import ai.platon.exotic.services.persist.IntegratedProductRepository
-import ai.platon.exotic.services.persist.PortalTaskRepository
-import ai.platon.exotic.services.persist.SysPropRepository
 import ai.platon.exotic.services.entity.generated.IntegratedProduct
+import ai.platon.exotic.services.persist.*
 import com.google.gson.GsonBuilder
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
+import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 import kotlin.test.assertEquals
 
-@DataJpaTest
+@SpringBootTest
 class RepositoryTests @Autowired constructor(
     val fullFieldProductRepository: FullFieldProductRepository,
     val integratedProductRepository: IntegratedProductRepository,
+    val crawlRuleRepository: CrawlRuleRepository,
     val portalTaskRepository: PortalTaskRepository,
     val sysPropRepository: SysPropRepository,
 ) {
@@ -48,6 +47,7 @@ class RepositoryTests @Autowired constructor(
         )
 
         val rule = CrawlRule()
+
         val portalTasks = pagedPortalUrls.map {
             PortalTask(it, "-refresh", 3).also {
                 it.rule = rule
@@ -55,6 +55,7 @@ class RepositoryTests @Autowired constructor(
             }
         }
 
+        crawlRuleRepository.save(rule)
         portalTaskRepository.saveAll(portalTasks)
     }
 
