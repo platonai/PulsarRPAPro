@@ -26,24 +26,6 @@ class ExoticApplication(
     val applicationContext: ApplicationContext,
     val env: Environment
 ) {
-    @Autowired
-    private lateinit var properties: ThymeleafProperties
-
-    @Value("\${spring.thymeleaf.templates_root}")
-    private val templatesRoot: String? = null
-
-    @Bean
-    fun defaultTemplateResolver(): ITemplateResolver? {
-        println("templatesRoot: " + templatesRoot)
-
-        val resolver = FileTemplateResolver()
-        resolver.suffix = properties.suffix
-        resolver.prefix = templatesRoot
-        resolver.setTemplateMode(properties.mode)
-        resolver.isCacheable = properties.isCache
-        return resolver
-    }
-
     @Bean
     fun javaTimeModule(): JavaTimeModule {
         return JavaTimeModule()
