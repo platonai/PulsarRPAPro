@@ -1,9 +1,9 @@
 package ai.platon.exotic.standalone
 
 import ai.platon.exotic.driver.common.ExoticUtils
-import ai.platon.pulsar.common.DateTimes.MILLIS_OF_DAY
-import ai.platon.pulsar.common.DateTimes.MILLIS_OF_SECOND
-import ai.platon.pulsar.common.browser.Browsers
+import ai.platon.pulsar.common.DateTimes.MILLIS_PER_DAY
+import ai.platon.pulsar.common.DateTimes.MILLIS_PER_SECOND
+import ai.platon.pulsar.common.getLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled
@@ -18,7 +18,7 @@ class StandaloneScheduler {
     @Value("\${server.servlet.context-path}")
     private val serverContextPath: String = "/exotic"
 
-    @Scheduled(initialDelay = 20 * MILLIS_OF_SECOND, fixedDelay = 1000 * MILLIS_OF_DAY)
+    @Scheduled(initialDelay = 20 * MILLIS_PER_SECOND, fixedDelay = 1000 * MILLIS_PER_DAY)
     fun openWebConsole() {
         val contextPath = serverContextPath.removePrefix("/")
         val url = "http://localhost:$serverPort/$contextPath/crawl/rules/"

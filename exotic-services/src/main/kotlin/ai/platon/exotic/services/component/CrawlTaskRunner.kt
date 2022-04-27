@@ -11,7 +11,7 @@ import ai.platon.exotic.services.persist.CrawlRuleRepository
 import ai.platon.exotic.services.persist.PortalTaskRepository
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.stringify
-import ai.platon.pulsar.common.urls.Urls
+import ai.platon.pulsar.common.urls.UrlUtils
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder
@@ -113,7 +113,7 @@ class CrawlTaskRunner(
             val maxPages = if (IS_DEVELOPMENT) 2 else rule.maxPages
             val pagedPortalUrls = portalUrls.split("\n")
                 .map { it.trim() }
-                .filter { Urls.isValidUrl(it) }
+                .filter { UrlUtils.isValidUrl(it) }
                 .flatMap { url -> createPagedUrls(url, maxPages) }
             if (pagedPortalUrls.isEmpty()) {
                 logger.info("No portal urls in rule #{}", rule.id)

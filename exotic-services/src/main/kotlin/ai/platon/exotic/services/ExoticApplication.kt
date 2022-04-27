@@ -1,6 +1,7 @@
 package ai.platon.exotic.services
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
+import ai.platon.pulsar.common.Runtimes
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Autowired
@@ -66,7 +67,12 @@ class ExoticApplication(
 }
 
 fun main(args: Array<String>) {
-    SpringApplicationBuilder(ExoticApplication::class.java)
-        .profiles("mysql")
-        .run(*args)
+    val builder = SpringApplicationBuilder(ExoticApplication::class.java)
+    if (Runtimes.checkIfProcessRunning("mysqld")) {
+        builder.profiles("mysqld")
+    } else {
+        builder.profiles("h2")
+    }
+
+    builder.run(*args)
 }

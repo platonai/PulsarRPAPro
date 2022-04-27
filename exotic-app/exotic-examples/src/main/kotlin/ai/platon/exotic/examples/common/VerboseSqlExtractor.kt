@@ -19,12 +19,6 @@ open class VerboseSqlExtractor(context: ScentSQLContext): VerboseCrawler(context
     private val randomConnection get() = sqlContext.randomConnection
     private val stat = randomConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)
 
-    fun allocateDbConnections(concurrent: Int) {
-        runBlocking {
-            repeat(concurrent) { launch { connectionPool.add(randomConnection) } }
-        }
-    }
-
     fun execute(sql: String, printResult: Boolean = true, formatAsList: Boolean = false) {
         try {
             val regex = "^(SELECT|CALL).+".toRegex()
@@ -62,10 +56,5 @@ open class VerboseSqlExtractor(context: ScentSQLContext): VerboseCrawler(context
         }
 
         return ResultSets.newSimpleResultSet()
-    }
-
-    override fun close() {
-        connectionPool.forEach { it.runCatching { it.close() }.onFailure { logger.warn(it.message) } }
-        super.close()
     }
 }
