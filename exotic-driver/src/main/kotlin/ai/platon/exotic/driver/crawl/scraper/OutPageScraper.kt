@@ -5,9 +5,8 @@ import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
-import ai.platon.pulsar.common.urls.Urls
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.driver.DriverSettings
-import com.google.gson.Gson
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
@@ -128,7 +127,7 @@ open class OutPageScraper(
         hrefs = hrefs.removePrefix("(").removeSuffix(")")
 
         val urls = hrefs.split(",").asSequence()
-            .filter { Urls.isValidUrl(it) }
+            .filter { UrlUtils.isValidUrl(it) }
             .map { it.trim() }
             .take(maxOutPages)
             .toList()

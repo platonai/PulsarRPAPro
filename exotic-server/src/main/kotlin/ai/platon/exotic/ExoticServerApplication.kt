@@ -3,6 +3,7 @@ package ai.platon.exotic
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ImportResource
@@ -11,8 +12,12 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @SpringBootApplication(
     scanBasePackages = [
         "ai.platon.scent.boot.autoconfigure",
-        "ai.platon.scent.rest.api"
+        "ai.platon.scent.rest.api",
     ]
+)
+@EntityScan(
+    "ai.platon.exotic.driver.crawl.entity",
+    "ai.platon.exotic.services.entity"
 )
 @ImportResource("classpath:config/app/app-beans/app-context.xml")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")

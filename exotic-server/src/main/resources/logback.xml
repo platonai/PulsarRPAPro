@@ -175,7 +175,7 @@
 
     <logger name="ai.platon.pulsar.common.distributed.lock" level="INFO"/>
 
-    <logger name="ai.platon.pulsar.examples" level="INFO"/>
+    <logger name="ai.platon.exotic.examples" level="INFO"/>
 
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>

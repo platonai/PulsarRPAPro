@@ -5,7 +5,7 @@ Exotic is the professional edition of pulsar.
 
 Exotic shows:
 
-- How to use pulsar driver to turn large websites into tables using simple SQLs
+- How to use pulsar driver to access the pulsar server
 - How to extract almost every field in webpages in an unsupervised manner using our advanced AI
 
 ## Requirements
