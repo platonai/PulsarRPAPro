@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
 
+@SpringBootApplication
 @Import(ExoticApplication::class, ExoticServerApplication::class)
 @EnableScheduling
 class ExoticStandalone
