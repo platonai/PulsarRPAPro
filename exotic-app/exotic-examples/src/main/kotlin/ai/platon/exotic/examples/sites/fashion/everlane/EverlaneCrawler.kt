@@ -66,10 +66,8 @@ fun main() {
            )
         """
 
-    withSQLContext { ctx ->
-        val executor = VerboseSQLExecutor(ctx)
-        executor.executeQuery(indexSQL)
-        executor.executeQuery(itemsSQL)
-        executor.executeQuery(reviewsSQL)
-    }
+    val executor = VerboseSQLExecutor()
+    executor.executeQuery(indexSQL)
+    executor.executeQuery(itemsSQL)
+    executor.executeQuery(reviewsSQL)
 }

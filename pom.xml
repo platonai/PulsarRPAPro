@@ -11,7 +11,7 @@
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
-	<version>0.0.3-SNAPSHOT</version>
+	<version>0.0.4-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -29,7 +29,7 @@
 		<connection>scm:git:https://github.com/platonai/pulsar.git</connection>
 		<developerConnection>scm:git:https://github.com/platonai/pulsar.git</developerConnection>
 		<url>https://github.com/platonai/pulsar</url>
-		<tag>v0.0.2</tag>
+		<tag>v0.0.4</tag>
 	</scm>
 
 	<developers>
@@ -201,6 +201,22 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-driver</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-server</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-services</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+
+			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
 				<artifactId>pulsar-persist</artifactId>
 				<version>${pulsar.version}</version>
@@ -252,6 +268,7 @@
 	</dependencyManagement>
 
 	<dependencies>
+
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
