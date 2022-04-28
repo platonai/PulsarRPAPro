@@ -78,11 +78,10 @@
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
         </dependency>
+
         <dependency>
             <groupId>ai.platon.exotic</groupId>
             <artifactId>exotic-driver</artifactId>
-            <version>0.0.4-SNAPSHOT</version>
-            <scope>compile</scope>
         </dependency>
     </dependencies>
 
@@ -94,7 +93,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ai.platon.scent.examples.HarvestExamplesKt</mainClass>
+                    <mainClass>ai.platon.exotic.examples.HarvestExamplesKt</mainClass>
                     <addResources>true</addResources>
                     <executable>true</executable>
                 </configuration>
