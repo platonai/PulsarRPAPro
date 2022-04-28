@@ -18,12 +18,10 @@
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-server</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-services</artifactId>
-			<version>${project.parent.version}</version>
 		</dependency>
 
 		<dependency>
