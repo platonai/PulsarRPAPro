@@ -3,26 +3,20 @@ package ai.platon.exotic.examples.common
 import ai.platon.pulsar.common.NetUtil
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlUtils
+import ai.platon.pulsar.context.PulsarContext
+import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.persist.WebPage
-import ai.platon.scent.ScentContext
-import ai.platon.scent.ScentSession
-import ai.platon.scent.context.ScentContexts
+import ai.platon.pulsar.session.PulsarSession
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.util.concurrent.atomic.AtomicBoolean
 
 open class VerboseCrawler(
-    val context: ScentContext
+    val context: PulsarContext
 ) {
-    val logger = LoggerFactory.getLogger(VerboseCrawler::class.java)
-    private val closed = AtomicBoolean()
+    private val logger = LoggerFactory.getLogger(VerboseCrawler::class.java)
 
-    val session: ScentSession = ScentContexts.createSession()
-
-    val isAppActive get() = !closed.get() && session.isActive
-
-    // trigger loop start
-    val crawlLoop = session.context.crawlLoops
+    open val session: PulsarSession = PulsarContexts.createSession()
 
     fun load(url: String, args: String) {
         val options = session.options(args)

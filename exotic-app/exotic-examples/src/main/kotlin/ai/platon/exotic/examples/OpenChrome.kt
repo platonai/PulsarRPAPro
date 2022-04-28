@@ -1,8 +1,9 @@
 package ai.platon.exotic.examples
 
-import ai.platon.scent.ql.h2.context.withSQLContext
+import ai.platon.pulsar.context.PulsarContexts
 
-fun main() = withSQLContext { cx ->
-    val session = cx.createSession()
+fun main() {
+    val session = PulsarContexts.createSession()
     session.load("https://www.tmall.com/", "-refresh")
+    readLine()
 }

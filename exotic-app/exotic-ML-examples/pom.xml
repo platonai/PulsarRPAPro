@@ -18,14 +18,32 @@
         <version>0.0.3-SNAPSHOT</version>
     </parent>
 
-    <artifactId>exotic-examples</artifactId>
-    <name>Exotic Examples</name>
+    <artifactId>exotic-ML-examples</artifactId>
+    <name>Exotic ML Examples</name>
 
     <dependencies>
         <dependency>
-            <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-all</artifactId>
-            <version>${pulsar.version}</version>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-examples</artifactId>
+            <version>0.0.3-SNAPSHOT</version>
+        </dependency>
+
+        <!-- Internal dependency -->
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-resources</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-site-amazon</artifactId>
+            <version>${scent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>ai.platon.pulsar</groupId>
+                    <artifactId>pulsar-site-amazon</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <dependency>
@@ -34,6 +52,17 @@
             <version>${pulsar.version}</version>
         </dependency>
 
+        <!-- for scent-beans/app-context.xml -->
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-beans</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-boot</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
         <!-- Required by ai.platon.pulsar.browser.driver.chrome.impl.Chrome -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -56,4 +85,20 @@
             <scope>compile</scope>
         </dependency>
     </dependencies>
+
+    <build>
+        <defaultGoal>package</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ai.platon.scent.examples.HarvestExamplesKt</mainClass>
+                    <addResources>true</addResources>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

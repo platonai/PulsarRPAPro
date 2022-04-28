@@ -7,8 +7,14 @@ import ai.platon.scent.ScentContext
 import ai.platon.scent.context.withContext
 import ai.platon.scent.dom.HNormUrl
 import ai.platon.scent.dom.nodes.annotateNodes
+import ai.platon.scent.ql.h2.context.ScentSQLContexts
+import org.slf4j.LoggerFactory
 
-class HarvestExamples(context: ScentContext): VerboseHarvester(context) {
+class HarvestExamples(
+    context: ScentContext = ScentSQLContexts.create()
+): VerboseHarvester(context) {
+
+    private val logger = LoggerFactory.getLogger(HarvestExamples::class.java)
 
     val testedSeeds = listOf(
         /////////////////////////////////////////////////////////
@@ -127,8 +133,8 @@ class HarvestExamples(context: ScentContext): VerboseHarvester(context) {
     }
 }
 
-fun main() = withContext {
-    HarvestExamples(it).harvestAll()
+fun main() {
+    HarvestExamples().harvestAll()
 
     val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
     ExoticUtils.openBrowser("$baseDir")
