@@ -1,0 +1,195 @@
+fun capitalize(arg0: String): String
+fun isAlpha(arg0: CharSequence): Boolean
+fun isNumeric(arg0: CharSequence): Boolean
+fun difference(arg0: String, arg1: String): String
+fun remove(arg0: String, arg1: String): String
+fun remove(arg0: String, arg1: Char): String
+fun equals(arg0: CharSequence, arg1: CharSequence): Boolean
+fun length(arg0: CharSequence): Int
+fun toString(arg0: ByteArray, arg1: String): String
+fun mid(arg0: String, arg1: Int, arg2: Int): String
+fun indexOf(arg0: CharSequence, arg1: Int): Int
+fun indexOf(arg0: CharSequence, arg1: Int, arg2: Int): Int
+fun indexOf(arg0: CharSequence, arg1: CharSequence): Int
+fun indexOf(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun isWhitespace(arg0: CharSequence): Boolean
+fun isEmpty(arg0: CharSequence): Boolean
+fun equalsIgnoreCase(arg0: CharSequence, arg1: CharSequence): Boolean
+fun startsWith(arg0: CharSequence, arg1: CharSequence, arg2: Boolean): Boolean
+fun startsWith(arg0: CharSequence, arg1: CharSequence): Boolean
+fun endsWith(arg0: CharSequence, arg1: CharSequence, arg2: Boolean): Boolean
+fun endsWith(arg0: CharSequence, arg1: CharSequence): Boolean
+fun lastIndexOf(arg0: CharSequence, arg1: Int): Int
+fun lastIndexOf(arg0: CharSequence, arg1: CharSequence): Int
+fun lastIndexOf(arg0: CharSequence, arg1: Int, arg2: Int): Int
+fun lastIndexOf(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun substring(arg0: String, arg1: Int): String
+fun substring(arg0: String, arg1: Int, arg2: Int): String
+fun replace(arg0: String, arg1: String, arg2: String): String
+fun replace(arg0: String, arg1: String, arg2: String, arg3: Int): String
+fun contains(arg0: CharSequence, arg1: Int): Boolean
+fun contains(arg0: CharSequence, arg1: CharSequence): Boolean
+fun split(arg0: String, arg1: String, arg2: Int): Array
+fun split(arg0: String): Array
+fun split(arg0: String, arg1: Char): Array
+fun split(arg0: String, arg1: String): Array
+fun join(arg0: CharArray, arg1: Char): String
+fun join(arg0: IntArray, arg1: Char): String
+fun join(arg0: ShortArray, arg1: Char): String
+fun join(arg0: ByteArray, arg1: Char): String
+fun join(arg0: Iterator, arg1: Char): String
+fun join(arg0: Array): String
+fun join(arg0: Array, arg1: Char): String
+fun join(arg0: LongArray, arg1: Char): String
+fun join(arg0: Iterator, arg1: String): String
+fun join(arg0: Iterable, arg1: Char): String
+fun join(arg0: Iterable, arg1: String): String
+fun join(arg0: DoubleArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: FloatArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: CharArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: Array, arg1: String, arg2: Int, arg3: Int): String
+fun join(arg0: LongArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: Array, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: DoubleArray, arg1: Char): String
+fun join(arg0: FloatArray, arg1: Char): String
+fun join(arg0: IntArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: ByteArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: ShortArray, arg1: Char, arg2: Int, arg3: Int): String
+fun join(arg0: Array, arg1: String): String
+fun trim(arg0: String): String
+fun strip(arg0: String): String
+fun strip(arg0: String, arg1: String): String
+fun isBlank(arg0: CharSequence): Boolean
+fun repeat(arg0: String, arg1: Int): String
+fun repeat(arg0: Char, arg1: Int): String
+fun repeat(arg0: String, arg1: String, arg2: Int): String
+fun reverse(arg0: String): String
+fun left(arg0: String, arg1: Int): String
+fun right(arg0: String, arg1: Int): String
+fun replaceEachRepeatedly(arg0: String, arg1: Array, arg2: Array): String
+fun replaceChars(arg0: String, arg1: Char, arg2: Char): String
+fun replaceChars(arg0: String, arg1: String, arg2: String): String
+fun overlay(arg0: String, arg1: String, arg2: Int, arg3: Int): String
+fun chomp(arg0: String): String
+fun chomp(arg0: String, arg1: String): String
+fun chop(arg0: String): String
+fun rightPad(arg0: String, arg1: Int, arg2: String): String
+fun rightPad(arg0: String, arg1: Int, arg2: Char): String
+fun rightPad(arg0: String, arg1: Int): String
+fun leftPad(arg0: String, arg1: Int, arg2: String): String
+fun leftPad(arg0: String, arg1: Int): String
+fun leftPad(arg0: String, arg1: Int, arg2: Char): String
+fun center(arg0: String, arg1: Int): String
+fun center(arg0: String, arg1: Int, arg2: Char): String
+fun center(arg0: String, arg1: Int, arg2: String): String
+fun upperCase(arg0: String, arg1: Locale): String
+fun upperCase(arg0: String): String
+fun lowerCase(arg0: String, arg1: Locale): String
+fun lowerCase(arg0: String): String
+fun uncapitalize(arg0: String): String
+fun swapCase(arg0: String): String
+fun countMatches(arg0: CharSequence, arg1: CharSequence): Int
+fun isAlphaSpace(arg0: CharSequence): Boolean
+fun isAlphanumeric(arg0: CharSequence): Boolean
+fun isAlphanumericSpace(arg0: CharSequence): Boolean
+fun isAsciiPrintable(arg0: CharSequence): Boolean
+fun isNumericSpace(arg0: CharSequence): Boolean
+fun isAllLowerCase(arg0: CharSequence): Boolean
+fun isAllUpperCase(arg0: CharSequence): Boolean
+fun defaultString(arg0: String): String
+fun defaultString(arg0: String, arg1: String): String
+fun defaultIfBlank(arg0: CharSequence, arg1: CharSequence): CharSequence
+fun defaultIfEmpty(arg0: CharSequence, arg1: CharSequence): CharSequence
+fun reverseDelimited(arg0: String, arg1: Char): String
+fun abbreviate(arg0: String, arg1: Int, arg2: Int): String
+fun abbreviate(arg0: String, arg1: Int): String
+fun abbreviateMiddle(arg0: String, arg1: String, arg2: Int): String
+fun indexOfDifference(arg0: Array): Int
+fun indexOfDifference(arg0: CharSequence, arg1: CharSequence): Int
+fun getCommonPrefix(arg0: Array): String
+fun getLevenshteinDistance(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun getLevenshteinDistance(arg0: CharSequence, arg1: CharSequence): Int
+fun getJaroWinklerDistance(arg0: CharSequence, arg1: CharSequence): Double
+fun score(arg0: CharSequence, arg1: CharSequence): Double
+fun transpositions(arg0: CharSequence, arg1: CharSequence): Int
+fun getSetOfMatchingCharacterWithin(arg0: CharSequence, arg1: CharSequence, arg2: Int): String
+fun commonPrefixLength(arg0: CharSequence, arg1: CharSequence): Int
+fun startsWithIgnoreCase(arg0: CharSequence, arg1: CharSequence): Boolean
+fun startsWithAny(arg0: CharSequence, arg1: Array): Boolean
+fun endsWithIgnoreCase(arg0: CharSequence, arg1: CharSequence): Boolean
+fun normalizeSpace(arg0: String): String
+fun endsWithAny(arg0: CharSequence, arg1: Array): Boolean
+fun appendIfMissing(arg0: String, arg1: CharSequence, arg2: Array): String
+fun appendIfMissing(arg0: String, arg1: CharSequence, arg2: Boolean, arg3: Array): String
+fun appendIfMissingIgnoreCase(arg0: String, arg1: CharSequence, arg2: Array): String
+fun prependIfMissing(arg0: String, arg1: CharSequence, arg2: Boolean, arg3: Array): String
+fun prependIfMissing(arg0: String, arg1: CharSequence, arg2: Array): String
+fun prependIfMissingIgnoreCase(arg0: String, arg1: CharSequence, arg2: Array): String
+fun toEncodedString(arg0: ByteArray, arg1: Charset): String
+fun isNotEmpty(arg0: CharSequence): Boolean
+fun isAnyEmpty(arg0: Array): Boolean
+fun isNoneEmpty(arg0: Array): Boolean
+fun isNotBlank(arg0: CharSequence): Boolean
+fun isAnyBlank(arg0: Array): Boolean
+fun isNoneBlank(arg0: Array): Boolean
+fun trimToNull(arg0: String): String
+fun trimToEmpty(arg0: String): String
+fun stripToNull(arg0: String): String
+fun stripToEmpty(arg0: String): String
+fun stripStart(arg0: String, arg1: String): String
+fun stripEnd(arg0: String, arg1: String): String
+fun stripAll(arg0: Array): Array
+fun stripAll(arg0: Array, arg1: String): Array
+fun stripAccents(arg0: String): String
+fun lastIndexOfIgnoreCase(arg0: CharSequence, arg1: CharSequence): Int
+fun lastIndexOfIgnoreCase(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun ordinalIndexOf(arg0: CharSequence, arg1: CharSequence, arg2: Int, arg3: Boolean): Int
+fun ordinalIndexOf(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun indexOfIgnoreCase(arg0: CharSequence, arg1: CharSequence): Int
+fun indexOfIgnoreCase(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun lastOrdinalIndexOf(arg0: CharSequence, arg1: CharSequence, arg2: Int): Int
+fun containsIgnoreCase(arg0: CharSequence, arg1: CharSequence): Boolean
+fun containsWhitespace(arg0: CharSequence): Boolean
+fun indexOfAny(arg0: CharSequence, arg1: CharArray): Int
+fun indexOfAny(arg0: CharSequence, arg1: Array): Int
+fun indexOfAny(arg0: CharSequence, arg1: String): Int
+fun containsAny(arg0: CharSequence, arg1: CharArray): Boolean
+fun containsAny(arg0: CharSequence, arg1: CharSequence): Boolean
+fun indexOfAnyBut(arg0: CharSequence, arg1: CharSequence): Int
+fun indexOfAnyBut(arg0: CharSequence, arg1: CharArray): Int
+fun containsOnly(arg0: CharSequence, arg1: String): Boolean
+fun containsOnly(arg0: CharSequence, arg1: CharArray): Boolean
+fun containsNone(arg0: CharSequence, arg1: CharArray): Boolean
+fun containsNone(arg0: CharSequence, arg1: String): Boolean
+fun lastIndexOfAny(arg0: CharSequence, arg1: Array): Int
+fun substringBefore(arg0: String, arg1: String): String
+fun substringAfter(arg0: String, arg1: String): String
+fun substringBeforeLast(arg0: String, arg1: String): String
+fun substringAfterLast(arg0: String, arg1: String): String
+fun substringBetween(arg0: String, arg1: String): String
+fun substringBetween(arg0: String, arg1: String, arg2: String): String
+fun substringsBetween(arg0: String, arg1: String, arg2: String): Array
+fun splitByWholeSeparator(arg0: String, arg1: String, arg2: Int): Array
+fun splitByWholeSeparator(arg0: String, arg1: String): Array
+fun splitByWholeSeparatorPreserveAllTokens(arg0: String, arg1: String, arg2: Int): Array
+fun splitByWholeSeparatorPreserveAllTokens(arg0: String, arg1: String): Array
+fun splitByWholeSeparatorWorker(arg0: String, arg1: String, arg2: Int, arg3: Boolean): Array
+fun splitPreserveAllTokens(arg0: String, arg1: String, arg2: Int): Array
+fun splitPreserveAllTokens(arg0: String): Array
+fun splitPreserveAllTokens(arg0: String, arg1: String): Array
+fun splitPreserveAllTokens(arg0: String, arg1: Char): Array
+fun splitWorker(arg0: String, arg1: String, arg2: Int, arg3: Boolean): Array
+fun splitWorker(arg0: String, arg1: Char, arg2: Boolean): Array
+fun splitByCharacterType(arg0: String, arg1: Boolean): Array
+fun splitByCharacterType(arg0: String): Array
+fun splitByCharacterTypeCamelCase(arg0: String): Array
+fun deleteWhitespace(arg0: String): String
+fun removeStart(arg0: String, arg1: String): String
+fun removeStartIgnoreCase(arg0: String, arg1: String): String
+fun removeEnd(arg0: String, arg1: String): String
+fun removeEndIgnoreCase(arg0: String, arg1: String): String
+fun replaceOnce(arg0: String, arg1: String, arg2: String): String
+fun replacePattern(arg0: String, arg1: String, arg2: String): String
+fun removePattern(arg0: String, arg1: String): String
+fun replaceEach(arg0: String, arg1: Array, arg2: Array): String
+fun replaceEach(arg0: String, arg1: Array, arg2: Array, arg3: Boolean, arg4: Int): String

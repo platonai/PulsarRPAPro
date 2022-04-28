@@ -201,6 +201,22 @@
 	<dependencyManagement>
 		<dependencies>
 			<dependency>
+				<groupId>ai.platon.pulsar</groupId>
+				<artifactId>pulsar-persist</artifactId>
+				<version>${pulsar.version}</version>
+				<exclusions>
+					<exclusion>
+						<groupId>org.mortbay.jetty</groupId>
+						<artifactId>servlet-api</artifactId>
+					</exclusion>
+				</exclusions>
+			</dependency>
+			<dependency>
+				<groupId>javax.servlet</groupId>
+				<artifactId>javax.servlet-api</artifactId>
+				<version>3.1.0</version>
+			</dependency>
+			<dependency>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-stdlib-jdk8</artifactId>
 				<version>${kotlin.version}</version>
@@ -241,6 +257,11 @@
 			<artifactId>kotlin-stdlib</artifactId>
 			<version>${kotlin.version}</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+			<version>3.1.0</version>
+		</dependency>
 	</dependencies>
 
 	<properties>
@@ -252,7 +273,7 @@
 		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.7.4-SNAPSHOT</pulsar.version>
-		<scent.version>1.7.0-SNAPSHOT</scent.version>
+		<pulsar.version>1.9.3</pulsar.version>
+		<scent.version>1.8.2</scent.version>
 	</properties>
 </project>

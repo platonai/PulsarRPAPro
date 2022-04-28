@@ -1,20 +1,26 @@
 package ai.platon.exotic.services
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
+import ai.platon.pulsar.common.Runtimes
+import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties
+import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
+import org.thymeleaf.spring5.templateresolver.SpringResourceTemplateResolver
 import org.thymeleaf.templateresolver.ClassLoaderTemplateResolver
 import org.thymeleaf.templateresolver.FileTemplateResolver
 import org.thymeleaf.templateresolver.ITemplateResolver
+import java.nio.file.Files
+import java.nio.file.Paths
 
 @SpringBootApplication
 @EnableJpaAuditing
@@ -24,8 +30,31 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 )
 class ExoticApplication(
     val applicationContext: ApplicationContext,
+    val defaultThymeleafTemplateResolver: ITemplateResolver,
     val env: Environment
 ) {
+    @Autowired
+    private lateinit var properties: ThymeleafProperties
+
+    @Value("\${spring.thymeleaf.templates_root:}")
+    private val templatesRoot: String? = null
+
+    @Bean
+    fun autoReloadThymeleafTemplateResolver(): ITemplateResolver? {
+        if (templatesRoot == null || !Files.exists(Paths.get(templatesRoot))) {
+            // fail back to default resolver
+            return defaultThymeleafTemplateResolver
+        }
+
+        val resolver = FileTemplateResolver()
+        resolver.suffix = properties.suffix
+        resolver.prefix = templatesRoot
+        resolver.setTemplateMode(properties.mode)
+        resolver.isCacheable = properties.isCache
+
+        return resolver
+    }
+
     @Bean
     fun javaTimeModule(): JavaTimeModule {
         return JavaTimeModule()
@@ -38,5 +67,12 @@ class ExoticApplication(
 }
 
 fun main(args: Array<String>) {
-    runApplication<ExoticApplication>(*args)
+    val builder = SpringApplicationBuilder(ExoticApplication::class.java)
+    if (Runtimes.checkIfProcessRunning("mysqld")) {
+        builder.profiles("mysqld")
+    } else {
+        builder.profiles("h2")
+    }
+
+    builder.run(*args)
 }

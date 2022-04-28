@@ -25,5 +25,6 @@
 
     <modules>
         <module>exotic-examples</module>
+        <module>exotic-ML-examples</module>
     </modules>
 </project>

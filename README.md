@@ -1,12 +1,15 @@
 Exotic README
 ===================
 
-Exotic is the professional edition of pulsar.
+Exotic is the professional edition of Pulsar with advanced AI support to do auto web mining.
 
-Exotic shows:
+There are already some scraping examples for the most popular websites, we are keeping adding more cases.
 
-- how to use pulsar driver
-- how to extract almost every field in a webpages in an unsupervised manner using our advanced AI
+Exotic demonstrates:
+
+- How to use pulsar as a library
+- How to use pulsar driver to access the Pulsar REST Service
+- How to extract almost every field in any webpages automatically in an unsupervised manner using our advanced AI
 
 ## Requirements
 
@@ -15,6 +18,7 @@ Exotic shows:
 - The latest version of the Java 11 OpenJDK
 - java and jar on the PATH
 - Google Chrome 90+
+- MongoDB for REST Services
 
 ## Build
 

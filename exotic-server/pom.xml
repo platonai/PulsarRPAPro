@@ -18,7 +18,6 @@
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-persist</artifactId>
-			<version>${pulsar.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
@@ -47,6 +46,10 @@
 		</dependency>
 
 		<dependency>
+			<groupId>javax.servlet</groupId>
+			<artifactId>javax.servlet-api</artifactId>
+		</dependency>
+		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-devtools</artifactId>
 			<scope>runtime</scope>
@@ -59,8 +62,6 @@
 	</dependencies>
 
 	<build>
-		<defaultGoal>package</defaultGoal>
-
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

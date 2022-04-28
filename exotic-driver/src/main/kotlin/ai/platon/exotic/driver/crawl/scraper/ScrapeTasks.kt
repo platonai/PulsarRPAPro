@@ -63,7 +63,6 @@ class ScrapeTask constructor(
     val args: String,
     val priority: Int,
     val sqlTemplate: String,
-
 ) {
     var response: ScrapeResponse = ScrapeResponse()
 
@@ -93,6 +92,8 @@ class ScrapeTask constructor(
 
     var exceptionMessage: String? = null
     var exception: Exception? = null
+
+    val configuredUrl get() = "$url $args"
 }
 
 class ListenableScrapeTask(
