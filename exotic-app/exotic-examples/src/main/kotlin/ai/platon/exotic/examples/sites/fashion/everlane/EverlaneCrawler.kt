@@ -1,6 +1,5 @@
 package ai.platon.exotic.examples.sites.fashion.everlane
 
-import ai.platon.pulsar.ql.context.withSQLContext
 import ai.platon.pulsar.test.VerboseSQLExecutor
 
 fun main() {
