@@ -5,7 +5,7 @@ bin=$(cd "$bin">/dev/null || exit; pwd)
 APP_HOME=$(cd "$bin"/..>/dev/null || exit; pwd)
 
 SNAPSHOT_VERSION=$(head -n 1 "$APP_HOME/VERSION")
-VERSION=$(sed 's/\(.*\)-.*/\1/' <<< $SNAPSHOT_VERSION)
+VERSION=${SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 LAST_COMMIT_ID=$(git log --format="%H" -n 1)
 BRANCH=$(git branch --show-current)
 TAG="v$VERSION"
