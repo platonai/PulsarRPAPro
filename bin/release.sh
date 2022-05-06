@@ -1,0 +1,40 @@
+#bin
+
+bin=$(dirname "$0")/..
+bin=$(cd "$bin">/dev/null || exit; pwd)
+APP_HOME=$(cd "$bin"/..>/dev/null || exit; pwd)
+
+VERSION=$(head -n 1 "$APP_HOME/VERSION")
+LAST_COMMIT_ID=$(git log --format="%H" -n 1)
+BRANCH=$(git branch --show-current)
+TAG="v$VERSION"
+
+echo "Ready to checkout branch $BRANCH"
+read -p "Are you sure to continue? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+  echo "Bye."
+  exit 0
+then
+  git checkout "$BRANCH"
+fi
+
+echo "Ready to add tag $TAG on $LAST_COMMIT_ID"
+read -p "Are you sure to continue? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+  echo "Bye."
+  exit 0
+then
+  git tag "$TAG" "$LAST_COMMIT_ID"
+fi
+
+echo "Ready to push with tags to $BRANCH"
+read -p "Are you sure to continue? " -n 1 -r
+echo    # (optional) move to a new line
+if [[ $REPLY =~ ^[Yy]$ ]]
+  echo "Bye."
+  exit 0
+then
+  git push --tags
+fi
