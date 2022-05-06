@@ -13,28 +13,28 @@ echo "Ready to checkout branch $BRANCH"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
+  git checkout "$BRANCH"
+then
   echo "Bye."
   exit 0
-then
-  git checkout "$BRANCH"
 fi
 
 echo "Ready to add tag $TAG on $LAST_COMMIT_ID"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
+  git tag "$TAG" "$LAST_COMMIT_ID"
+then
   echo "Bye."
   exit 0
-then
-  git tag "$TAG" "$LAST_COMMIT_ID"
 fi
 
 echo "Ready to push with tags to $BRANCH"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]
+  git push --tags
+then
   echo "Bye."
   exit 0
-then
-  git push --tags
 fi
