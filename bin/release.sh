@@ -12,9 +12,9 @@ TAG="v$VERSION"
 echo "Ready to checkout branch $BRANCH"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [[ $REPLY =~ ^[Yy]$ ]]; then
   git checkout "$BRANCH"
-then
+else
   echo "Bye."
   exit 0
 fi
@@ -22,9 +22,9 @@ fi
 echo "Ready to add tag $TAG on $LAST_COMMIT_ID"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [[ $REPLY =~ ^[Yy]$ ]]; then
   git tag "$TAG" "$LAST_COMMIT_ID"
-then
+else
   echo "Bye."
   exit 0
 fi
@@ -32,9 +32,9 @@ fi
 echo "Ready to push with tags to $BRANCH"
 read -p "Are you sure to continue? " -n 1 -r
 echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
+if [[ $REPLY =~ ^[Yy]$ ]]; then
   git push --tags
-then
+else
   echo "Bye."
   exit 0
 fi
