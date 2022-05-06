@@ -21,9 +21,8 @@ COMMENT=$(sed 's/\(.*\)-.*/\1/' <<< $NEXT_VERSION)
 echo "Ready to commit with comment: $COMMENT"
 read -p "Are you sure to continue?" -n 1 -r
 echo    # (optional) move to a new line
-if [[ $REPLY =~ ^[Yy]$ ]]
-  echo "Bye."
-then
+if [[ $REPLY =~ ^[Yy]$ ]]; then
   git add .
   git commit -m "$COMMENT"
+  git push
 fi
