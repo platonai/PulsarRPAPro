@@ -20,20 +20,14 @@ class HarvestExamples(
         /////////////////////////////////////////////////////////
         // The sites below are well tested
 
-        "http://mall.goumin.com/mall/list/219",
         "https://www.hua.com/gifts/chocolates/",
         "http://category.dangdang.com/cid4002590.html",
-        "https://list.mogujie.com/book/magic/51894",
         "https://list.jd.com/list.html?cat=6728,6742,13246",
         "https://list.gome.com.cn/cat10000055-00-0-48-1-0-0-0-1-2h8q-0-0-10-0-0-0-0-0.html?intcmp=bx-1000078331-1",
-        "https://search.yhd.com/c0-0/k电视/",
-        "https://www.amazon.cn/b/ref=sa_menu_Accessories_l3_b888650051?ie=UTF8&node=888650051",
+        "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
         "https://category.vip.com/search-1-0-1.html?q=3|49738||&rp=26600|48483&ff=|0|2|1&adidx=2&f=ad&adp=130610&adid=632686",
 
-        "https://www.lagou.com/zhaopin/chanpinzongjian/?labelWords=label",
         "https://mall.ccmn.cn/mallstocks/",
-        "https://sh.julive.com/project/s/i1",
-        "https://www.meiju.net/Mlist//Mju13.html",
         "http://mall.molbase.cn/p/612",
         "https://www.haier.com/xjd/all.shtml",
         "https://bj.nuomi.com/540",
@@ -97,14 +91,11 @@ class HarvestExamples(
     ).filter { it.isNotBlank() }
 
     val seeds = listOf(
-            "https://list.suning.com/0-20006-0-0-0-0-0-0-0-0-11635.html -expires 1s -ol \".product-box a[href~=product]\"",
-            "http://dzhcg.sinopr.org/channel/301",
-            "https://list.gome.com.cn/cat10000070-00-0-48-1-0-0-0-1-0-0-1-0-0-0-0-0-0.html?intcmp=phone-163",
-            "http://category.dangdang.com/cid4002590.html -tp 140 -i 1h -scrollCount 20 -ii 1d -ol a[href~=product]",
-            "https://www.proya.com/product_query-xId-583.html -i 1d -tl 40 -ol \"a[href~=product_detail]\" -ii 7d -c \".productInfo .conn\"",
-            "https://www.esteelauder.com.cn/products/14731/product-catalog -i 1s -ii 7d -ol a[href~=product]",
-            "https://www.darphin.com/collections/essential-oil-elixir",
-            "https://search.jd.com/Search?keyword=basketball&enc=utf-8&wq=basketball&pvid=27d8a05385cd49298b5caff778e14b97"
+        "https://list.suning.com/0-20006-0-0-0-0-0-0-0-0-11635.html -expires 1s -ol \".product-box a[href~=product]\"",
+        "https://list.gome.com.cn/cat10000070-00-0-48-1-0-0-0-1-0-0-1-0-0-0-0-0-0.html?intcmp=phone-163",
+        "http://category.dangdang.com/cid4002590.html -tp 140 -i 1h -scrollCount 20 -ii 1d -ol a[href~=product]",
+        "https://search.jd.com/Search?keyword=basketball&enc=utf-8&wq=basketball&pvid=27d8a05385cd49298b5caff778e14b97",
+        "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
     ).filter { it.isNotBlank() }
 
     fun arrangeLinks() {

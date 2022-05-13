@@ -3,11 +3,13 @@ package ai.platon.exotic.examples.common
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.dom.nodes.annotateNodes
+import ai.platon.scent.entities.HarvestResult
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
@@ -73,6 +75,12 @@ open class VerboseHarvester(
 
     fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
 
+    fun harvest(documents: List<FeaturedDocument>, options: HarvestOptions): HarvestResult {
+        val result = runBlocking { session.harvest(documents, options) }
+        report(result, options)
+        return result
+    }
+
     fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
         val start = Instant.now()
 
@@ -91,4 +99,16 @@ open class VerboseHarvester(
             .filter { it.matches(".+/tables/.+".toRegex()) }
             .forEach { ExoticUtils.openBrowser(it) }
     }
+
+    private fun report(result: HarvestResult, options: HarvestOptions) {
+        session.buildAll(result.tableGroup, options)
+
+        val json = session.buildJson(result.tableGroup)
+        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        Files.createDirectories(path.parent)
+        Files.writeString(path, json)
+
+        logger.info("Harvest result: file://${path.parent}")
+    }
+
 }

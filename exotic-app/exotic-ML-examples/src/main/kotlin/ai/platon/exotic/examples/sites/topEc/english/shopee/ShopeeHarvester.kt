@@ -10,6 +10,5 @@ fun main() {
             " -component .product-briefing" +
             " -diagnose -vj"
 
-    val crawler = VerboseHarvester()
-    crawler.harvest(portalUrl, args)
+    VerboseHarvester().harvest(portalUrl, args)
 }
