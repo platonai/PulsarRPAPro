@@ -3,7 +3,7 @@ Exotic README
 
 Exotic is the professional edition of Pulsar with advanced AI support to do auto web mining.
 
-There are already some scraping examples for the most popular websites, we are keeping adding more cases.
+There are already dozens of scraping cases for the most popular websites, we are keeping adding more cases.
 
 Exotic demonstrates:
 
@@ -27,7 +27,7 @@ Exotic demonstrates:
 
 ## Run the standalone server and web console
 
-    ./start.sh
+    java -jar exotic-standalone/target/exotic-standalone-*-SNAPSHOT.jar
 
 ## Run auto web mining examples
 

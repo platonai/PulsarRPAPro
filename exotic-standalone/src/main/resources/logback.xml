@@ -209,6 +209,7 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
+    <logger name="org.springframework" level="WARN"/>
     <logger name="org.springframework.core" level="INFO"/>
     <logger name="org.springframework.core.env" level="INFO"/>
 
