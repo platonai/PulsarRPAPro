@@ -1,11 +1,14 @@
 package ai.platon.exotic.services
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
+import ai.platon.pulsar.common.Runtimes
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
+import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties
+import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -16,7 +19,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 import java.nio.file.Files
 import java.nio.file.Paths
 
-@Configuration
+@SpringBootApplication
 @EnableJpaAuditing
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
@@ -59,14 +62,14 @@ class ExoticApplication(
         return ExoticCrawler(env)
     }
 }
-//
-//fun main(args: Array<String>) {
-//    val builder = SpringApplicationBuilder(ExoticApplication::class.java)
-//    if (Runtimes.checkIfProcessRunning("mysqld")) {
-//        builder.profiles("mysqld")
-//    } else {
-//        builder.profiles("h2")
-//    }
-//
-//    builder.run(*args)
-//}
+
+fun main(args: Array<String>) {
+    val builder = SpringApplicationBuilder(ExoticApplication::class.java)
+    if (Runtimes.checkIfProcessRunning("mysqld")) {
+        builder.profiles("mysqld")
+    } else {
+        builder.profiles("h2")
+    }
+
+    builder.run(*args)
+}
