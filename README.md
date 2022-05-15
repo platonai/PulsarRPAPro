@@ -15,10 +15,9 @@ Exotic demonstrates:
 
 - Memory 4G+
 - Maven 3.2+
-- The latest version of the Java 11 OpenJDK
+- The latest version of the Java 11 JDK
 - java and jar on the PATH
 - Google Chrome 90+
-- MongoDB for REST Services
 
 ## Build
 
