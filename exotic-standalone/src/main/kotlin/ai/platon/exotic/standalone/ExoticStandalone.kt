@@ -1,5 +1,7 @@
 package ai.platon.exotic.standalone
 
+import ai.platon.pulsar.common.config.AppConstants
+import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -37,6 +39,9 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class ExoticStandalone
 
 fun main(args: Array<String>) {
+    System.setProperty(CapabilityTypes.STORAGE_DATA_STORE_CLASS, AppConstants.FILE_BACKEND_STORE_CLASS)
+//    BrowserSettings.headless()
+
     SpringApplicationBuilder(ExoticStandalone::class.java)
         .profiles("h2")
         .initializers(ScentContextInitializer())
