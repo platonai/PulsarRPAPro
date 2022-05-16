@@ -19,10 +19,10 @@ find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$VERSION/" {}
 mvn clean
 mvn
 
-REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic/
+REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic
 ssh $HOST mkdir -p $REMOTE_BASE_DIR
 
-scp -r "$APP_HOME"/exotic-standalone/target/exotic-standalone-"$VERSION".jar "$HOST:$REMOTE_BASE_DIR"
+scp -r "$APP_HOME"/exotic-standalone/target/exotic-standalone-"$VERSION".jar "$HOST:$REMOTE_BASE_DIR/"
 
 echo "List directory before creating symbolic link: "
 ssh $HOST ls -l $REMOTE_BASE_DIR
