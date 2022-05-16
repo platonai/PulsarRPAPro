@@ -16,8 +16,8 @@ VERSION=${SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 echo "$VERSION" > "$APP_HOME"/VERSION
 find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$VERSION/" {} \;
 
-#mvn clean
-#mvn
+mvn clean
+mvn
 
 REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic/
 ssh $HOST mkdir -p $REMOTE_BASE_DIR
