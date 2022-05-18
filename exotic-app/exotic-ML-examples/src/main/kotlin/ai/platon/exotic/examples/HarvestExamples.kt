@@ -2,11 +2,9 @@ package ai.platon.exotic.examples
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.exotic.examples.common.VerboseHarvester
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.scent.ScentContext
-import ai.platon.scent.context.withContext
-import ai.platon.scent.dom.HNormUrl
-import ai.platon.scent.dom.nodes.annotateNodes
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import org.slf4j.LoggerFactory
 
@@ -43,10 +41,7 @@ class HarvestExamples(
         "https://www.hua.com/flower/",
         "https://www.hua.com/gifts/chocolates/",
         "https://www.hua.com/yongshenghua/yongshenghua_large.html",
-        "http://www.cityflower.net/goodslist/5/",
-        "http://www.cityflower.net/goodslist/2/",
-        "http://www.cityflower.net/goodslist/1/0/0-0-4-0.html",
-        "http://www.cityflower.net/",
+        "https://www.cityflower.net/attribute/37.html",
         "http://www.zgxhcs.com/",
         // laobao
         "https://www.zhaolaobao.com/productlist.html?classifyId=77",
@@ -98,16 +93,6 @@ class HarvestExamples(
         "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
     ).filter { it.isNotBlank() }
 
-    fun arrangeLinks() {
-        listOf(seeds, testedSeeds).flatten().filter { it.isNotBlank() }.forEach { url ->
-            logger.info("Arranging links in page $url")
-            val normUrl = HNormUrl.parse(url, session.sessionConfig.toVolatileConfig())
-            val doc = session.load(url).let { session.parse(it) }
-            session.arrangeLinks(normUrl, doc)
-            doc.also { it.annotateNodes(normUrl.hOptions) }.also { session.export(it) }
-        }
-    }
-
     fun arrangeDocuments() {
         listOf(seeds).flatten().filter { it.isNotBlank() }.forEach { url ->
             arrangeDocument(url)
@@ -125,6 +110,7 @@ class HarvestExamples(
 }
 
 fun main() {
+    BrowserSettings.headless()
     HarvestExamples().harvestAll()
 
     val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
