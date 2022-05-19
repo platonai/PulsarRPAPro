@@ -91,6 +91,7 @@ class HarvestExamples(
         "http://category.dangdang.com/cid4002590.html -tp 140 -i 1h -scrollCount 20 -ii 1d -ol a[href~=product]",
         "https://search.jd.com/Search?keyword=basketball&enc=utf-8&wq=basketball&pvid=27d8a05385cd49298b5caff778e14b97",
         "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
+        "https://shopee.sg/Computers-Peripherals-cat.11013247 -ol a[href~=sp_atk] -tl 20 -ignoreFailure -component .page-product__breadcrumb  -component .product-briefing",
     ).filter { it.isNotBlank() }
 
     fun arrangeDocuments() {
