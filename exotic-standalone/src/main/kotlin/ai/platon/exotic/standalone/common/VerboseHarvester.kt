@@ -2,8 +2,7 @@ package ai.platon.exotic.standalone.common
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
-import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.pulsar.common.sql.ResultSetFormatter
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
@@ -16,11 +15,7 @@ import ai.platon.scent.entities.HarvestResult
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
-import java.time.Duration
-import java.time.Instant
 import java.util.*
-import java.util.concurrent.ConcurrentHashMap
-import java.util.concurrent.atomic.AtomicInteger
 
 open class VerboseHarvester(
     context: ScentContext = ScentContexts.create()
@@ -31,18 +26,18 @@ open class VerboseHarvester(
     val session: ScentSession = context.createSession()
 
     val defaultArgs = "" +
-            " -expires 1d" +
-            " -itemExpires 1d" +
+//            " -expires 1d" +
+//            " -itemExpires 1d" +
 //                " -scrollCount 6" +
 //                " -itemScrollCount 4" +
+            " -topLinks 40" +
             " -nScreens 5" +
 //                " -polysemous" +
-            " -diagnose" +
-            " -nVerbose 1" +
-            " -preferParallel false" +
+//            " -diagnose" +
+            " -nVerbose 3" +
 //                " -pageLoadTimeout 60s" +
             " -showTip" +
-            " -showImage" +
+//            " -showImage" +
 //                " -cellType PLAIN_TEXT" +
             ""
 
@@ -67,7 +62,8 @@ open class VerboseHarvester(
     }
 
     fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
-        val result = runBlocking { session.harvest(url, options) }
+        val (url0, args0) = UrlUtils.splitUrlArgs(url)
+        val result = runBlocking { session.harvest(url0, session.options("$options $args0")) }
         val exports = session.buildAll(result.tableGroup, options)
 
         val json = session.buildJson(result.tableGroup)

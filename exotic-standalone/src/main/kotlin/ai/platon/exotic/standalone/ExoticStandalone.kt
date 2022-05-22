@@ -4,6 +4,7 @@ import ai.platon.exotic.standalone.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.AppConstants
 import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -59,7 +60,7 @@ fun main(args: Array<String>) {
     }
 
     if (harvest) {
-        if (!portalUrl.startsWith("http")) {
+        if (!UrlUtils.isValidUrl(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
