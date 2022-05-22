@@ -1,8 +1,11 @@
 package ai.platon.exotic.standalone
 
+import ai.platon.exotic.standalone.common.VerboseHarvester
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.AppConstants
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
+import kotlinx.coroutines.runBlocking
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -39,8 +42,39 @@ import org.springframework.scheduling.annotation.EnableScheduling
 class ExoticStandalone
 
 fun main(args: Array<String>) {
+    var harvest = false
+    var portalUrl = ""
+    var headless = false
+
+    var i = 0
+    while (i < args.size - 1) {
+        if (args[i] == "harvest") {
+            harvest = true
+            portalUrl = args.drop(i + 1).joinToString(" ")
+            break
+        }
+        if (args[i] == "-headless") headless = true
+
+        ++i
+    }
+
+    if (harvest) {
+        if (!portalUrl.startsWith("http")) {
+            System.err.println("The portal url is invalid")
+            return
+        }
+
+        runBlocking {
+            VerboseHarvester().harvest(portalUrl)
+        }
+
+        return
+    }
+
     System.setProperty(CapabilityTypes.STORAGE_DATA_STORE_CLASS, AppConstants.FILE_BACKEND_STORE_CLASS)
-//    BrowserSettings.headless()
+    if (headless) {
+        BrowserSettings.headless()
+    }
 
     SpringApplicationBuilder(ExoticStandalone::class.java)
         .profiles("h2")
