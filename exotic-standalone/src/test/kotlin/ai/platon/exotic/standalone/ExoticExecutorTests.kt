@@ -72,8 +72,34 @@ class ExoticExecutorTests {
                 " -field #productTitle" +
                 " -field #acrPopover -field #acrCustomerReviewText -field #askATFLink"
         val executor = ExoticExecutor(cmdLine)
+        executor.mute()
         executor.parseCmdLine()
         val result = executor.scrape()
         assertTrue(result.isNotEmpty())
+    }
+
+    @Test
+    fun testScrapeHelp() {
+        val executor = ExoticExecutor("-help scrape")
+        executor.mute()
+        executor.execute()
+        assertTrue(executor.lastHelpMessage?.contains("-itemExpires") == true)
+    }
+
+    @Test
+    fun testHarvestHelp() {
+        val executor = ExoticExecutor("-help harvest")
+        executor.mute()
+        executor.execute()
+        assertTrue(executor.lastHelpMessage?.contains("-itemExpires") == true)
+        assertTrue(executor.lastHelpMessage?.contains("-componentSelectors") == true)
+    }
+
+    @Test
+    fun testSQLHelp() {
+        val executor = ExoticExecutor("-help SQL")
+//        executor.mute()
+        executor.execute()
+        assertTrue(executor.lastHelpMessage?.contains("DomFunctions") == true)
     }
 }
