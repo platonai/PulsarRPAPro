@@ -2,12 +2,15 @@ package ai.platon.exotic.examples.common
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.sql.ResultSetFormatter
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
 import ai.platon.scent.context.ScentContexts
+import ai.platon.scent.context.support.DefaultClassPathXmlScentContext
 import ai.platon.scent.dom.HNormUrl
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.dom.nodes.AnchorGroup
@@ -15,6 +18,7 @@ import ai.platon.scent.dom.nodes.annotateNodes
 import ai.platon.scent.entities.HarvestResult
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
+import org.springframework.core.io.DefaultResourceLoader
 import java.nio.file.Files
 import java.time.Duration
 import java.time.Instant
@@ -23,7 +27,7 @@ import java.util.concurrent.ConcurrentHashMap
 import java.util.concurrent.atomic.AtomicInteger
 
 open class VerboseHarvester(
-    context: ScentContext = ScentContexts.create()
+    context: ScentContext = ScentContexts.create("classpath*:/scent-beans/app-context.xml")
 ): VerboseCrawler(context) {
 
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
@@ -34,7 +38,6 @@ open class VerboseHarvester(
 
     init {
         System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
-        // BrowserSettings.pageLoadStrategy = "normal"
     }
 
     val defaultArgs = "" +
@@ -113,34 +116,22 @@ open class VerboseHarvester(
     }
 
     fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
-        val start = Instant.now()
-
-        val result = runBlocking { session.harvest(url, options) }
-        val exports = session.buildAll(result.tableGroup, options)
-
-        val json = session.buildJson(result.tableGroup)
-        val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
-        Files.createDirectories(baseDir)
-        val path = baseDir.resolve("last-page-tables.json")
-        Files.writeString(path, json)
-
-        taskTimes[url] = Duration.between(start, Instant.now())
-
-        logger.info("Harvest reports: {}", path.parent)
-        exports.keys.map { it.toString() }
-            .filter { it.matches(".+/tables/.+".toRegex()) }
-            .forEach { ExoticUtils.openBrowser(it) }
+        val (url0, args0) = UrlUtils.splitUrlArgs(url)
+        val result = runBlocking { session.harvest(url0, session.options("$options $args0")) }
+        report(result, options)
     }
 
     private fun report(result: HarvestResult, options: HarvestOptions) {
-        session.buildAll(result.tableGroup, options)
+        val exports = session.buildAll(result.tableGroup, options)
 
         val json = session.buildJson(result.tableGroup)
         val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
         Files.createDirectories(path.parent)
         Files.writeString(path, json)
 
-        logger.info("Harvest result: file://${path.parent}")
+        logger.info("Harvest reports: {}", path.parent)
+        exports.keys.map { it.toString() }
+            .filter { it.matches(".+/tables/.+".toRegex()) }
+            .forEach { ExoticUtils.openBrowser(it) }
     }
-
 }

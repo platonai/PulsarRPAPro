@@ -3,7 +3,6 @@ package ai.platon.exotic.standalone
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_DAY
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_SECOND
-import ai.platon.pulsar.common.getLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.scheduling.annotation.EnableScheduling
 import org.springframework.scheduling.annotation.Scheduled

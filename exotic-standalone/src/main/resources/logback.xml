@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<configuration scan="true" scanPeriod="30 seconds" debug="false">
+<configuration>
     <property name="logging.dir" value="${logging.dir:-logs}" />
     <property name="logging.prefix" value="${logging.prefix:-exotics}" />
     <property name="logging.file" value="${logging.prefix}.log" />
@@ -25,6 +25,8 @@
     <!-- 彩色日志格式 -->
     <property name="CONSOLE_LOG_PATTERN" value="${CONSOLE_LOG_PATTERN:-%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(${LOG_LEVEL_PATTERN:-%5p}) %clr([%.10t]){faint} %clr(%c{2}){cyan} %clr(-){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}}"/>
     <property name="DRFA_LOG_PATTERN" value="%d{HH:mm:ss.SSS} [%.10thread] %-5level %logger{26} - %msg%n"/>
+
+    <statusListener class="ch.qos.logback.core.status.NopStatusListener" />
 
     <appender name="Console" class="ch.qos.logback.core.ConsoleAppender">
         <layout class="ch.qos.logback.classic.PatternLayout">
@@ -118,19 +120,19 @@
         </encoder>
     </appender>
 
-    <root level="${log.level:-INFO}">
+    <root level="WARN">
         <appender-ref ref="DRFA"/>
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="ai.platon.scent" level="INFO"/>
-    <logger name="ai.platon.scent.proxy" level="INFO"/>
-    <logger name="ai.platon.scent.crawl.parser" level="INFO"/>
+    <logger name="ai.platon.scent" level="WARN"/>
+    <logger name="ai.platon.scent.proxy" level="WARN"/>
+    <logger name="ai.platon.scent.crawl.parser" level="WARN"/>
 
-    <logger name="ai.platon.scent.ql.h2.context" level="INFO"/>
+    <logger name="ai.platon.scent.ql.h2.context" level="WARN"/>
 
-    <logger name="ai.platon.scent.rest.api.schedule" level="INFO"/>
-    <logger name="ai.platon.scent.rest.api.service.scrape" level="INFO"/>
+    <logger name="ai.platon.scent.rest.api.schedule" level="WARN"/>
+    <logger name="ai.platon.scent.rest.api.service.scrape" level="WARN"/>
 
     <logger name="ai.platon.scent.rest.api.service.v1.ScrapeServiceV1.Task" level="INFO" additivity="false">
         <appender-ref ref="API"/>
@@ -156,27 +158,11 @@
         <appender-ref ref="HARVEST"/>
     </logger>
 
-    <logger name="ai.platon.pulsar" level="INFO"/>
-    <logger name="ai.platon.pulsar.ql" level="INFO"/>
-    <logger name="ai.platon.pulsar.ql.context" level="WARN"/>
-    <logger name="ai.platon.pulsar.net" level="INFO"/>
-    <logger name="ai.platon.pulsar.browser" level="INFO"/>
-    <logger name="ai.platon.pulsar.parse.html" level="INFO"/>
-    <logger name="ai.platon.pulsar.crawl.parse" level="INFO"/>
-    <logger name="ai.platon.pulsar.cli.shell" level="INFO"/>
-    <logger name="ai.platon.pulsar.crawl" level="INFO"/>
-    <logger name="ai.platon.pulsar.crawl.protocol" level="INFO"/>
-    <logger name="ai.platon.pulsar.protocol.browser" level="INFO"/>
-    <logger name="ai.platon.pulsar.protocol.browser.driver" level="INFO"/>
-
+    <logger name="ai.platon.pulsar" level="WARN"/>
     <logger name="ai.platon.pulsar.crawl.component" level="INFO"/>
     <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="INFO"/>
 
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="INFO"/>
-
-    <logger name="ai.platon.pulsar.common.distributed.lock" level="INFO"/>
-
-    <logger name="ai.platon.exotic.examples" level="INFO"/>
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="WARN"/>
 
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>
@@ -209,12 +195,9 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="org.springframework" level="WARN"/>
-    <logger name="org.springframework.core" level="INFO"/>
-    <logger name="org.springframework.core.env" level="INFO"/>
+    <logger name="ch.qos.logback.classic" level="WARN"/>
 
-    <logger name="org.springframework.orm.jpa" level="INFO"/>
-    <logger name="org.springframework.transaction" level="INFO"/>
+    <logger name="org.springframework" level="WARN"/>
 
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>
