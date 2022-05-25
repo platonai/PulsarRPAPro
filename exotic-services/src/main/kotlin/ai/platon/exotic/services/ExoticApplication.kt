@@ -66,7 +66,7 @@ class ExoticApplication(
 }
 
 fun main(args: Array<String>) {
-    // still check the database
+    // should also check if the database exists
     val dbProfile = if (Runtimes.checkIfProcessRunning("mysqld")) { "mysql" } else { "h2" }
 
     SpringApplicationBuilder(ExoticApplication::class.java)

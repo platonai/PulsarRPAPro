@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-//@EnableScheduling
+@EnableScheduling
 class ExoticScheduler(
     private val exoticCrawler: ExoticCrawler,
     private val crawlTaskRunner: CrawlTaskRunner,
@@ -28,24 +28,38 @@ class ExoticScheduler(
     }
 
     private val logger = LoggerFactory.getLogger(ExoticScheduler::class.java)
+    private var serverIsRunning = true
 
     @Bean
     fun runStartupTasks() {
+        if (!checkIfServerRunning()) {
+            return
+        }
         crawlTaskRunner.loadUnfinishedTasks()
     }
 
     @Scheduled(initialDelay = INITIAL_DELAY, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun startCreatedCrawlRules() {
+        if (!checkIfServerRunning()) {
+            return
+        }
         crawlTaskRunner.startCreatedCrawlRules()
     }
 
     @Scheduled(initialDelay = INITIAL_DELAY, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun restartCrawlRules() {
+        if (!checkIfServerRunning()) {
+            return
+        }
         crawlTaskRunner.restartCrawlRulesNextRound()
     }
 
     @Scheduled(initialDelay = INITIAL_DELAY_2, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun runPortalTasksWhenFew() {
+        if (!checkIfServerRunning()) {
+            return
+        }
+
         try {
             val submitter = exoticCrawler.outPageScraper.taskSubmitter
             val maxPendingTaskCount = if (IS_DEVELOPMENT) DEV_MAX_PENDING_TASKS else PRODUCT_MAX_PENDING_TASKS
@@ -66,6 +80,25 @@ class ExoticScheduler(
 
     @Scheduled(initialDelay = INITIAL_DELAY_3, fixedDelay = 30 * MILLIS_PER_SECOND)
     fun synchronizeProducts() {
+        if (!checkIfServerRunning()) {
+            return
+        }
         crawlResultChecker.synchronizeProducts()
+    }
+
+    private fun checkIfServerRunning(): Boolean {
+        if (!serverIsRunning) {
+            return false
+        }
+
+        val submitter = exoticCrawler.outPageScraper.taskSubmitter
+        serverIsRunning = try {
+            submitter.driver.count()
+            true
+        } catch (e: Exception) {
+            false
+        }
+
+        return serverIsRunning
     }
 }
