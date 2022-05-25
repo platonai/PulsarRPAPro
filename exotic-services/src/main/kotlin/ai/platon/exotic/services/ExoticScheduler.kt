@@ -15,7 +15,7 @@ import org.springframework.scheduling.annotation.Scheduled
 import org.springframework.stereotype.Component
 
 @Component
-@EnableScheduling
+//@EnableScheduling
 class ExoticScheduler(
     private val exoticCrawler: ExoticCrawler,
     private val crawlTaskRunner: CrawlTaskRunner,

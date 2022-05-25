@@ -2,16 +2,18 @@ package ai.platon.exotic.services
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.pulsar.common.Runtimes
+import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ApplicationContext
 import org.springframework.context.annotation.Bean
-import org.springframework.context.annotation.Configuration
 import org.springframework.core.env.Environment
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.thymeleaf.templateresolver.FileTemplateResolver
@@ -19,7 +21,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 import java.nio.file.Files
 import java.nio.file.Paths
 
-@SpringBootApplication
+@SpringBootApplication(exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class])
 @EnableJpaAuditing
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
@@ -64,12 +66,12 @@ class ExoticApplication(
 }
 
 fun main(args: Array<String>) {
-    val builder = SpringApplicationBuilder(ExoticApplication::class.java)
-    if (Runtimes.checkIfProcessRunning("mysqld")) {
-        builder.profiles("mysqld")
-    } else {
-        builder.profiles("h2")
-    }
+    // still check the database
+    val dbProfile = if (Runtimes.checkIfProcessRunning("mysqld")) { "mysql" } else { "h2" }
 
-    builder.run(*args)
+    SpringApplicationBuilder(ExoticApplication::class.java)
+        .profiles("h2")
+        .initializers(ScentContextInitializer())
+        .registerShutdownHook(true)
+        .run(*args)
 }

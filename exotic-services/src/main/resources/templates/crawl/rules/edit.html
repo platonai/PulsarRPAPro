@@ -29,37 +29,57 @@
         </ol>
     </nav>
 
-    <div class="card">
-        <div class="card-body">
-            <div th:switch="${rule}" class="row">
-                <dl class="col-1">
-                    <dt>Id</dt><dd th:text="${rule.id}"></dd>
-                </dl>
-                <dl class="col">
-                    <dt>Last Crawl Time</dt><dd th:text="${rule.lastCrawlTime}"></dd>
-                </dl>
-                <dl class="col">
-                    <dt>Create Time</dt><dd th:text="${rule.createdDate}"></dd>
-                </dl>
-            </div>
+    <form action="#" th:action="@{/crawl/rules/update/{id}(id=${rule.id})}" th:object="${rule}" method="post">
+        <div class="row">
+            <div class="col-md-8">
+                <div th:switch="${rule}" class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-1">
+                                <dl>
+                                    <dt>Id</dt><dd th:text="${rule.id}"></dd>
+                                </dl>
+                            </div>
+                            <div class="col-2">
+                                <dl>
+                                    <dt>Last Crawl Time</dt><dd th:text="${rule.lastCrawlTime}"></dd>
+                                </dl>
+                            </div>
+                            <div class="col">
+                                <dl>
+                                    <dt>Create Time</dt><dd th:text="${rule.createdDate}"></dd>
+                                </dl>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
-            <form action="#" th:action="@{/crawl/rules/update/{id}(id=${rule.id})}" th:object="${rule}" method="post">
-                <div class="row">
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <label for="sqlTemplate" class="col-form-label">SQL Template<em class="required">*</em></label>
-                            <textarea th:field="*{sqlTemplate}" th:required="required"
-                                      class="form-control" id="sqlTemplate" rows="5"></textarea>
+                <div class="card my-3">
+                    <div class="card-header">
+                        <label for="sqlTemplate" class="col-form-label">SQL Template<em class="required">*</em></label>
+                    </div>
+                    <div class="card-body">
+                        <textarea th:field="*{sqlTemplate}" th:required="required"
+                                  class="form-control border-0 bg-light" id="sqlTemplate" rows="5"></textarea>
                             <span th:if="${#fields.hasErrors('sqlTemplate')}" th:errors="*{sqlTemplate}"
                                   class="text-danger"></span>
-                        </div>
-                        <div class="form-group">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="card my-3">
+                        <div class="card-header">
                             <label for="portalUrls" class="col-form-label">Portal Urls<em class="required">*</em></label>
-                            <textarea th:field="*{portalUrls}" th:required="required"
-                                      class="form-control" id="portalUrls"></textarea>
-                            <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="*{portalUrls}"
-                                  class="text-danger"></span>
                         </div>
+                        <div class="card-body">
+                            <textarea th:field="*{portalUrls}" th:required="required"
+                                      class="form-control border-0 bg-light" id="portalUrls"></textarea>
+                                    <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="*{portalUrls}"
+                                          class="text-danger"></span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-3">
+                    <div class="card-body">
                         <div class="form-group">
                             <label for="outLinkSelector" class="col-form-label">Out Link Selector<em class="required">*</em></label>
                             <input type="text" th:field="*{outLinkSelector}" th:required="required"
@@ -77,7 +97,27 @@
                                   class="text-danger"></span>
                         </div>
                     </div>
-                    <div class="col-md-4">
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="form-group my-3">
+                            <input type="submit" class="btn btn-primary mr-5" value="Save">
+
+                            <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
+                                <i class="fas fa-list ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-eye ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-play ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-pause ml-1"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card my-3">
+                    <div class="card-body">
                         <div class="row">
                             <div class="form-group col">
                                 <label for="name" class="col-form-label">Name<em class="required">*</em></label>
@@ -165,23 +205,15 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="form-group my-3">
-                    <input type="submit" class="btn btn-primary mr-5" value="Save">
-
-                    <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
-                        <i class="fas fa-list ml-1"></i></a>
-                    <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                        <i class="fas fa-eye ml-1"></i></a>
-                    <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                        <i class="fas fa-play ml-1"></i></a>
-                    <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                        <i class="fas fa-pause ml-1"></i></a>
-                </div>
-            </form>
-
+            </div>
         </div>
-    </div>
+
+    </form>
+
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
 </div>
 
 </body>

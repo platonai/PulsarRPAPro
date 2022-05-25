@@ -17,64 +17,83 @@
         </ol>
     </nav>
 
-    <div class="card" th:switch="${task}">
-        <div class="card-body" th:case="*">
-            <div class="row my-5">
-                <div class="col-4">
-                    <dl>
-                        <dt>Id</dt>
-                        <dd th:text="${task.id}"></dd>
-                        <dt>Status</dt>
-                        <dd th:text="${task.status}"></dd>
-                        <dt>Server Task Id</dt>
-                        <dd th:text="${task.serverTaskId}"></dd>
-                    </dl>
+    <div th:switch="${task}">
+        <div th:case="*">
+            <div class="row">
+                <div class="col-8">
+
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <table>
+                                <tr>
+                                    <th>Submitted Count</th>
+                                    <th>Success Count</th>
+                                    <th>Retry Count</th>
+                                    <th>Failed Count</th>
+                                    <th>Finished Count</th>
+                                </tr>
+                                <tr>
+                                    <td th:text="${task.submittedCount}"></td>
+                                    <td th:text="${task.successCount}"></td>
+                                    <td th:text="${task.retryCount}"></td>
+                                    <td th:text="${task.failedCount}"></td>
+                                    <td th:text="${task.finishedCount}"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-8">
+                                    <pre th:text="${task.url}"></pre>
+                                </div>
+                                <div class="col">
+                                    <span th:text="${task.args}"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-header">SQL Template</div>
+                        <div class="card-body">
+                            <pre><code class="language-sql" th:text="${task.rule.sqlTemplate}"></code></pre>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
-                    <dl>
-                        <dt>Start Time</dt>
-                        <dd th:text="${task.startTime}"></dd>
-                    </dl>
-                    <dl>
-                        <dt>Created Time</dt>
-                        <dd th:text="${task.createdDate}"></dd>
-                    </dl>
-                    <dl>
-                        <dt>Modified Time</dt>
-                        <dd th:text="${task.lastModifiedDate}"></dd>
-                    </dl>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl>
+                                <dt>Id</dt>
+                                <dd th:text="${task.id}"></dd>
+                                <dt>Status</dt>
+                                <dd th:text="${task.status}"></dd>
+                                <dt>Server Task Id</dt>
+                                <dd th:text="${task.serverTaskId}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl>
+                                <dt>Start At</dt>
+                                <dd th:text="${task.startTime}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Created At</dt>
+                                <dd th:text="${task.createdDate}"></dd>
+                            </dl>
+                            <dl>
+                                <dt>Modified At</dt>
+                                <dd th:text="${task.lastModifiedDate}"></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-            <div class="row">
-                <table>
-                    <tr>
-                        <th>Submitted Count</th>
-                        <th>Success Count</th>
-                        <th>Retry Count</th>
-                        <th>Failed Count</th>
-                        <th>Finished Count</th>
-                    </tr>
-                    <tr>
-                        <td th:text="${task.submittedCount}"></td>
-                        <td th:text="${task.successCount}"></td>
-                        <td th:text="${task.retryCount}"></td>
-                        <td th:text="${task.failedCount}"></td>
-                        <td th:text="${task.finishedCount}"></td>
-                    </tr>
-                </table>
-            </div>
-            <div class="row">
-                <div class="col-8">
-                    <pre th:text="${task.url}"></pre>
-                </div>
-                <div class="col">
-                    <span th:text="${task.args}"></span>
-                </div>
-            </div>
-            <div class="row">
-                <pre th:text="${task.rule.sqlTemplate}"></pre>
-            </div>
+
         </div>
 
         <div class="card-footer">
@@ -88,6 +107,11 @@
                 <i class="fas fa-pause ml-1"></i></a>
         </div>
     </div>
+
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
 </div>
 </body>
 </html>

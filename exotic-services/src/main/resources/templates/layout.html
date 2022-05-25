@@ -18,6 +18,8 @@
 <!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
     <link href="../static/css/fontawesome/all.css" rel="stylesheet" media="screen"
           th:href="@{/css/fontawesome/all.css}"/>
+    <link href="../static/vendor/highlightjs/styles/default.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/highlightjs/styles/default.css}"/>
 
     <!--/* Per-page placeholder for additional links */-->
     <th:block th:if="${links} != null">
@@ -28,12 +30,12 @@
     <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
     <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
     <script src="../static/js/crawl-common.js" th:src="@{/js/crawl-common.js}"></script>
+    <script src="../static/vendor/highlightjs/highlight.pack.js" th:src="@{/vendor/highlightjs/highlight.pack.js}"></script>
 
     <!--/* Per-page placeholder for additional scripts */-->
     <th:block th:if="${scripts} != null">
         <th:block th:replace="${scripts}" />
     </th:block>
-
 </head>
 
 <body>
@@ -60,7 +62,9 @@
         Phasellus et placerat elit.
     </p>
 </div>
+
 <!--/* Footer fragment */-->
 <footer th:fragment="footer" class="text-center">&copy; 2022 Default Footer</footer>
+
 </body>
 </html>

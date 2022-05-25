@@ -18,86 +18,103 @@
         </ol>
     </nav>
 
-    <div class="card" th:switch="${rule}">
-        <div class="card-body" th:case="*">
+    <div th:switch="${rule}">
+        <div th:case="*">
             <div class="row">
                 <div class="col-md-8">
-                    <div class="row">
-                        <div>
-                            <div>SQL Template</div>
-                            <div><pre th:text="${rule.sqlTemplate}"></pre></div>
+                    <div class="card my-3">
+                        <div class="card-header">SQL Template</div>
+                        <div class="card-body">
+                            <pre><code class="language-sql" th:text="${rule.sqlTemplate}"></code>
+                            </pre>
                         </div>
-                        <div>
-                            <div>Portal Urls</div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-header">Portal Urls</div>
+                        <div class="card-body">
                             <div><pre th:text="${rule.portalUrls}"></pre></div>
                         </div>
-                        <div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
                             <div>Out link Selector</div>
                             <div><pre th:text="${rule.outLinkSelector}"></pre></div>
-                        </div>
-                        <div>
                             <div>Next page Selector</div>
                             <div><pre th:text="${rule.nextPageSelector}"></pre></div>
                         </div>
                     </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl>
+                                <dt>Label</dt>
+                                <dd th:text="${rule.label} ?: 'No label'"></dd>
+
+                                <dt>Description</dt>
+                                <dd th:text="${rule.description} ?: 'No description'"></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
                 <div class="col">
-                    <dl>
-                        <dt>Id</dt>
-                        <dd th:text="${rule.id}"></dd>
-                        <dt>Name</dt>
-                        <dd th:text="${rule.name}"></dd>
-                        <dt>Status</dt>
-                        <dd th:text="${rule.status}"></dd>
-                    </dl>
-                    <dl>
-                        <dt>Start Time</dt>
-                        <dd th:text="${rule.startTime}"></dd>
-                        <dt>Dead Time</dt>
-                        <dd th:text="${rule.deadTime}"></dd>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
+                                <i class="fas fa-list ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-edit ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-play ml-1"></i></a>
+                            <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                                <i class="fas fa-pause ml-1"></i></a>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl>
+                                <dt>Id</dt>
+                                <dd th:text="${rule.id}"></dd>
+                                <dt>Name</dt>
+                                <dd th:text="${rule.name}"></dd>
+                                <dt>Status</dt>
+                                <dd th:text="${rule.status}"></dd>
+                                <dt>Max Pages</dt>
+                                <dd th:text="${rule.maxPages}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl>
+                                <dt>Start Time</dt>
+                                <dd th:text="${rule.startTime}"></dd>
+                                <dt>Dead Time</dt>
+                                <dd th:text="${rule.deadTime}"></dd>
 
-                        <th:block th:if="${rule.period.toString()} != 'PT-1H'">
-                            <dt>Period</dt>
-                            <dd th:text="${rule.period}"></dd>
-                        </th:block>
+                                <th:block th:if="${rule.period.toString()} != 'PT-1H'">
+                                    <dt>Period</dt>
+                                    <dd th:text="${rule.period}"></dd>
+                                </th:block>
 
-                        <th:block th:if="${rule.cronExpression} != '0 * * * * ? *'">
-                            <dt>Cron</dt>
-                            <dd>minute, hour, dom, month, dow</dd>
-                            <dd th:text="${rule.cronExpression}"></dd>
-                        </th:block>
+                                <th:block th:if="${rule.cronExpression} != '0 * * * * ? *'">
+                                    <dt>Cron</dt>
+                                    <dd>minute, hour, dom, month, dow</dd>
+                                    <dd th:text="${rule.cronExpression}"></dd>
+                                </th:block>
 
-                        <dt>Max Pages</dt>
-                        <dd th:text="${rule.maxPages}"></dd>
-                    </dl>
-                    <dl>
-                        <dt>Last Crawl Time</dt>
-                        <dd th:text="${rule.lastCrawlTime}"></dd>
-                        <dt>Created Date</dt>
-                        <dd th:text="${rule.createdDate}"></dd>
-                        <dt>Last Modified Date</dt>
-                        <dd th:text="${rule.lastModifiedDate}"></dd>
-                    </dl>
-                    <dl>
-                        <dt>Label</dt>
-                        <dd th:text="${rule.label}"></dd>
-                        <dt>Description</dt>
-                        <dd th:text="${rule.description}"></dd>
-                    </dl>
+                            </dl>
+                            <dl>
+                                <dt>Last Crawl Time</dt>
+                                <dd th:text="${rule.lastCrawlTime}"></dd>
+                                <dt>Created Date</dt>
+                                <dd th:text="${rule.createdDate}"></dd>
+                                <dt>Last Modified Date</dt>
+                                <dd th:text="${rule.lastModifiedDate}"></dd>
+                            </dl>
+                        </div>
+                    </div>
                 </div>
             </div>
 
-        </div>
-
-        <div class="card-footer">
-            <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
-                <i class="fas fa-list ml-1"></i></a>
-            <a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                <i class="fas fa-edit ml-1"></i></a>
-            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                <i class="fas fa-play ml-1"></i></a>
-            <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                <i class="fas fa-pause ml-1"></i></a>
         </div>
     </div>
 
@@ -157,5 +174,10 @@
         </div>
     </div>
 </div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
 </body>
 </html>

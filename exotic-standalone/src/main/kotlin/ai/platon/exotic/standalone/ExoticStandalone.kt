@@ -1,7 +1,7 @@
 package ai.platon.exotic.standalone
 
-fun main(args: Array<String>) {
-    val executor = ExoticExecutor(args)
+fun main(argv: Array<String>) {
+    val executor = ExoticExecutor(argv)
     executor.parseCmdLine()
     executor.execute()
 }

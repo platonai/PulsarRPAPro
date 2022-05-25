@@ -31,7 +31,7 @@ class CrawlRuleController(
             rule.sqlTemplate = sqlTemplate
         }
 
-        rule.adjustFields()
+//        rule.adjustFields()
         repository.save(rule)
 
         return rule

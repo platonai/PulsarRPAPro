@@ -13,9 +13,10 @@ import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.builder.SpringApplicationBuilder
 import java.sql.ResultSet
+import kotlin.system.exitProcess
 
 class ExoticExecutor(val argv: Array<String>) {
-    val session = ScentSQLContexts.createSession()
+    private val session = ScentSQLContexts.createSession()
 
     /**
      * Do not print anything
@@ -30,6 +31,8 @@ class ExoticExecutor(val argv: Array<String>) {
         private set
     var server = false
         private set
+    var criticalHelp = false
+        private set
     var help = false
         private set
     var configuredUrl = ""
@@ -43,6 +46,7 @@ class ExoticExecutor(val argv: Array<String>) {
         private set
 
     var helpVerbose = false
+        private set
     var helpArgs: Array<String>? = null
         private set
 
@@ -56,6 +60,11 @@ class ExoticExecutor(val argv: Array<String>) {
 
     fun execute() {
         parseCmdLine()
+
+        if (criticalHelp) {
+            System.err.println(MAIN_HELP)
+            return
+        }
 
         if (help) {
             help()
@@ -88,8 +97,13 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         if (!mute) {
-            System.err.println(lastHelpMessage)
+            println(lastHelpMessage)
         }
+    }
+
+    private fun printMainHelpAndExit() {
+        System.err.println(MAIN_HELP)
+        exitProcess(0)
     }
 
     private fun dispatchHelp(argv0: Array<String>) {
@@ -100,6 +114,7 @@ class ExoticExecutor(val argv: Array<String>) {
             if (arg.equals("scrape", true)) scrape = true
             if (arg.equals("harvest", true)) harvest = true
             if (arg.equals("sql", true)) sql = "help"
+            if (arg.equals("serve", true)) server = true
             if (arg.equals("server", true)) server = true
 
             if (arg in listOf("-v", "-verbose")) {
@@ -173,7 +188,7 @@ class ExoticExecutor(val argv: Array<String>) {
     internal fun executeSQL() {
         val context = ScentSQLContexts.create()
         val rs = context.executeQuery(sql)
-        lastOutput = ResultSetFormatter(rs, withHeader = true).toString()
+        lastOutput = ResultSetFormatter(rs, withHeader = true, asList = true).toString()
         output()
     }
 
@@ -192,32 +207,54 @@ class ExoticExecutor(val argv: Array<String>) {
         parsed = true
 
         var i = 0
-        while (i < argv.size - 1) {
-            if (argv[i] == "harvest") {
+        while (i < argv.size) {
+            val arg = argv[i]
+            val isLastArg = i == argv.size - 1
+
+            if (arg == "harvest") {
+                if (i == argv.size - 1) {
+                    criticalHelp = true
+                    break
+                }
+
                 harvest = true
                 configuredUrl = argv.drop(i + 1).joinToString(" ")
                 break
-            }
-            if (argv[i] == "scrape") {
+            } else if (arg == "scrape") {
+                if (isLastArg) {
+                    criticalHelp = true
+                    break
+                }
+
                 scrape = true
                 configuredUrl = argv.drop(i + 1).joinToString(" ")
                 parseScrapeArgs()
                 break
-            }
-            if (argv[i] == "server") {
+            } else if (arg == "server" || arg == "serve") {
                 server = true
                 break
-            }
-            if (argv[i] == "sql") {
+            } else if (arg == "sql") {
+                if (isLastArg) {
+                    criticalHelp = true
+                    break
+                }
+
                 sql = argv.drop(i + 1).joinToString(" ")
                 break
             }
-            if (argv[i] == "-headless") {
+
+            if (arg == "-headless") {
                 headless = true
             }
-            if (argv[i] in listOf("?", "-h", "-help", "--help")) {
+            if (arg in listOf("?", "-h", "-help")) {
+                criticalHelp = true
+                break
+            }
+            if (arg == "--help") {
                 help = true
-                helpArgs = argv.drop(i + 1).toTypedArray()
+                if (!isLastArg) {
+                    helpArgs = argv.drop(i + 1).toTypedArray()
+                }
                 break
             }
 
@@ -325,23 +362,22 @@ $option:
         val MAIN_HELP = """
 Usage: java -jar ExoticStandalone*.jar [options] harvest <url> [args...]
            (to harvest webpages automatically using our advanced AI)
-   or  java -jar ExoticStandalone*.jar [options] -jar scrape <url> [args...]
+   or  java -jar ExoticStandalone*.jar [options] scrape <url> [args...]
            (to scrape a webpage or a batch of webpages)
    or  java -jar ExoticStandalone*.jar [options] sql <sql>
            (to execute a X-SQL)
-   or  java -jar ExoticStandalone*.jar [options] server
-           (to run the standalone server: both the Exotic server and the web console)
+   or  java -jar ExoticStandalone*.jar [options] serve
+           (to run the standalone server: both the REST server and the web console)
 
 Arguments following the urls are passed as the arguments for harvest or scrape methods.
 
 where options include:
     -headless       to run browser in headless mode
-    -? -h -help [topic [-v|-verbose]]
-                    print this help message to the error stream, or print help message for topic
-                    the topic can be one of: [harvest|scrape|SQL|sql]
+    -? -h -help
+                    print this help message to the error stream
     --help [topic [-v|-verbose]]
                     print this help message to the output stream, or print help message for topic
-                    the topic can be one of: [harvest|scrape|SQL|sql]
+                    the topic can be one of: [harvest|scrape|SQL], case insensitive
         """.trimIndent()
     }
 }

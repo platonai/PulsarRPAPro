@@ -83,7 +83,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
             return "crawl/rules/add"
         }
 
-        rule.adjustFields()
+//        rule.adjustFields()
         repository.save(rule)
         return "redirect:/crawl/rules/"
     }
@@ -104,7 +104,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
             return "crawl/rules/edit"
         }
 
-        rule.adjustFields()
+//        rule.adjustFields()
 
         repository.save(rule)
 
@@ -116,7 +116,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
         val rule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
 
         rule.status = RuleStatus.Paused.toString()
-        rule.adjustFields()
+//        rule.adjustFields()
         repository.save(rule)
 
         return "redirect:/crawl/rules/"
@@ -127,7 +127,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
         val rule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
 
         rule.status = RuleStatus.Created.toString()
-        rule.adjustFields()
+//        rule.adjustFields()
         repository.save(rule)
 
         crawlTaskRunner.startCrawl(rule)
@@ -140,7 +140,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
         val rule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
 
         rule.status = RuleStatus.Archived.toString()
-        rule.adjustFields()
+//        rule.adjustFields()
         repository.save(rule)
 
         crawlTaskRunner.startCrawl(rule)
