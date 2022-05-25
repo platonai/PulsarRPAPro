@@ -1,4 +1,4 @@
-package ai.platon.exotic.services
+package ai.platon.exotic.starter
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.pulsar.common.Runtimes
@@ -7,7 +7,9 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.autoconfigure.data.mongo.MongoDataAutoConfiguration
 import org.springframework.boot.autoconfigure.domain.EntityScan
+import org.springframework.boot.autoconfigure.mongo.MongoAutoConfiguration
 import org.springframework.boot.autoconfigure.thymeleaf.ThymeleafProperties
 import org.springframework.boot.builder.SpringApplicationBuilder
 import org.springframework.context.ApplicationContext
@@ -19,7 +21,10 @@ import org.thymeleaf.templateresolver.ITemplateResolver
 import java.nio.file.Files
 import java.nio.file.Paths
 
-@SpringBootApplication
+@SpringBootApplication(
+    scanBasePackages = ["ai.platon.exotic.services"],
+    exclude = [MongoAutoConfiguration::class, MongoDataAutoConfiguration::class]
+)
 @EnableJpaAuditing
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
@@ -64,6 +69,9 @@ class ExoticApplication(
 }
 
 fun main(args: Array<String>) {
+    // should also check if the database exists
+    val dbProfile = if (Runtimes.checkIfProcessRunning("mysqld")) "mysql" else "h2"
+
     SpringApplicationBuilder(ExoticApplication::class.java)
         .profiles("h2")
         .initializers(ScentContextInitializer())

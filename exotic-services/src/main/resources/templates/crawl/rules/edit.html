@@ -40,14 +40,14 @@
                                     <dt>Id</dt><dd th:text="${rule.id}"></dd>
                                 </dl>
                             </div>
-                            <div class="col-2">
+                            <div class="col-4">
                                 <dl>
-                                    <dt>Last Crawl Time</dt><dd th:text="${rule.lastCrawlTime}"></dd>
+                                    <dt>Last Crawl At</dt><dd th:text="${rule.lastCrawlTime}"></dd>
                                 </dl>
                             </div>
                             <div class="col">
                                 <dl>
-                                    <dt>Create Time</dt><dd th:text="${rule.createdDate}"></dd>
+                                    <dt>Created At</dt><dd th:text="${rule.createdDate}"></dd>
                                 </dl>
                             </div>
                         </div>
@@ -102,18 +102,16 @@
             <div class="col-md-4">
                 <div class="card">
                     <div class="card-body">
-                        <div class="form-group my-3">
-                            <input type="submit" class="btn btn-primary mr-5" value="Save">
+                        <input type="submit" class="btn btn-primary mr-1" value="Save" />
 
-                            <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
-                                <i class="fas fa-list ml-1"></i></a>
-                            <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                                <i class="fas fa-eye ml-1"></i></a>
-                            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                                <i class="fas fa-play ml-1"></i></a>
-                            <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
-                                <i class="fas fa-pause ml-1"></i></a>
-                        </div>
+                        <a th:href="@{/crawl/rules/}" class="btn btn-primary m-1">
+                            <i class="fas fa-list ml-1"></i></a>
+                        <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                            <i class="fas fa-eye ml-1"></i></a>
+                        <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                            <i class="fas fa-play ml-1"></i></a>
+                        <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-primary m-1">
+                            <i class="fas fa-pause ml-1"></i></a>
                     </div>
                 </div>
                 <div class="card my-3">

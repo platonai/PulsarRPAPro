@@ -120,12 +120,12 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="DRFA"/>
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="ai.platon.scent" level="INFO"/>
+    <logger name="ai.platon.scent" level="WARN"/>
     <logger name="ai.platon.scent.proxy" level="WARN"/>
     <logger name="ai.platon.scent.crawl.parser" level="WARN"/>
 

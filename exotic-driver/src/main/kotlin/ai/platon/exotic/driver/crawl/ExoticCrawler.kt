@@ -5,6 +5,7 @@ import ai.platon.exotic.driver.crawl.entity.ItemDetail
 import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
 import ai.platon.exotic.driver.crawl.scraper.OutPageScraper
 import ai.platon.exotic.driver.crawl.scraper.ScrapeTask
+import ai.platon.pulsar.common.config.Params
 import ai.platon.pulsar.driver.DriverSettings
 import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
@@ -17,7 +18,7 @@ class ExoticCrawler(val env: Environment? = null) {
 
     val scrapeServer: String
         get() = env?.getProperty("scrape.server") ?: "localhost"
-    val scrapeServerPath: Int
+    val scrapeServerPort: Int
         get() = env?.getProperty("scrape.server.port")?.toInt() ?: 8182
     val scrapeServerContextPath: String
         get() = env?.getProperty("scrape.server.servlet.context-path") ?: "/api"
@@ -27,7 +28,7 @@ class ExoticCrawler(val env: Environment? = null) {
     val driverSettings get() = DriverSettings(
         scrapeServer,
         authToken,
-        scrapeServerPath,
+        scrapeServerPort,
         scrapeServerContextPath
     )
 
@@ -40,6 +41,14 @@ class ExoticCrawler(val env: Environment? = null) {
     val pendingItems = ConcurrentLinkedQueue<ItemDetail>()
 
     var maxPendingTaskCount = if (IS_DEVELOPMENT) 10 else 50
+
+    init {
+        Params.of(
+            "scrapeServer", scrapeServer,
+            "scrapeServerPort", scrapeServerPort,
+            "scrapeServerContextPath", scrapeServerContextPath
+        ).withLogger(logger).info()
+    }
 
     fun crawl() {
         val taskSubmitter = outPageScraper.taskSubmitter

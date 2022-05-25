@@ -7,6 +7,7 @@ import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.services.component.CrawlTaskRunner
 import ai.platon.exotic.services.component.ScrapeResultCollector
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_SECOND
+import ai.platon.pulsar.common.alwaysTrue
 import ai.platon.pulsar.common.stringify
 import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
@@ -28,19 +29,19 @@ class ExoticScheduler(
     }
 
     private val logger = LoggerFactory.getLogger(ExoticScheduler::class.java)
-    private var serverIsRunning = true
 
     @Bean
     fun runStartupTasks() {
-        if (!checkIfServerRunning()) {
+        if (!serverIsRunning()) {
             return
         }
+
         crawlTaskRunner.loadUnfinishedTasks()
     }
 
     @Scheduled(initialDelay = INITIAL_DELAY, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun startCreatedCrawlRules() {
-        if (!checkIfServerRunning()) {
+        if (!serverIsRunning()) {
             return
         }
         crawlTaskRunner.startCreatedCrawlRules()
@@ -48,7 +49,7 @@ class ExoticScheduler(
 
     @Scheduled(initialDelay = INITIAL_DELAY, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun restartCrawlRules() {
-        if (!checkIfServerRunning()) {
+        if (!serverIsRunning()) {
             return
         }
         crawlTaskRunner.restartCrawlRulesNextRound()
@@ -56,7 +57,7 @@ class ExoticScheduler(
 
     @Scheduled(initialDelay = INITIAL_DELAY_2, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun runPortalTasksWhenFew() {
-        if (!checkIfServerRunning()) {
+        if (!serverIsRunning()) {
             return
         }
 
@@ -80,25 +81,20 @@ class ExoticScheduler(
 
     @Scheduled(initialDelay = INITIAL_DELAY_3, fixedDelay = 30 * MILLIS_PER_SECOND)
     fun synchronizeProducts() {
-        if (!checkIfServerRunning()) {
+        if (!serverIsRunning()) {
             return
         }
         crawlResultChecker.synchronizeProducts()
     }
 
-    private fun checkIfServerRunning(): Boolean {
-        if (!serverIsRunning) {
-            return false
-        }
-
+    private fun serverIsRunning(): Boolean {
         val submitter = exoticCrawler.outPageScraper.taskSubmitter
-        serverIsRunning = try {
+
+        return try {
             submitter.driver.count()
             true
         } catch (e: Exception) {
             false
         }
-
-        return serverIsRunning
     }
 }
