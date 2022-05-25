@@ -97,5 +97,7 @@ derby.log
 *.mv.db
 *.trace.db
 *.private.env.json
-/.TEST
+/.TEST/
 /.jpb/jpb-settings.xml
+.pulsar/
+.private/
