@@ -80,7 +80,7 @@ class ExoticExecutorTests {
 
     @Test
     fun testScrapeHelp() {
-        val executor = ExoticExecutor("-help scrape")
+        val executor = ExoticExecutor("--help scrape")
         executor.mute()
         executor.execute()
         assertTrue(executor.lastHelpMessage?.contains("-itemExpires") == true)
@@ -88,18 +88,27 @@ class ExoticExecutorTests {
 
     @Test
     fun testHarvestHelp() {
-        val executor = ExoticExecutor("-help harvest")
-        executor.mute()
+        val executor = ExoticExecutor("--help harvest -verbose")
+//        executor.mute()
         executor.execute()
-        assertTrue(executor.lastHelpMessage?.contains("-itemExpires") == true)
+        assertTrue(executor.lastHelpMessage?.contains("-trustSamples") == true)
         assertTrue(executor.lastHelpMessage?.contains("-componentSelectors") == true)
     }
 
     @Test
     fun testSQLHelp() {
-        val executor = ExoticExecutor("-help SQL")
-//        executor.mute()
+        val executor = ExoticExecutor("--help SQL")
+        executor.mute()
         executor.execute()
+        assertTrue(executor.lastHelpMessage?.contains("DOM_SLIM_HTML") == true)
+    }
+
+    @Test
+    fun testSQLHelpVerbose() {
+        val executor = ExoticExecutor("--help SQL -verbose")
+        executor.mute()
+        executor.execute()
+        assertTrue(executor.lastHelpMessage?.contains("DOM_SLIM_HTML") == true)
         assertTrue(executor.lastHelpMessage?.contains("DomFunctions") == true)
     }
 }

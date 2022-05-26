@@ -2,6 +2,7 @@ package ai.platon.exotic.standalone
 
 import ai.platon.exotic.standalone.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
@@ -359,25 +360,7 @@ $option:
     }
 
     companion object {
-        val MAIN_HELP = """
-Usage: java -jar ExoticStandalone*.jar [options] harvest <url> [args...]
-           (to harvest webpages automatically using our advanced AI)
-   or  java -jar ExoticStandalone*.jar [options] scrape <url> [args...]
-           (to scrape a webpage or a batch of webpages)
-   or  java -jar ExoticStandalone*.jar [options] sql <sql>
-           (to execute a X-SQL)
-   or  java -jar ExoticStandalone*.jar [options] serve
-           (to run the standalone server: both the REST server and the web console)
-
-Arguments following the urls are passed as the arguments for harvest or scrape methods.
-
-where options include:
-    -headless       to run browser in headless mode
-    -? -h -help
-                    print this help message to the error stream
-    --help [topic [-v|-verbose]]
-                    print this help message to the output stream, or print help message for topic
-                    the topic can be one of: [harvest|scrape|SQL], case insensitive
-        """.trimIndent()
+        val MAIN_HELP = ResourceLoader.readString("help/main.txt")  +
+                "\n\n" + ResourceLoader.readString("help/examples.txt")
     }
 }

@@ -15,28 +15,34 @@ You can also use Exotic as an #intelligent CSS selector generator#, the generate
 == Requirements
 
 * Memory 4G+
-* Maven 3.2+
 * The latest version of the Java 11 JDK
 * java and jar on the PATH
 * Google Chrome 90+
 
-== Build
-
+== Build from source
+[source,bash]
 ----
 cd exotic
 mvn clean && mvn
 ----
 
 == Run the standalone server and web console
-
+[source,bash]
 ----
-java -jar exotic-standalone/target/exotic-standalone-*-SNAPSHOT.jar
+java -jar exotic-standalone/target/exotic-standalone*.jar serve
 ----
 
-== Run auto web mining examples
-Run from bash:
+== Run Auto Web Mining examples
+Run Auto Web Mining examples from bash:
+[source,bash]
 ----
 ./harvest.sh
+----
+
+Or use the standalone jar:
+[source,bash]
+----
+java -jar exotic-standalone/target/exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
 ----
 
 Here is a snapshot of the result of auto extraction using unsupervised machine learning for an e-commerce site.
@@ -48,3 +54,11 @@ The best CSS selectors for each field are generated automatically, you can use t
 image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
 
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
+
+== Explore the exotic standalone jar:
+Run Auto Web Mining examples from bash:
+[source,bash]
+----
+java -jar exotic-standalone/target/exotic-standalone*.jar
+----
+This command will print the help information and most useful examples.
