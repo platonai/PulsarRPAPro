@@ -128,6 +128,7 @@
     <logger name="ai.platon.scent" level="WARN"/>
     <logger name="ai.platon.scent.proxy" level="WARN"/>
     <logger name="ai.platon.scent.crawl.parser" level="WARN"/>
+    <logger name="ai.platon.scent.analysis" level="INFO"/>
 
     <logger name="ai.platon.scent.ql.h2.context" level="WARN"/>
 
