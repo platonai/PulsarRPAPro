@@ -1,91 +1,91 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
 
-	<parent>
-		<groupId>ai.platon.exotic</groupId>
-		<artifactId>exotic</artifactId>
-		<version>1.9.5-SNAPSHOT</version>
-	</parent>
+    <parent>
+        <groupId>ai.platon.exotic</groupId>
+        <artifactId>exotic</artifactId>
+        <version>1.9.5-SNAPSHOT</version>
+    </parent>
 
-	<artifactId>exotic-standalone</artifactId>
-	<packaging>jar</packaging>
-	<name>Exotic Standalone</name>
-	<description>The exotic standalone</description>
+    <artifactId>exotic-standalone</artifactId>
+    <packaging>jar</packaging>
+    <name>Exotic Standalone</name>
+    <description>The exotic standalone</description>
 
-	<dependencies>
-		<dependency>
-			<groupId>ai.platon.exotic</groupId>
-			<artifactId>exotic-server</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ai.platon.exotic</groupId>
-			<artifactId>exotic-services</artifactId>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-server</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-services</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-data-mongodb</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>de.flapdoodle.embed</groupId>
-			<artifactId>de.flapdoodle.embed.mongo</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-mongodb</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>de.flapdoodle.embed</groupId>
+            <artifactId>de.flapdoodle.embed.mongo</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-devtools</artifactId>
-			<optional>true</optional>
-		</dependency>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-actuator</artifactId>
-		</dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-devtools</artifactId>
+            <optional>true</optional>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
 
-		<dependency>
-			<groupId>org.junit.jupiter</groupId>
-			<artifactId>junit-jupiter</artifactId>
-			<scope>test</scope>
-		</dependency>
-	</dependencies>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
 
-	<build>
-		<defaultGoal>package</defaultGoal>
+    <build>
+        <defaultGoal>package</defaultGoal>
 
-		<plugins>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-dependency-plugin</artifactId>
-				<executions>
-					<execution>
-						<goals>
-							<goal>unpack</goal>
-						</goals>
-						<configuration>
-							<artifactItems>
-								<artifactItem>
-									<groupId>${project.groupId}</groupId>
-									<artifactId>exotic-services</artifactId>
-									<version>${project.version}</version>
-									<includes>**/static/*</includes>
-									<includes>**/templates/**</includes>
-								</artifactItem>
-							</artifactItems>
-							<outputDirectory>${project.build.directory}/classes/</outputDirectory>
-						</configuration>
-					</execution>
-				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>ai.platon.exotic.standalone.ExoticStandaloneKt</mainClass>
-					<addResources>true</addResources>
-					<executable>true</executable>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-dependency-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>unpack</goal>
+                        </goals>
+                        <configuration>
+                            <artifactItems>
+                                <artifactItem>
+                                    <groupId>${project.groupId}</groupId>
+                                    <artifactId>exotic-services</artifactId>
+                                    <version>${project.version}</version>
+                                    <includes>**/static/*</includes>
+                                    <includes>**/templates/**</includes>
+                                </artifactItem>
+                            </artifactItems>
+                            <outputDirectory>${project.build.directory}/classes/</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ai.platon.exotic.standalone.StandaloneApplicationKt</mainClass>
+                    <addResources>true</addResources>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 </project>

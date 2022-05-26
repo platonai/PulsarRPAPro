@@ -196,7 +196,8 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="INFO"/>
+    <logger name="ai.platon.exotic" level="WARN"/>
+    <logger name="ai.platon.exotic.driver" level="INFO"/>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>
 
