@@ -59,7 +59,7 @@ image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
 == Explore the exotic standalone jar:
-Run Auto Web Mining examples from bash:
+Run the jar directly for helps:
 [source,bash]
 ----
 java -jar exotic-standalone/target/exotic-standalone*.jar
