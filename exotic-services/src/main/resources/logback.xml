@@ -40,6 +40,10 @@
     <logger name="org.springframework.orm.jpa" level="INFO"/>
     <logger name="org.springframework.transaction" level="INFO"/>
 
+    <!-- Suppress Warning logs for JodaTime converters -->
+    <!-- see https://github.com/spring-projects/spring-data-commons/issues/1729 -->
+    <logger name="org.springframework.data.convert.CustomConversions" level="ERROR"/>
+
     <logger name="org.hibernate.cache" level="DEBUG"/>
 <!--    <logger name="org.hibernate.SQL" level="DEBUG"/>-->
     <logger name="net.sf.ehcache.store" level="DEBUG"/>

@@ -7,7 +7,7 @@
 
 <body>
 
-<div class="container-fluid my-2">
+<div class="container-fluid my-1">
 
     <!--/* The element with breadcrumb class will be passed to the header fragment */-->
     <nav aria-label="breadcrumb">
@@ -40,9 +40,8 @@
                                 <th></th>
                                 <th>Name</th>
                                 <th>Label</th>
-                                <th>Period</th>
-                                <th title="minute, hour, dom, month, dow">Cron</th>
-                                <th>Portals</th>
+                                <th title="For cron: minute, hour, dom, month, dow">Period/Cron</th>
+                                <th>Portal Urls</th>
                                 <th>Status</th>
                                 <th>Start At</th>
                                 <th>Last Crawl</th>
@@ -55,12 +54,10 @@
                                 <td th:text="${rule.name}"></td>
                                 <td th:text="${rule.label}"></td>
                                 <td th:switch="${rule.period.toString()}">
-                                    <span th:case="'PT-1H'"></span>
+                                    <block th:case="'PT-1H'">
+                                        <span th:text="${rule.cronExpression}"></span>
+                                    </block>
                                     <span th:case="*" th:text="${rule.period}"></span>
-                                </td>
-                                <td th:switch="${rule.period.toString()}">
-                                    <span th:case="'PT-1H'" th:text="${rule.cronExpression}"></span>
-                                    <span th:case="*"></span>
                                 </td>
                                 <td th:text="${rule.portalUrls.split('\n').length}"></td>
                                 <td th:text="${rule.status}"></td>

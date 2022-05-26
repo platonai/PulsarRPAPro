@@ -1,14 +1,14 @@
 = Exotic README
 
-Exotic is the professional edition of Pulsar with advanced AI support to do auto web mining.
+Exotic is the professional edition of Pulsar with advanced AI support to do link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[Auto Web Mining].
 
-There are already dozens of scraping cases for the most popular websites, we are keeping adding more cases.
+There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are keeping adding more cases.
 
 Exotic demonstrates:
 
-* How to use Exotic as a standalone server and web console
+* How to use Exotic as a standalone server with a minimal web console to manage scrape tasks
 * How to use Pulsar as a library
-* How to use Pulsar driver to access the Pulsar REST Service
+* How to use Pulsar driver to access the Pulsar REST service
 * How to extract almost every field in any webpages automatically in an unsupervised manner using our advanced AI
 * How to use Exotic as an #intelligent CSS selector generator#, the generated CSS selectors can be used in any traditional scrape systems to extract data from webpages.
 
@@ -19,23 +19,33 @@ Exotic demonstrates:
 * java and jar on the PATH
 * Google Chrome 90+
 
-== Build
+== Download
+Download the latest executable jar: http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar[link].
 
+== Build from source
+[source,bash]
 ----
 cd exotic
 mvn clean && mvn
 ----
 
 == Run the standalone server and web console
-
+[source,bash]
 ----
-java -jar exotic-standalone/target/exotic-standalone-*-SNAPSHOT.jar
+java -jar exotic-standalone/target/exotic-standalone*.jar serve
 ----
 
-== Run auto web mining examples
-Run from bash:
+== Run Auto Web Mining examples
+Run Auto Web Mining examples from bash:
+[source,bash]
 ----
 ./harvest.sh
+----
+
+Or use the standalone jar:
+[source,bash]
+----
+java -jar exotic-standalone/target/exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
 ----
 
 Here is a snapshot of the result of auto extraction using unsupervised machine learning for an e-commerce site.
@@ -47,3 +57,11 @@ The best CSS selectors for each field are generated automatically, you can use t
 image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
 
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
+
+== Explore the exotic standalone jar:
+Run the jar directly for helps:
+[source,bash]
+----
+java -jar exotic-standalone/target/exotic-standalone*.jar
+----
+This command will print the help information and most useful examples.

@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>ai.platon.exotic</groupId>
 		<artifactId>exotic</artifactId>
-		<version>1.9.3-SNAPSHOT</version>
+		<version>1.9.4-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>exotic-standalone</artifactId>
@@ -41,6 +41,12 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>org.junit.jupiter</groupId>
+			<artifactId>junit-jupiter</artifactId>
+			<scope>test</scope>
 		</dependency>
 	</dependencies>
 

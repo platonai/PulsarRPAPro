@@ -116,9 +116,9 @@ class CrawlRule {
         return NameGenerator.gen()
     }
 
-    /**
-     * TODO: use EntityListeners
-     * */
+    @PrePersist
+    @PreUpdate
+    @PostLoad
     final fun adjustFields() {
         period = period.truncatedTo(ChronoUnit.MINUTES)
         startTime = startTime.truncatedTo(ChronoUnit.SECONDS)
@@ -136,6 +136,12 @@ class CrawlRule {
         }
 
         name = name.takeIf { it.isNotBlank() } ?: randomName()
-        label = label ?: ""
+
+        if (label.isNullOrBlank()) {
+            label = null
+        }
+        if (description.isNullOrBlank()) {
+            description = null
+        }
     }
 }

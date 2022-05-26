@@ -20,7 +20,6 @@ import java.util.*
 open class VerboseHarvester(
     context: ScentContext = ScentContexts.create()
 ) {
-
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
 
     val session: ScentSession = context.createSession()
@@ -64,28 +63,20 @@ open class VerboseHarvester(
     fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
         val (url0, args0) = UrlUtils.splitUrlArgs(url)
         val result = runBlocking { session.harvest(url0, session.options("$options $args0")) }
-        val exports = session.buildAll(result.tableGroup, options)
-
-        val json = session.buildJson(result.tableGroup)
-        val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
-        Files.createDirectories(baseDir)
-        val path = baseDir.resolve("last-page-tables.json")
-        Files.writeString(path, json)
-
-        logger.info("Harvest reports: {}", path.parent)
-        exports.keys.map { it.toString() }
-            .filter { it.matches(".+/tables/.+".toRegex()) }
-            .forEach { ExoticUtils.openBrowser(it) }
+        report(result, options)
     }
 
     private fun report(result: HarvestResult, options: HarvestOptions) {
-        session.buildAll(result.tableGroup, options)
+        val exports = session.buildAll(result.tableGroup, options)
 
         val json = session.buildJson(result.tableGroup)
         val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
         Files.createDirectories(path.parent)
         Files.writeString(path, json)
 
-        logger.info("Harvest result: file://${path.parent}")
+        logger.info("Harvest reports: {}", path.parent)
+        exports.keys.map { it.toString() }
+            .filter { it.matches(".+/tables/.+".toRegex()) }
+            .forEach { ExoticUtils.openBrowser(it) }
     }
 }

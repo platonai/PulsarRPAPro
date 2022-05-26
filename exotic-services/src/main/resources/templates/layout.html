@@ -13,11 +13,17 @@
 
     <link href="../static/css/core.css" rel="stylesheet" media="screen"
           th:href="@{/css/core.css}" />
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"
-          th:href="@{/css/bootstrap.min.css}"/>
+<!--    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"-->
+<!--          th:href="@{/css/bootstrap.min.css}"/>-->
 <!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
     <link href="../static/css/fontawesome/all.css" rel="stylesheet" media="screen"
           th:href="@{/css/fontawesome/all.css}"/>
+
+    <link href="../static/vendor/bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/bootstrap-4.3.1/css/bootstrap.css}"/>
+
+    <link href="../static/vendor/highlightjs/styles/default.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/highlightjs/styles/default.css}"/>
 
     <!--/* Per-page placeholder for additional links */-->
     <th:block th:if="${links} != null">
@@ -26,23 +32,26 @@
 
     <!--/* Default scripts; can be replaced by the calling templates */-->
     <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+<!--    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>-->
+    <script src="../static/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js" th:src="@{/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js}"></script>
     <script src="../static/js/crawl-common.js" th:src="@{/js/crawl-common.js}"></script>
+    <script src="../static/vendor/highlightjs/highlight.pack.js" th:src="@{/vendor/highlightjs/highlight.pack.js}"></script>
 
     <!--/* Per-page placeholder for additional scripts */-->
     <th:block th:if="${scripts} != null">
         <th:block th:replace="${scripts}" />
     </th:block>
-
 </head>
 
 <body>
 <!--/* Header fragment */-->
 
-<nav aria-label="breadcrumb" th:fragment="header(breadcrumb)">
-    <ol class="breadcrumb">
-        <li><a href="#">Fake</a></li>
-    </ol>
+<!--/* The element with breadcrumb class will be passed to the header fragment */-->
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">PlatonAI</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
 </nav>
 
 <!--/* The value passed from calling template will be inserted in this element */-->
@@ -60,7 +69,9 @@
         Phasellus et placerat elit.
     </p>
 </div>
+
 <!--/* Footer fragment */-->
 <footer th:fragment="footer" class="text-center">&copy; 2022 Default Footer</footer>
+
 </body>
 </html>
