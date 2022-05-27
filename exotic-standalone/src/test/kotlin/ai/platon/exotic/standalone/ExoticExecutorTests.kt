@@ -89,7 +89,7 @@ class ExoticExecutorTests {
     @Test
     fun testHarvestHelp() {
         val executor = ExoticExecutor("--help harvest -verbose")
-//        executor.mute()
+        executor.mute()
         executor.execute()
         assertTrue(executor.lastHelpMessage?.contains("-trustSamples") == true)
         assertTrue(executor.lastHelpMessage?.contains("-componentSelectors") == true)

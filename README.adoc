@@ -20,19 +20,24 @@ Exotic demonstrates:
 * Google Chrome 90+
 
 == Download
-Download the latest executable jar: http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar[link].
+Download the latest executable jar:
+[source,bash]
+----
+wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
+----
 
 == Build from source
 [source,bash]
 ----
 cd exotic
 mvn clean && mvn
+cd exotic-standalone/target/
 ----
 
 == Run the standalone server and web console
 [source,bash]
 ----
-java -jar exotic-standalone/target/exotic-standalone*.jar serve
+java -jar exotic-standalone*.jar serve
 ----
 
 == Run Auto Web Mining examples
@@ -42,10 +47,10 @@ Run Auto Web Mining examples from bash:
 ./harvest.sh
 ----
 
-Or use the standalone jar:
+Or run the standalone jar:
 [source,bash]
 ----
-java -jar exotic-standalone/target/exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
+java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
 ----
 
 Here is a snapshot of the result of auto extraction using unsupervised machine learning for an e-commerce site.
@@ -56,12 +61,14 @@ The best CSS selectors for each field are generated automatically, you can use t
 
 image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
 
+Note that the target website in this demo uses CSS obfuscation techniques, so the CSS selectors is hard to read and changes frequently, and there is no other effective technology to solve this problem other than machine learning based solutions.
+
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
 == Explore the exotic standalone jar:
-Run the jar directly for helps:
+Run the executable jar directly for helps:
 [source,bash]
 ----
-java -jar exotic-standalone/target/exotic-standalone*.jar
+java -jar exotic-standalone*.jar
 ----
-This command will print the help information and most useful examples.
+This command will print the help message and most useful examples.

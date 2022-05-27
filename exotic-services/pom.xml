@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>ai.platon.exotic</groupId>
 		<artifactId>exotic</artifactId>
-		<version>1.9.4-SNAPSHOT</version>
+		<version>1.9.5-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>exotic-services</artifactId>
@@ -115,27 +115,28 @@
 		</dependency>
     </dependencies>
 
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<mainClass>ai.platon.exotic.starter.ExoticServiceStarterKt</mainClass>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
-
 	<profiles>
 		<profile>
-			<id>war</id>
+			<id>REST-executable</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<mainClass>ai.platon.exotic.starter.ExoticServiceStarterKt</mainClass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>REST-war</id>
 			<build>
 				<plugins>
 					<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>3.3.2</version>
 						<configuration>
 							<warName>exotic</warName>
 						</configuration>
