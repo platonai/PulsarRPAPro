@@ -47,7 +47,7 @@ class ExoticCrawler(val env: Environment? = null) {
             "scrapeServer", scrapeServer,
             "scrapeServerPort", scrapeServerPort,
             "scrapeServerContextPath", scrapeServerContextPath
-        ).withLogger(logger).info()
+        ).withLogger(logger).debug()
     }
 
     fun crawl() {

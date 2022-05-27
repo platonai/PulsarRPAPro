@@ -128,6 +128,7 @@
     <logger name="ai.platon.scent" level="WARN"/>
     <logger name="ai.platon.scent.proxy" level="WARN"/>
     <logger name="ai.platon.scent.crawl.parser" level="WARN"/>
+    <logger name="ai.platon.scent.analysis" level="INFO"/>
 
     <logger name="ai.platon.scent.ql.h2.context" level="WARN"/>
 
@@ -195,15 +196,20 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="INFO"/>
+    <logger name="ai.platon.exotic" level="WARN"/>
+    <logger name="ai.platon.exotic.driver" level="INFO"/>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>
 
-    <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework" level="DEBUG"/>
+    <logger name="org.springframework.data" level="WARN"/>
 
     <!-- Suppress Warning logs for JodaTime converters -->
     <!-- see https://github.com/spring-projects/spring-data-commons/issues/1729 -->
     <logger name="org.springframework.data.convert.CustomConversions" level="ERROR"/>
+
+    <logger name="de.flapdoodle.embed.mongo" level="WARN"/>
+    <logger name="org.mongodb" level="WARN"/>
 
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>

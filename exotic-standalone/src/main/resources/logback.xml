@@ -202,10 +202,14 @@
     <logger name="ch.qos.logback.classic" level="WARN"/>
 
     <logger name="org.springframework" level="WARN"/>
+    <logger name="org.springframework.data" level="WARN"/>
 
     <!-- Suppress Warning logs for JodaTime converters -->
     <!-- see https://github.com/spring-projects/spring-data-commons/issues/1729 -->
     <logger name="org.springframework.data.convert.CustomConversions" level="ERROR"/>
+
+    <logger name="de.flapdoodle.embed.mongo" level="WARN"/>
+    <logger name="org.mongodb" level="WARN"/>
 
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>

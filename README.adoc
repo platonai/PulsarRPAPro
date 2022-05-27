@@ -20,7 +20,11 @@ Exotic demonstrates:
 * Google Chrome 90+
 
 == Download
-Download the latest executable jar: http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar[link].
+Download the latest executable jar:
+[source,bash]
+----
+wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
+----
 
 == Build from source
 [source,bash]
