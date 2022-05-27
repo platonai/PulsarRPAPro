@@ -47,7 +47,7 @@ Run Auto Web Mining examples from bash:
 ./harvest.sh
 ----
 
-Or use the standalone jar:
+Or run the standalone jar:
 [source,bash]
 ----
 java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
@@ -60,6 +60,8 @@ image::docs/shopee.auto.mining.png[Auto Extract]
 The best CSS selectors for each field are generated automatically, you can use these rules for web scraping in the old-fashioned way:
 
 image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
+
+Note that the target website in this demo uses CSS obfuscation techniques, so the CSS selectors is hard to read and changes frequently, and there is no other effective technology to solve this problem other than machine learning based solutions.
 
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
