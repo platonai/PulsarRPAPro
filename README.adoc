@@ -2,11 +2,11 @@
 
 Exotic is the professional edition of Pulsar with advanced AI support to do link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[Auto Web Mining].
 
-There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are keeping adding more cases.
+There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
 Exotic demonstrates:
 
-* How to use Exotic as a standalone server with a minimal web console to manage scrape tasks
+* How to use Exotic as a standalone server with a minimal web console to manage scraping tasks
 * How to use Pulsar as a library
 * How to use Pulsar driver to access the Pulsar REST service
 * How to extract almost every field in any webpages automatically in an unsupervised manner using our advanced AI
@@ -34,7 +34,7 @@ mvn clean && mvn
 cd exotic-standalone/target/
 ----
 
-== Run the standalone server and web console
+== Run the standalone server and open web console
 [source,bash]
 ----
 java -jar exotic-standalone*.jar serve
@@ -50,7 +50,7 @@ Run Auto Web Mining examples from bash:
 Or run the standalone jar:
 [source,bash]
 ----
-java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
+java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose
 ----
 
 Here is a snapshot of the result of auto extraction using unsupervised machine learning for an e-commerce site.
@@ -61,7 +61,7 @@ The best CSS selectors for each field are generated automatically, you can use t
 
 image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
 
-Note that the target website in this demo uses CSS obfuscation techniques, so the CSS selectors is hard to read and changes frequently, and there is no other effective technology to solve this problem other than machine learning based solutions.
+Note that the website in this demo uses CSS obfuscation techniques, so the CSS selectors are hard to read and changes frequently, and there is no other effective technology to solve this problem other than machine learning based solutions.
 
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
