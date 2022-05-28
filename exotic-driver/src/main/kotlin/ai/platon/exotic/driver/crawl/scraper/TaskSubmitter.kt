@@ -19,7 +19,7 @@ import kotlin.random.Random
 open class TaskSubmitter(
     private val driverSettings: DriverSettings,
     private val autoCollect: Boolean = true,
-) {
+): AutoCloseable {
     var logger: Logger = LoggerFactory.getLogger(TaskSubmitter::class.java)
     var dryRun = false
     var driver = Driver(driverSettings)
@@ -65,6 +65,11 @@ open class TaskSubmitter(
         submitAll(tasks)
 
         return tasks
+    }
+
+    override fun close() {
+        collectTimer.cancel()
+        driver.close()
     }
 
     private fun submit(listenableTask: ListenableScrapeTask): ListenableScrapeTask {

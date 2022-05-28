@@ -57,7 +57,7 @@ class ExoticApplication(
         return JavaTimeModule()
     }
 
-    @Bean
+    @Bean(destroyMethod = "close")
     fun exoticCrawler(): ExoticCrawler {
         return ExoticCrawler(env)
     }

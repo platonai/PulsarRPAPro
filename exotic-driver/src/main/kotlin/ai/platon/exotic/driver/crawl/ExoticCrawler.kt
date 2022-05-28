@@ -13,17 +13,25 @@ import java.util.*
 import java.util.concurrent.ConcurrentLinkedDeque
 import java.util.concurrent.ConcurrentLinkedQueue
 
-class ExoticCrawler(val env: Environment? = null) {
+class ExoticCrawler(val env: Environment? = null): AutoCloseable {
     private val logger = LoggerFactory.getLogger(ExoticCrawler::class.java)
 
     val scrapeServer: String
-        get() = env?.getProperty("scrape.server") ?: "localhost"
+        get() = env?.getProperty("scrape.server")
+            ?: System.getProperty("scrape.server")
+            ?: "localhost"
     val scrapeServerPort: Int
-        get() = env?.getProperty("scrape.server.port")?.toInt() ?: 8182
+        get() = env?.getProperty("scrape.server.port")?.toIntOrNull()
+            ?: System.getProperty("scrape.server.port")?.toIntOrNull()
+            ?: 8182
     val scrapeServerContextPath: String
-        get() = env?.getProperty("scrape.server.servlet.context-path") ?: "/api"
+        get() = env?.getProperty("scrape.server.servlet.context-path")
+            ?: System.getProperty("scrape.server.servlet.context-path")
+            ?: "/api"
     val authToken: String
-        get() = env?.getProperty("scrape.authToken") ?: "b06test42c13cb000f74539b20be9550b8a1a90b9"
+        get() = env?.getProperty("scrape.authToken")
+            ?: System.getProperty("scrape.authToken")
+            ?: "b06test42c13cb000f74539b20be9550b8a1a90b9"
 
     val driverSettings get() = DriverSettings(
         scrapeServer,
@@ -74,6 +82,10 @@ class ExoticCrawler(val env: Environment? = null) {
         } catch (t: Throwable) {
             logger.warn("Unexpected exception", t)
         }
+    }
+
+    override fun close() {
+        outPageScraper.close()
     }
 
     private fun scrapeFromQueue(queue: Queue<ListenablePortalTask>, n: Int) {

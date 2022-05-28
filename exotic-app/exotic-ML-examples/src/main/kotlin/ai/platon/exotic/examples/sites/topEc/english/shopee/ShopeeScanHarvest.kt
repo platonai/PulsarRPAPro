@@ -12,18 +12,22 @@ import kotlin.streams.toList
 /**
  * Scan webpages in a directory and run an un-supervised ML algorithm.
  *
- * When sample size > 1000, add VM flags: -Xmx6g -Xms2G
- * When sample size > 2000, add VM flags: -Xmx10g -Xms2G
+ * When corpus size > 1000, add VM flags: -Xmx6g -Xms2G
+ * When corpus size > 2000, add VM flags: -Xmx10g -Xms2G
  *
  * The flag Xmx specifies the maximum memory allocation pool for a Java Virtual Machine (JVM),
  * while Xms specifies the initial memory allocation pool.
+ *
+ * The best way to run the program is using command line:
+ *
+ * java -Xmx10g -Xms2G -cp exotic-ML-examples*.jar -D"loader.main=ai.platon.exotic.examples.sites.topEc.english.shopee.ShopeeScanHarvestKt" org.springframework.boot.loader.PropertiesLauncher -limit 2000
  * */
 object ShopeeScanHarvest {
+    val session = ScentContexts.createSession()
+    val store = SimpleAvroStore()
 
-    fun run() {
-        val session = ScentContexts.createSession()
-        val store = SimpleAvroStore()
-        val limit = 1000
+    fun run(limit: Int) {
+        println("Limit: $limit")
 
         val documents = Files.list(AppPaths.LOCAL_STORAGE_DIR)
             .filter { it.toString().contains("shopee-sg") }
@@ -55,6 +59,14 @@ object ShopeeScanHarvest {
     }
 }
 
-fun main() {
-    ShopeeScanHarvest.run()
+fun main(args: Array<String>) {
+    var limit = Int.MAX_VALUE
+
+    var i = 0
+    while (i < args.size) {
+        if (args[i] == "limit") limit = args[++i].toIntOrNull() ?: Int.MAX_VALUE
+        ++i
+    }
+
+    ShopeeScanHarvest.run(limit)
 }
