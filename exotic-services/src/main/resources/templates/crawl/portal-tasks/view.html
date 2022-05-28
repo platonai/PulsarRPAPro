@@ -70,7 +70,13 @@
                                 <dt>Status</dt>
                                 <dd th:text="${task.status}"></dd>
                                 <dt>Server Task Id</dt>
-                                <dd th:text="${task.serverTaskId}"></dd>
+                                <dd>
+                                    <a
+                                            th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
+                                            th:text="${task.serverTaskId}"
+                                            target="_blank"
+                                    ></a>
+                                </dd>
                             </dl>
                         </div>
                     </div>
@@ -97,7 +103,10 @@
         <div class="card-footer">
             <a th:href="@{/crawl/portal-tasks/}" class="btn btn-primary m-1">
                 <i class="fas fa-list ml-1"></i></a>
-<!--            <a th:href="@{/crawl/portal-tasks/edit/{id}(id=${task.id})}" class="btn btn-primary m-1">-->
+            <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}" class="btn btn-primary m-1">
+                <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
+
+            <!--            <a th:href="@{/crawl/portal-tasks/edit/{id}(id=${task.id})}" class="btn btn-primary m-1">-->
 <!--                <i class="fas fa-edit ml-1"></i></a>-->
 <!--            <a th:href="@{/crawl/portal-tasks/start/{id}(id=${task.id})}" class="btn btn-primary m-1">-->
 <!--                <i class="fas fa-play ml-1"></i></a>-->
