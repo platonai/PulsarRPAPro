@@ -4,13 +4,12 @@ import ai.platon.exotic.driver.common.PROP_FETCH_NEXT_OFFSET
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
-import ai.platon.exotic.services.entity.SysProp
-import ai.platon.exotic.services.entity.generated.IntegratedProduct
-import ai.platon.exotic.services.persist.*
+import ai.platon.exotic.services.api.entity.SysProp
+import ai.platon.exotic.services.api.entity.generated.IntegratedProduct
+import ai.platon.exotic.services.api.persist.*
 import com.google.gson.GsonBuilder
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import java.util.*

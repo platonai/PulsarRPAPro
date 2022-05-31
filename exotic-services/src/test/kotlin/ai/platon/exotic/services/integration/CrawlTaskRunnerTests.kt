@@ -1,11 +1,11 @@
 package ai.platon.exotic.services.integration
 
-import ai.platon.exotic.services.jackson.prettyScentObjectWritter
-import ai.platon.exotic.services.jackson.scentObjectMapper
-import ai.platon.exotic.services.component.CrawlTaskRunner
+import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
+import ai.platon.exotic.services.common.jackson.scentObjectMapper
+import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
-import ai.platon.exotic.services.entity.converters.IntegratedProductConverter
+import ai.platon.exotic.services.api.entity.converters.IntegratedProductConverter
 import org.junit.jupiter.api.Disabled
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

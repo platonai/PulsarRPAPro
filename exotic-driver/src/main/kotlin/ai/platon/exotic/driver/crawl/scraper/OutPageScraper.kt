@@ -13,7 +13,7 @@ import java.time.Duration
 
 open class OutPageScraper(
     val driverSettings: DriverSettings
-) {
+): AutoCloseable {
     var logger: Logger = LoggerFactory.getLogger(OutPageScraper::class.java)
 
     val httpTimeout: Duration = Duration.ofMinutes(3)
@@ -87,6 +87,10 @@ open class OutPageScraper(
         }
 
         taskSubmitter.scrape(listenableScrapeTask)
+    }
+
+    override fun close() {
+        taskSubmitter.close()
     }
 
     private fun createChildTasks(

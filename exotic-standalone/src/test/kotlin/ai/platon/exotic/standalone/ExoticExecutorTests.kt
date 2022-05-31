@@ -1,5 +1,6 @@
 package ai.platon.exotic.standalone
 
+import ai.platon.exotic.standalone.starter.ExoticExecutor
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.scent.context.ScentContexts
 import org.junit.jupiter.api.Assertions.*

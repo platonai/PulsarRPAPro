@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Task List</title>
+</head>
+
+<body>
+<div class="container-fluid my-1">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
+            <li class="breadcrumb-item active">Remote Tasks</li>
+        </ol>
+    </nav>
+
+    <div class="card">
+        <div class="card-body">
+            <div th:switch="${tasks}">
+                <div>
+                    <h2 th:case="null">No task yet</h2>
+                    <div th:case="*">
+                        <table class="table table-striped table-responsive-md">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th>Status Code</th>
+                                <th>Page Status Code</th>
+                                <th>Page Content Bytes</th>
+                                <th>Is Done</th>
+                                <th>Url</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="task : ${tasks}">
+                                <td><a th:text="${task.id}" th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}" target="_blank"></a></td>
+                                <td th:text="${task.statusCode}"></td>
+                                <td th:text="${task.pageStatusCode}"></td>
+                                <td th:text="${task.pageContentBytes}"></td>
+                                <td th:text="${task.isDone}"></td>
+                                <td th:text="${task.url}"></td>
+                                <td>
+                                    <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}"
+                                       title="Server side detail" class="btn btn-primary">
+                                        <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

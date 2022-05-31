@@ -19,7 +19,7 @@ import kotlin.random.Random
 open class TaskSubmitter(
     private val driverSettings: DriverSettings,
     private val autoCollect: Boolean = true,
-) {
+): AutoCloseable {
     var logger: Logger = LoggerFactory.getLogger(TaskSubmitter::class.java)
     var dryRun = false
     var driver = Driver(driverSettings)
@@ -65,6 +65,11 @@ open class TaskSubmitter(
         submitAll(tasks)
 
         return tasks
+    }
+
+    override fun close() {
+        collectTimer.cancel()
+        driver.close()
     }
 
     private fun submit(listenableTask: ListenableScrapeTask): ListenableScrapeTask {
@@ -164,10 +169,10 @@ open class TaskSubmitter(
 
         val nextCheckTime = responses.filter { !it.isDone }.minOfOrNull { it.estimatedWaitTime } ?: collectTimerPeriod.seconds
         val elapsedTime = Duration.between(startTime, Instant.now())
-        val rand = Random.nextInt(5)
-        val description = if (rand == 0) "finished/retry/responses/checking/pending" else ""
+        val rand = Random.nextInt(10)
+        val description = if (rand == 0) " | (finished/retry/responses/checking/pending)" else ""
         logger.info(
-            "Collected {}/{}/{}/{}/{} responses in {}, next check: {}s | $description",
+            "Collected {}/{}/{}/{}/{} responses in {}, next check: {}s$description",
             fc, rc, responses.size, checkingIds.size, pendingTasks.size, elapsedTime, nextCheckTime
         )
 

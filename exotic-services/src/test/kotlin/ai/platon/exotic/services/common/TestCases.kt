@@ -1,6 +1,6 @@
 package ai.platon.exotic.services.common
 
-import ai.platon.exotic.services.entity.converters.ModelConverter
+import ai.platon.exotic.services.api.entity.converters.ModelConverter
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder

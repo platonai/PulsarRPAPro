@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Rule List</title>
+</head>
+
+<body>
+
+<div class="container-fluid my-2">
+
+    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Crawl Home</a></li>
+            <li class="breadcrumb-item active">Remote Dashboard</li>
+        </ol>
+    </nav>
+
+    <div>
+        <div class="card">
+            <div class="card-header">
+                Dashboard
+            </div>
+            <div class="card-body">
+                <pre><code class="language-json" th:text="${dashboard}"></code></pre>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+</body>
+
+</html>
