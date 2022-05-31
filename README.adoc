@@ -6,9 +6,9 @@ There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/p
 
 You can use Exotic to generate all the scraping rules automatically and then use the web console to manage the crawler in detail:
 
-. STEP1: Extract almost every field in any webpage automatically using our advanced AI
-. STEP2: Check the automatically generated SQLs, test and modify it to match the most concerned needs if necessary
-. STEP3: Create a crawl rule in the web console to run the SQLs continuously
+. STEP1: extract almost every field in any webpage automatically using our advanced AI
+. STEP2: check the automatically generated scraping SQLs, test and modify it to match the further needs if necessary
+. STEP3: create crawl rules in the web console to run the scraping SQLs continuously
 
 Exotic also demonstrates:
 
@@ -43,7 +43,7 @@ cd exotic-standalone/target/
 java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose
 ----
 
-Here is a snapshot of the result of auto extraction using unsupervised machine learning for an e-commerce site.
+Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
 
 image::docs/shopee.auto.mining.png[Auto Extract]
 
@@ -55,12 +55,12 @@ And also the generated SQL:
 
 image::docs/shopee.generated.sql.png[Auto Generated SQL]
 
-Note that the website in this demo uses CSS obfuscation techniques, so the CSS selectors are hard to read and changes frequently, and there is no other effective technology to solve this problem other than machine learning based solutions.
+Note that the website in this demo uses CSS obfuscation techniques, so the CSS selectors are hard to read and changes frequently. There is no other effective technology to solve this problem other than machine learning based solutions.
 
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
-== Scrape pages use generated SQL
-The harvest command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the SQL. We can execute the SQL query using the sql command.
+== Scrape pages using the generated SQLs
+The harvest command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the scraping SQLs. We can execute the SQL query using the `sql` command.
 [source,bash,sql]
 ----
 java -jar exotic-standalone*.jar sql "
@@ -92,14 +92,14 @@ from load_out_pages('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pri
 ----
 
 == Run the standalone server and open web console
-Finally, we have the perfect scrape rules to match our most complex requirement, we can use the web console to manage the crawler in detail and run the crawlers continuously.
+Finally, we have the perfect scraping rules to match our most complex requirement, we can use the web console to manage the crawlers and run them on demand.
 
 [source,bash]
 ----
 java -jar exotic-standalone*.jar serve
 ----
 
-== Explore the exotic standalone jar:
+== Explore the exotic executable jar:
 Run the executable jar directly for helps to explore more power provided:
 [source,bash]
 ----
