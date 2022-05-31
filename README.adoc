@@ -60,7 +60,7 @@ Note that the website in this demo uses CSS obfuscation techniques, so the CSS s
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
 == Scrape pages using the generated SQLs
-The harvest command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the scraping SQLs. We can execute the SQL query using the `sql` command.
+The `harvest` command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the scraping SQLs. We can execute the SQL query using the `sql` command.
 [source,bash,sql]
 ----
 java -jar exotic-standalone*.jar sql "
@@ -99,7 +99,7 @@ Finally, we have the perfect scraping rules to match our most complex requiremen
 java -jar exotic-standalone*.jar serve
 ----
 
-== Explore the exotic executable jar
+== Explore the Exotic executable jar
 Run the executable jar directly for helps to explore more power provided:
 [source,bash]
 ----
