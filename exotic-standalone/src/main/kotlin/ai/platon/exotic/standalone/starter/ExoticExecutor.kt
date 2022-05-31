@@ -191,6 +191,8 @@ class ExoticExecutor(val argv: Array<String>) {
         val context = ScentSQLContexts.create()
         val rs = context.executeQuery(sql)
         lastOutput = ResultSetFormatter(rs, withHeader = true, asList = true).toString()
+        // remove all ` character so that we can paste the sql in a terminal
+        lastOutput = lastOutput?.replace("`", "")
         output()
     }
 
