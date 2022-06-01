@@ -1,4 +1,4 @@
-package ai.platon.exotic.services.integration
+package ai.platon.exotic.services.api.integration
 
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.exotic.services.common.jackson.scentObjectMapper
