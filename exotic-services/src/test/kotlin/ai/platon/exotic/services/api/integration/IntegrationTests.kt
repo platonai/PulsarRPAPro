@@ -1,4 +1,4 @@
-package ai.platon.exotic.services.integration
+package ai.platon.exotic.services.api.integration
 
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired

@@ -1,4 +1,4 @@
-package ai.platon.exotic.services.integration
+package ai.platon.exotic.services.api.integration
 
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.web.client.TestRestTemplate

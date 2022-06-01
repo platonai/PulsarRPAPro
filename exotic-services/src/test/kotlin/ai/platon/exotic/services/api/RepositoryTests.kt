@@ -1,4 +1,4 @@
-package ai.platon.exotic.services
+package ai.platon.exotic.services.api
 
 import ai.platon.exotic.driver.common.PROP_FETCH_NEXT_OFFSET
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
