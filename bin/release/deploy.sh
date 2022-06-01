@@ -20,14 +20,14 @@ mvn clean
 mvn
 
 exitCode=$?
-[ $exitCode -eq 0 ] ?: echo "Build successfully" : exit 1
+[ $exitCode -eq 0 ] && echo "Build successfully" || exit 1
 
 REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic
 ssh $HOST mkdir -p $REMOTE_BASE_DIR
 
 scp -r "$APP_HOME"/exotic-standalone/target/exotic-standalone-"$VERSION".jar "$HOST:$REMOTE_BASE_DIR/"
 exitCode=$?
-[ $exitCode -eq 0 ] ?: echo "Copy to remote destination successfully" : exit 1
+[ $exitCode -eq 0 ] && echo "Copy to remote destination successfully" || exit 1
 
 echo "List directory before creating symbolic link: "
 ssh $HOST ls -l $REMOTE_BASE_DIR
