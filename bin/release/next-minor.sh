@@ -26,7 +26,7 @@ find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$NEXT_SNAPSHO
 COMMENT=${NEXT_SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 
 echo "Ready to commit with comment: <$COMMENT>"
-read -p "Are you sure to continue?" -n 1 -r
+read -p "Are you sure to continue? [Y/n]" -n 1 -r
 echo    # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]; then
   git add .
