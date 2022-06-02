@@ -2,24 +2,26 @@
 
 Exotic (stand for exotic star) is the professional edition of Pulsar with advanced AI support to do link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[Auto Extract].
 
-There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
+*#Never write another web scraper. Exotic generates all the scraping rules automatically and manages the crawler in detail:#*
 
-You can use Exotic to generate all the scraping rules automatically and then use the web console to manage the crawler in detail:
-
-. STEP1: automatically extract every field in webpages using our advanced AI and generate scraping SQLs
-. STEP2: check the scraping SQLs, test and improve them if necessary
+. STEP1: automatically extract every field in webpages using advanced AI and generate scraping SQLs
+. STEP2: test and improve scraping SQLs to match frontend business requirements if necessary
 . STEP3: create crawl rules in the web console to run scraping SQLs continuously
+
+Check out https://github.com/platonai/pulsar[Pulsar] to see the full power of Exotic.
 
 Exotic also demonstrates:
 
 * How to use Pulsar as a library
 * How to use Pulsar driver to access the Pulsar REST service
 
+There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
+
 == Requirements
 
 * Memory 4G+
 * The latest version of the Java 11 JDK
-* java and jar on the PATH
+* Java and jar on the PATH
 * Google Chrome 90+
 
 == Download
