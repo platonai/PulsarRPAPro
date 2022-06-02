@@ -2,7 +2,7 @@
 
 Exotic (stand for exotic star) is the professional edition of Pulsar with advanced AI support to do link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[Auto Extract].
 
-*#Never write another web scraper. Exotic generates all the extract rules automatically and manages the crawlers in detail:#*
+*#Never write another web scraper. Exotic automatically generates all the extract rules, query the Web just like the local database and manages the crawlers in detail:#*
 
 . STEP1: automatically extract every field in webpages using advanced AI and generate extract SQLs
 . STEP2: test the SQLs and improve them to match frontend business requirements if necessary
