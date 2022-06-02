@@ -2,11 +2,11 @@
 
 Exotic (stand for exotic star) is the professional edition of Pulsar with advanced AI support to do link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[Auto Extract].
 
-*#Never write another web scraper. Exotic generates all the scraping rules automatically and manages the crawler in detail:#*
+*#Never write another web scraper. Exotic generates all the extract rules automatically and manages the crawlers in detail:#*
 
-. STEP1: automatically extract every field in webpages using advanced AI and generate scraping SQLs
-. STEP2: test and improve scraping SQLs to match frontend business requirements if necessary
-. STEP3: create crawl rules in the web console to run scraping SQLs continuously
+. STEP1: automatically extract every field in webpages using advanced AI and generate extract SQLs
+. STEP2: test and improve the SQLs to match business requirements if necessary
+. STEP3: create crawl rules in the web console to run extract SQLs continuously
 
 Check out https://github.com/platonai/pulsar[Pulsar] to see the full power of Exotic.
 
@@ -63,7 +63,7 @@ Note that the website in this demo uses CSS obfuscation techniques, so the CSS s
 The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
 
 == Scrape pages using the generated SQLs
-The `harvest` command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the scraping SQLs. We can execute the SQL query using the `sql` command.
+The `harvest` command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the extract SQLs. We can execute the SQLs using `sql` command.
 [source,bash,sql]
 ----
 java -jar exotic-standalone*.jar sql "
@@ -95,7 +95,7 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 ----
 
 == Run the standalone server and open web console
-Finally, we have the perfect scraping rules to match our most complex requirement, we can use the web console to manage the crawlers and run them on demand.
+Finally, we have the perfect extract rules to match our most complex requirements, we can use the web console to manage the crawlers and run them on demand.
 
 [source,bash]
 ----
@@ -109,4 +109,3 @@ Run the executable jar directly for helps to explore more power provided:
 java -jar exotic-standalone*.jar
 ----
 This command will print the help message and most useful examples.
-
