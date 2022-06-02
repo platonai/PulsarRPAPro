@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <title>Platon</title>
+
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/styles/default.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.5.1/highlight.min.js"></script>
+
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WVR0BFHCVV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-WVR0BFHCVV');
+    </script>
+
+    <style type="text/css">
+
+        body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, code, form, fieldset, legend, input, textarea, p, blockquote, th, td {  margin: 0;  padding: 0;  }
+        body { font-family: "Lucida Grande", "Lucida Sans Unicode", Tahoma, sans-serif; font-size: small; letter-spacing: 0.01em; margin: 17px 0 15px; text-align: left; text-rendering: optimizelegibility; }
+
+        article, aside, figure, footer, header, menu, nav, section { display: block; }
+        hr { border-top:thin dotted #D4D4D4; border-bottom:none; border-left:none; border-right:none }
+        a { color:#a747e9; text-decoration:none; outline: medium none; }
+        a:hover { color: green; cursor: pointer; text-decoration:underline }
+        img, a img { border: medium none; max-width: 100px; max-height: 100px; min-width: 20px; min-height: 20px }
+
+        h1, h2, h3 { font-weight: normal; }
+        p { color: #222222; }
+        em { color:darkgreen; font-style:normal }
+
+        ul, ul li { list-style:none }
+        ol { list-style: inside none decimal; }
+        dl { line-height: 2em; margin: 0 0; width: 60%; }
+        dt { font-weight: bold; padding-left: 4px; vertical-align: top; }
+        dd { margin-left: 13em; margin-top: -2em; vertical-align: top; }
+
+        /* table's style */
+        table { background: #fff; border-right:0; clear: both; color: #333; margin-bottom: 10px; min-width: 30% }
+        caption { font-size: x-large; text-align: left }
+        thead { border-bottom:1px solid #ccc; }
+        tfoot { border-top:2px solid #ccc; }
+        th { border:0; padding:4px; }
+        th.medium { min-width: 15em; }
+        th a { display: block; padding: 2px 4px; text-decoration: none; }
+        tr td {
+            background: #fff; padding: 6px; vertical-align: top;
+            /*border-bottom:1px solid #E5F0FF;*/
+        }
+        tfoot tr:last-child td { border-bottom: 1px solid #ccc; }
+        tr:nth-child(2n) th { background: #f5f5f5; }
+        tr:nth-child(2n) td { background: #f5f5f5; }
+
+        .hidden { display: none; }
+
+        a.link.image {
+            display: block;
+            width: 50%
+        }
+
+        a.link.text {
+            display: block;
+            width: 50%
+        }
+        #container {
+            width: 100%;
+            background: none;
+            /*margin: 0 auto;*/
+            color: #333;
+        }
+
+        #content {
+            background-color: #FFF;
+            font-size: 14px;
+            border-radius: 0;
+            padding-left: 121px;
+            padding-top: 5px;
+            box-sizing: border-box;
+        }
+
+        .search-box span.input {
+            border: 1px solid;
+            border-right-width: 0;
+            border-color: #b8b8b8 transparent #ccc #b8b8b8;
+            background: #fff;
+            display: inline-block;
+            vertical-align: top;
+            width: 1000px;
+            margin-right: 0;
+            overflow: hidden;
+            position: relative;
+            height: 32px;
+        }
+        .search-box span.input input {
+            width: 100%;
+            height: 22px;
+            font: 16px/18px arial;
+            line-height: 22px;
+            margin: 6px 0 0 7px;
+            padding: 0;
+            background: transparent;
+            border: 0;
+            outline: 0;
+            -webkit-appearance: none;
+            box-sizing: border-box;
+        }
+        .search-box span.submit {
+            width: auto;
+            height: auto;
+            display: inline-block;
+            z-index: 0;
+            vertical-align: top;
+        }
+        .search-box span.submit input {
+            width: 100px;
+            height: 34px;
+            color: #fff;
+            letter-spacing: 1px;
+            background: #3385ff;
+            text-align: center;
+            font-size: 14px;
+            outline: medium;
+            cursor: pointer;
+            border: 0;
+        }
+        .information {
+            margin: 20px 0;
+        }
+        .information > div {
+            margin: 5px 0;
+        }
+        .filters, .control {
+            position: relative;
+            max-width: 1100px;
+            width: calc(100% - 164px);
+            margin: 10px 0;
+            overflow: auto;
+        }
+        .filters div {
+            margin-bottom: 10px;
+        }
+        .filters a {
+            padding: 5px;
+            margin-right: 10px;
+            display: inline-block;
+            color: #333;
+            background-color: #E5F0FF;
+            border: 1px solid #e1e1e1;
+        }
+        .filters a:hover {
+            text-decoration: none;
+        }
+        .control span {
+            float: left;
+        }
+        .control a {
+            margin-left: 8px;
+            float: right;
+        }
+
+        table.table {
+            border: 1px solid #ccc;
+            border-collapse: collapse;
+            empty-cells: show;
+        }
+
+        table.table table {
+            border: 0 none;
+            empty-cells: hide;
+        }
+
+        /** nested table */
+        table.table table tr td, table.table table tr th {
+            border: none;
+        }
+        #tables {
+            margin-top: 20px;
+        }
+        #tables .message i {
+            font-size: x-large;
+            font-weight: bolder;
+        }
+        #tables .message i.no {
+            margin-right: 10px;
+        }
+        #tables .message em {
+            font-size: x-large;
+            font-weight: bolder;
+        }
+        div.table {
+            margin-right: 10px;
+            overflow-x: auto;
+            margin-bottom: 26px;
+            table-layout: fixed;
+            white-space: nowrap;
+        }
+        div.table td {
+            max-width: 300px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tablesorter-headerUnSorted:after {
+            content: "";
+        }
+
+        .tablesorter-headerAsc:after {
+            content: " ⇡";
+        }
+
+        .tablesorter-headerDesc:after {
+            content: " ⇣";
+        }
+    </style>
+</head>
+
+<body class="page entity">
+
+<div id="container">
+    <div id="content">
+<!--        <form class="search-box" action="../q" method="get">-->
+<!--            <span class="input"><input placeholder="Enter an url, list pages are preferred" name="u"></span><span class="submit"><input type="submit" value="Analyze!"></span>-->
+<!--        </form>-->
+<!--        <div class="control">-->
+<!--            <span class="message"></span>-->
+<!--            <a class="mode-bi" href="http://bi.platonic.fun/" target="_blank">Advanced</a>-->
+<!--        </div>-->
+        <div id="page-message"></div>
+        <div id="tables"></div>
+        <div id="natural-components"></div>
+    </div>
+</div>
+
+<script>
+    hljs.initHighlightingOnLoad();
+</script>
+
+</body></html>
