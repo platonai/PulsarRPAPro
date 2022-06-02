@@ -12,6 +12,7 @@ import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.dom.nodes.AnchorGroup
 import ai.platon.scent.dom.nodes.annotateNodes
 import ai.platon.scent.entities.HarvestResult
+import ai.platon.scent.view.builder.PageTableViewBuilder
 import kotlinx.coroutines.runBlocking
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
@@ -69,9 +70,22 @@ open class VerboseHarvester(
     private fun report(result: HarvestResult, options: HarvestOptions) {
         val exports = session.buildAll(result.tableGroup, options)
 
-        val json = session.buildJson(result.tableGroup)
-        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        // table view
+        val builder = ExoticPageTableViewBuilder(result.tableGroup, devMode = options.diagnose)
+        val doc = builder.build()
+
+        var path = result.tableGroup.tableViewPath
+        doc.document.setBaseUri(path.toString())
         Files.createDirectories(path.parent)
+        session.exportTo(doc, path)
+
+        path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.htm")
+        doc.document.setBaseUri(path.toString())
+        session.exportTo(doc, path)
+
+        // json view
+        val json = session.buildJson(result.tableGroup)
+        path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
         Files.writeString(path, json)
 
         logger.info("Harvest reports: {}", path.parent)
