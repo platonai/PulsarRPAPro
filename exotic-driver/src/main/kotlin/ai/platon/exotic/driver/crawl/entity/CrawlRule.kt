@@ -123,8 +123,6 @@ class CrawlRule {
         period = period.truncatedTo(ChronoUnit.MINUTES)
         startTime = startTime.truncatedTo(ChronoUnit.SECONDS)
         lastCrawlTime = lastCrawlTime.truncatedTo(ChronoUnit.SECONDS)
-        createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS)
-        lastModifiedDate = lastModifiedDate.truncatedTo(ChronoUnit.SECONDS)
 
         val count = cronExpression?.split(" ") ?: 0
         if (count == 5) {

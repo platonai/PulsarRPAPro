@@ -13,8 +13,6 @@
 
     <link href="../static/css/core.css" rel="stylesheet" media="screen"
           th:href="@{/css/core.css}" />
-<!--    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"-->
-<!--          th:href="@{/css/bootstrap.min.css}"/>-->
 <!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
     <link href="../static/css/fontawesome/all.css" rel="stylesheet" media="screen"
           th:href="@{/css/fontawesome/all.css}"/>
@@ -24,6 +22,8 @@
 
     <link href="../static/vendor/highlightjs/styles/default.css" rel="stylesheet" media="screen"
           th:href="@{/vendor/highlightjs/styles/default.css}"/>
+    <link href="../static/vendor/jquery-ui-1.13.1/jquery-ui.min.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/jquery-ui-1.13.1/jquery-ui.min.css}" />
 
     <!--/* Per-page placeholder for additional links */-->
     <th:block th:if="${links} != null">
@@ -31,8 +31,10 @@
     </th:block>
 
     <!--/* Default scripts; can be replaced by the calling templates */-->
-    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-<!--    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>-->
+    <script src="../static/js/jquery/jquery.min.js" th:src="@{/js/jquery/jquery.min.js}"></script>
+
+    <script src="../static/vendor/jquery-ui-1.13.1/external/jquery/jquery.js" th:src="@{/vendor/jquery-ui-1.13.1/external/jquery/jquery.js}"></script>
+    <script src="../static/vendor/jquery-ui-1.13.1/jquery-ui.min.js" th:src="@{/vendor/jquery-ui-1.13.1/jquery-ui.min.js}"></script>
     <script src="../static/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js" th:src="@{/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js}"></script>
     <script src="../static/js/crawl-common.js" th:src="@{/js/crawl-common.js}"></script>
     <script src="../static/vendor/highlightjs/highlight.pack.js" th:src="@{/vendor/highlightjs/highlight.pack.js}"></script>

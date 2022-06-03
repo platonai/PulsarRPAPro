@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html lang="en" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="layout :: head(~{this :: title}, null, null)">
+<head th:replace="layout :: head(~{this :: title}, null, ~{this :: .custom-script})">
     <title>Task List</title>
+    <script class="custom-script" src="../../../../static/js/remote/tasks.js" th:src="@{'/js/remote/tasks.js'}"></script>
 </head>
 
 <body>
@@ -17,6 +18,14 @@
 
     <div class="card">
         <div class="card-body">
+            <a th:href="@{/api/crawl/remote/tasks/}"
+               title="download" class="btn btn-info" target="_blank">
+                <i class="fas fa-download ml-1"></i></a>
+        </div>
+    </div>
+
+    <div class="card my-3 tasks">
+        <div class="card-body">
             <div th:switch="${tasks}">
                 <div>
                     <h2 th:case="null">No task yet</h2>
@@ -30,6 +39,7 @@
                                 <th title="Page Content Bytes">Bytes</th>
                                 <th>Is Done</th>
                                 <th>Created At</th>
+                                <th>Result Set</th>
                                 <th>Url</th>
                                 <th>Actions</th>
                             </tr>
@@ -42,10 +52,19 @@
                                 <td th:text="${task.response.pageContentBytes}"></td>
                                 <td th:text="${task.response.isDone}"></td>
                                 <td th:text="${task.objectTime}"></td>
+                                <td>
+                                    <a href="javascript:" class="preview btn btn-info" th:data-target-id="${task.id}">
+                                        <i class="fas fa-eye ml-1"></i></a>
+                                    <div class="card d-none preview" th:id="|a${task.id}|">
+                                        <div class="card-body">
+                                            <pre><code class="language-json" th:text="${task.resultSetAsJson}"></code></pre>
+                                        </div>
+                                    </div>
+                                </td>
                                 <td th:text="${task.abbreviatedUrl}"></td>
                                 <td>
                                     <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}"
-                                       title="Server side detail" class="btn btn-primary">
+                                       title="Server side detail" class="btn btn-info">
                                         <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
                                 </td>
                             </tr>

@@ -23,6 +23,11 @@ open class TaskSubmitter(
 
     private val pendingTasks: MutableMap<String, ListenableScrapeTask> = ConcurrentSkipListMap()
 
+    var scrapeId = 0
+        private set
+    var collectId = 0
+        private set
+
     val pendingPortalTaskCount get() = pendingTasks.count { it.value.task.isPortal }
     val pendingTaskCount get() = pendingTasks.size
 
@@ -48,7 +53,9 @@ open class TaskSubmitter(
     }
 
     fun scrape(task: ListenableScrapeTask): ListenableScrapeTask {
-        logger.info("Scraping 1/{}/{} task | {} {}", pendingTasks.size, task.task.url, task.task.args, totalTaskCount)
+        ++scrapeId
+        logger.info("{}.\tScraping 1/{}/{} task | {} {}",
+            scrapeId, pendingTasks.size, task.task.url, task.task.args, totalTaskCount)
         return submit(task)
     }
 
@@ -57,7 +64,8 @@ open class TaskSubmitter(
             return listOf()
         }
 
-        logger.info("Scraping {}/{}/{} tasks", tasks.size, pendingTasks.size, totalTaskCount)
+        ++scrapeId
+        logger.info("{}.\tScraping {}/{}/{} tasks", scrapeId, tasks.size, pendingTasks.size, totalTaskCount)
 
         submitAll(tasks)
 
@@ -109,6 +117,8 @@ open class TaskSubmitter(
         if (pendingTasks.isEmpty()) {
             return listOf()
         }
+
+        ++collectId
 
         val checkBatchSize = 30
         val checkingTasks = pendingTasks.values
@@ -177,9 +187,10 @@ open class TaskSubmitter(
         val nextCheckTime = estimatedTime.coerceAtLeast(collectTimerPeriod.seconds)
         val elapsedTime = Duration.between(startTime, Instant.now())
         val rand = Random.nextInt(10)
-        val description = if (rand == 0) " | (finished/retry/responses/checking/pending)" else ""
+        val description = if (rand == 0) " | (failed/retry/responses/checking/pending/finished)" else ""
         logger.info(
-            "Collected {}/{}/{}/{}/{}/{} responses in {}, next check: {}s$description",
+            "{}.\tCollected {}/{}/{}/{}/{}/{} responses in {}, next check: {}s$description",
+            collectId,
             localFailedCount, localRetryCount, responses.size, checkingIds.size, pendingTasks.size, totalFinishedTaskCount,
             elapsedTime, nextCheckTime
         )
