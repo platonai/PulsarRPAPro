@@ -20,11 +20,7 @@ import org.thymeleaf.templateresolver.ITemplateResolver
     "ai.platon.exotic.driver.crawl.entity",
     "ai.platon.exotic.services.api.entity"
 )
-class ExoticStarterApplication(
-    val applicationContext: ApplicationContext,
-    val defaultThymeleafTemplateResolver: ITemplateResolver,
-    val env: Environment
-)
+class ExoticStarterApplication
 
 fun main(args: Array<String>) {
     SpringApplicationBuilder(ExoticStarterApplication::class.java)

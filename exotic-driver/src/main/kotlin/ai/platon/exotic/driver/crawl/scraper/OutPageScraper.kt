@@ -47,6 +47,10 @@ open class OutPageScraper(
         val itemSQLTemplate = "$prefix load_and_select('{{url}}', 'body')"
     }
 
+    fun scrape(task: ListenableScrapeTask) {
+        taskSubmitter.scrape(task)
+    }
+
     fun scrape(listenablePortalTask: ListenablePortalTask) {
         val task = listenablePortalTask.task
         val rule = task.rule
@@ -130,8 +134,10 @@ open class OutPageScraper(
         val maxOutPages = if (IS_DEVELOPMENT) DEV_MAX_OUT_PAGES else PRODUCT_MAX_OUT_PAGES
         hrefs = hrefs.removePrefix("(").removeSuffix(")")
 
+        // TODO: normalization
         val urls = hrefs.split(",").asSequence()
             .filter { UrlUtils.isValidUrl(it) }
+            .map { it.substringBeforeLast("#") }
             .map { it.trim() }
             .take(maxOutPages)
             .toList()

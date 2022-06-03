@@ -1,10 +1,7 @@
 package ai.platon.exotic.driver.crawl.scraper
 
 import ai.platon.pulsar.common.chrono.scheduleAtFixedRate
-import ai.platon.pulsar.driver.Driver
-import ai.platon.pulsar.driver.DriverSettings
-import ai.platon.pulsar.driver.ScrapeException
-import ai.platon.pulsar.driver.ScrapeResponse
+import ai.platon.pulsar.driver.*
 import ai.platon.pulsar.driver.utils.SQLTemplate
 import com.google.gson.Gson
 import org.apache.commons.lang3.RandomStringUtils
@@ -29,20 +26,20 @@ open class TaskSubmitter(
     val pendingPortalTaskCount get() = pendingTasks.count { it.value.task.isPortal }
     val pendingTaskCount get() = pendingTasks.size
 
+    var totalTaskCount = 0
+        private set
+    var totalFinishedTaskCount = 0
+        private set
+    var totalSuccessTaskCount = 0
+        private set
+    var totalFailedTaskCount = 0
+        private set
+    var totalRetryTaskCount = 0
+        private set
+
     private val collectTimer = Timer()
     var collectTimerDelay = Duration.ofSeconds(15)
     var collectTimerPeriod = Duration.ofSeconds(15)
-
-    var taskCount = 0
-        private set
-    var finishedTaskCount = 0
-        private set
-    var successTaskCount = 0
-        private set
-    var failedTaskCount = 0
-        private set
-    var retryTaskCount = 0
-        private set
 
     init {
         if (autoCollect) {
@@ -51,7 +48,7 @@ open class TaskSubmitter(
     }
 
     fun scrape(task: ListenableScrapeTask): ListenableScrapeTask {
-        logger.info("Scraping 1/{} task | {} {}", pendingTasks.size, task.task.url, task.task.args)
+        logger.info("Scraping 1/{}/{} task | {} {}", pendingTasks.size, task.task.url, task.task.args, totalTaskCount)
         return submit(task)
     }
 
@@ -60,7 +57,7 @@ open class TaskSubmitter(
             return listOf()
         }
 
-        logger.info("Scraping {}/{} tasks", tasks.size, pendingTasks.size)
+        logger.info("Scraping {}/{}/{} tasks", tasks.size, pendingTasks.size, totalTaskCount)
 
         submitAll(tasks)
 
@@ -73,9 +70,11 @@ open class TaskSubmitter(
     }
 
     private fun submit(listenableTask: ListenableScrapeTask): ListenableScrapeTask {
-        ++taskCount
+        ++totalTaskCount
 
         val task = listenableTask.task
+        ++task.submitCount
+
         val configuredUrl = task.url.trim() + " " + task.args.trim()
         val sql = SQLTemplate(task.sqlTemplate).createSQL(configuredUrl)
         try {
@@ -122,33 +121,40 @@ open class TaskSubmitter(
             return listOf()
         }
 
-        var fc = 0
-        var rc = 0
+        var localFailedCount = 0
+        var localRetryCount = 0
         val startTime = Instant.now()
 
         val checkingIds = checkingTasks.map { it.task.serverTaskId }
-        val responses = driver.findAllByIds(checkingIds)
+        val responses = kotlin.runCatching { driver.findAllByIds(checkingIds) }
+            .onFailure { logger.warn(it.message) }
+            .getOrNull() ?: listOf()
         checkingTasks.forEach { it.task.lastCheckTime = Instant.now() }
 
         responses.forEach { response ->
             val task = pendingTasks[response.id]
             if (task != null) {
+                ++task.task.collectedCount
+                task.task.collectedTime = Instant.now()
                 task.task.response = response
+
                 when {
                     response.isDone -> {
-                        ++fc
-                        ++finishedTaskCount
+                        ++localFailedCount
+                        ++totalFinishedTaskCount
 
                         if (response.statusCode == 200) {
+                            ++totalSuccessTaskCount
                             task.onSuccess()
                         } else {
-                            ++failedTaskCount
+                            ++totalFailedTaskCount
                             task.onFailed()
                         }
+                        task.onFinished()
                     }
                     response.statusCode == 1601 -> {
-                        ++rc
-                        ++retryTaskCount
+                        ++localRetryCount
+                        ++totalRetryTaskCount
                         task.onRetry()
                     }
                 }
@@ -167,13 +173,15 @@ open class TaskSubmitter(
             roundTimeoutTasks.forEach { pendingTasks.remove(it.key) }
         }
 
-        val nextCheckTime = responses.filter { !it.isDone }.minOfOrNull { it.estimatedWaitTime } ?: collectTimerPeriod.seconds
+        val estimatedTime = responses.filter { !it.isDone }.minOfOrNull { it.estimatedWaitTime }?.takeIf { it > 0 } ?: 0
+        val nextCheckTime = estimatedTime.coerceAtLeast(collectTimerPeriod.seconds)
         val elapsedTime = Duration.between(startTime, Instant.now())
         val rand = Random.nextInt(10)
         val description = if (rand == 0) " | (finished/retry/responses/checking/pending)" else ""
         logger.info(
-            "Collected {}/{}/{}/{}/{} responses in {}, next check: {}s$description",
-            fc, rc, responses.size, checkingIds.size, pendingTasks.size, elapsedTime, nextCheckTime
+            "Collected {}/{}/{}/{}/{}/{} responses in {}, next check: {}s$description",
+            localFailedCount, localRetryCount, responses.size, checkingIds.size, pendingTasks.size, totalFinishedTaskCount,
+            elapsedTime, nextCheckTime
         )
 
         return responses

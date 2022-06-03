@@ -4,13 +4,13 @@ import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
-import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
-import ai.platon.exotic.driver.crawl.scraper.RuleStatus
-import ai.platon.exotic.driver.crawl.scraper.TaskStatus
+import ai.platon.exotic.driver.crawl.scraper.*
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
 import ai.platon.exotic.services.api.persist.PortalTaskRepository
 import ai.platon.pulsar.common.DateTimes
+import ai.platon.pulsar.common.collect.queue.ConcurrentNEntrantQueue
 import ai.platon.pulsar.common.stringify
+import ai.platon.pulsar.common.urls.ComparableUrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
@@ -23,6 +23,7 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
+import java.util.concurrent.ConcurrentLinkedQueue
 
 @Component
 class CrawlTaskRunner(
@@ -31,6 +32,9 @@ class CrawlTaskRunner(
     val scraper: ExoticCrawler
 ) {
     private val logger = LoggerFactory.getLogger(CrawlTaskRunner::class.java)
+
+    private val retryingPortalTasks = ConcurrentNEntrantQueue<ScrapeTask>(5)
+    private val retryingItemTasks = ConcurrentNEntrantQueue<ScrapeTask>(3)
 
     fun loadUnfinishedTasks() {
         // portalTaskRepository.findAllByStatus("Running")
@@ -163,21 +167,19 @@ class CrawlTaskRunner(
             .forEach { task -> scraper.scrapeOutPages(task) }
     }
 
+    fun submitRetryingScrapeTasks(limit: Int) {
+        val retryingTasks = retryingItemTasks.take(limit)
+        retryingTasks.forEach {
+            scraper.scrape(createListenableScrapeTask(it))
+        }
+    }
+
     fun createListenablePortalTask(portalTask: PortalTask, refresh: Boolean = false): ListenablePortalTask {
         return ListenablePortalTask(
             portalTask, refresh = refresh,
 
             onSubmitted = {
                 val rule = portalTask.rule
-                if (rule != null) {
-//                    rule.crawlHistory += ","
-//                    rule.crawlHistory += LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS).toString()
-//                    while (rule.crawlHistory.length > 1024) {
-//                        rule.crawlHistory = rule.crawlHistory
-//                            .split(",").drop(5).joinToString(",")
-//                    }
-                    // crawlRuleRepository.save(rule)
-                }
 
                 it.status = TaskStatus.SUBMITTED
 
@@ -190,6 +192,8 @@ class CrawlTaskRunner(
 
                 portalTask.status = TaskStatus.RETRYING
                 portalTaskRepository.save(portalTask)
+
+                retryingPortalTasks.add(it)
             },
             onSuccess = {
                 it.status = TaskStatus.OK
@@ -224,14 +228,15 @@ class CrawlTaskRunner(
                 portalTask.status = TaskStatus.RETRYING
                 ++portalTask.retryCount
                 portalTaskRepository.save(portalTask)
+
+                it.status = TaskStatus.RETRYING
+                retryingItemTasks.add(it)
             },
             onItemSuccess = {
                 it.status = TaskStatus.OK
 
                 portalTask.status = TaskStatus.OK
                 ++portalTask.successCount
-                ++portalTask.finishedCount
-                portalTaskRepository.save(portalTask)
             },
             onItemFailed = {
                 it.status = TaskStatus.FAILED
@@ -242,12 +247,66 @@ class CrawlTaskRunner(
                 portalTaskRepository.save(portalTask)
             },
             onItemFinished = {
-
+                ++portalTask.finishedCount
+                portalTaskRepository.save(portalTask)
             },
             onItemTimeout = {
 
             },
         )
+    }
+
+    fun createListenableScrapeTask(task: ScrapeTask, refresh: Boolean = false): ListenableScrapeTask {
+        val portalTask = task.companionPortalTask
+        val listenableScrapeTask = ListenableScrapeTask(task)
+        listenableScrapeTask.onSubmitted = {
+            task.status = TaskStatus.SUBMITTED
+
+            portalTask?.also {
+                it.status = TaskStatus.SUBMITTED
+                // portalTask.serverTaskId = it.id
+                ++it.submittedCount
+                portalTaskRepository.save(it)
+            }
+        }
+        listenableScrapeTask.onRetry = {
+            portalTask?.also {
+                it.status = TaskStatus.RETRYING
+                ++it.retryCount
+                portalTaskRepository.save(it)
+            }
+
+            task.status = TaskStatus.RETRYING
+            retryingItemTasks.add(task)
+        }
+        listenableScrapeTask.onSuccess = {
+            task.status = TaskStatus.OK
+
+            portalTask?.also {
+                it.status = TaskStatus.OK
+                ++it.successCount
+                ++it.finishedCount
+                portalTaskRepository.save(it)
+            }
+        }
+        listenableScrapeTask.onFailed = {
+            task.status = TaskStatus.FAILED
+
+            portalTask?.also {
+                it.status = TaskStatus.FAILED
+                ++it.failedCount
+                ++it.finishedCount
+                portalTaskRepository.save(it)
+            }
+        }
+        listenableScrapeTask.onFinished = {
+
+        }
+        listenableScrapeTask.onTimeout = {
+
+        }
+
+        return listenableScrapeTask
     }
 
     private fun createPagedUrls(url: String, maxPages: Int): List<String> {

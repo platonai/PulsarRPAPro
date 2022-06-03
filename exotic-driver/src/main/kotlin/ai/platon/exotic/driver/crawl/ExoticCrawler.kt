@@ -3,6 +3,7 @@ package ai.platon.exotic.driver.crawl
 import ai.platon.exotic.driver.common.*
 import ai.platon.exotic.driver.crawl.entity.ItemDetail
 import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
+import ai.platon.exotic.driver.crawl.scraper.ListenableScrapeTask
 import ai.platon.exotic.driver.crawl.scraper.OutPageScraper
 import ai.platon.exotic.driver.crawl.scraper.ScrapeTask
 import ai.platon.pulsar.common.config.Params
@@ -69,6 +70,18 @@ class ExoticCrawler(val env: Environment? = null): AutoCloseable {
         val n = (maxPendingTaskCount - submittedTaskCount).coerceAtMost(10)
         if (pendingPortalTasks.isNotEmpty()) {
             scrapeFromQueue(pendingPortalTasks, n)
+        }
+    }
+
+    @Throws(Exception::class)
+    fun scrape(task: ListenableScrapeTask) {
+        try {
+//            task.onItemSuccess = {
+//                createPendingItems(it)
+//            }
+            outPageScraper.scrape(task)
+        } catch (t: Throwable) {
+            logger.warn("Unexpected exception", t)
         }
     }
 

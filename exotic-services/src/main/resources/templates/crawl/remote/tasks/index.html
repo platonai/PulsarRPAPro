@@ -25,10 +25,11 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Status Code</th>
-                                <th>Page Status Code</th>
-                                <th>Page Content Bytes</th>
+                                <th title="Status Code">SC</th>
+                                <th title="Page Status Code">PSC</th>
+                                <th title="Page Content Bytes">Bytes</th>
                                 <th>Is Done</th>
+                                <th>Created At</th>
                                 <th>Url</th>
                                 <th>Actions</th>
                             </tr>
@@ -36,11 +37,12 @@
                             <tbody>
                             <tr th:each="task : ${tasks}">
                                 <td><a th:text="${task.id}" th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}" target="_blank"></a></td>
-                                <td th:text="${task.statusCode}"></td>
-                                <td th:text="${task.pageStatusCode}"></td>
-                                <td th:text="${task.pageContentBytes}"></td>
-                                <td th:text="${task.isDone}"></td>
-                                <td th:text="${task.url}"></td>
+                                <td th:text="${task.response.statusCode}"></td>
+                                <td th:text="${task.response.pageStatusCode}"></td>
+                                <td th:text="${task.response.pageContentBytes}"></td>
+                                <td th:text="${task.response.isDone}"></td>
+                                <td th:text="${task.objectTime}"></td>
+                                <td th:text="${task.abbreviatedUrl}"></td>
                                 <td>
                                     <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}"
                                        title="Server side detail" class="btn btn-primary">
@@ -55,6 +57,8 @@
         </div>
     </div>
 </div>
+
+<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
 
 </body>
 

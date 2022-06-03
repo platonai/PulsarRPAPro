@@ -12,7 +12,7 @@
     <nav aria-label="breadcrumb">
         <ol class="breadcrumb">
             <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
-            <li class="breadcrumb-item"><a th:href="@{/crawl/portal-tasks/}">Tasks</a></li>
+            <li class="breadcrumb-item"><a th:href="@{/crawl/portal-tasks/}">Portal Tasks</a></li>
             <li th:text="${task.id}" class="breadcrumb-item active" aria-current="page"></li>
         </ol>
     </nav>
@@ -22,9 +22,10 @@
             <div class="row">
                 <div class="col-8">
 
-                    <div class="card my-3">
-                        <div class="card-body">
-                            <table>
+                    <div class="card border-0 my-3">
+                        <div class="card-body p-0">
+                            <table class="table table-sm">
+                                <thead>
                                 <tr>
                                     <th>Submitted Count</th>
                                     <th>Success Count</th>
@@ -32,6 +33,8 @@
                                     <th>Failed Count</th>
                                     <th>Finished Count</th>
                                 </tr>
+                                </thead>
+                                <tbody>
                                 <tr>
                                     <td th:text="${task.submittedCount}"></td>
                                     <td th:text="${task.successCount}"></td>
@@ -39,29 +42,60 @@
                                     <td th:text="${task.failedCount}"></td>
                                     <td th:text="${task.finishedCount}"></td>
                                 </tr>
+                                </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="card my-3">
+                        <div class="card-header">Portal Url & Parameters</div>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-8">
                                     <pre th:text="${task.url}"></pre>
                                 </div>
                                 <div class="col">
-                                    <span th:text="${task.args}"></span>
+                                    <pre th:text="${task.args}"></pre>
                                 </div>
                             </div>
+                            <div class="row">
+                                <div class="col">
+                                    <dl>
+                                        <dt>Out Link Selector</dt>
+                                        <dd><pre th:text="${task.rule.outLinkSelector}"></pre></dd>
+                                    </dl>
+                                </div>
+                            </div>
+<!--                            <div class="row">-->
+<!--                                <div class="col">-->
+<!--                                    <dl>-->
+<!--                                        <dt>Next Page Selector</dt>-->
+<!--                                        <dd><pre th:text="${task.rule.nextPageSelector}"></pre></dd>-->
+<!--                                    </dl>-->
+<!--                                </div>-->
+<!--                            </div>-->
                         </div>
                     </div>
                     <div class="card my-3">
                         <div class="card-header">SQL Template</div>
                         <div class="card-body">
+                            <div class="my-3">The SQL Template is applied to item pages.</div>
                             <pre><code class="language-sql" th:text="${task.rule.sqlTemplate}"></code></pre>
                         </div>
                     </div>
                 </div>
                 <div class="col">
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <a th:href="@{/crawl/portal-tasks/}" title="List" class="btn btn-primary m-1">
+                                <i class="fas fa-list ml-1"></i></a>
+                            <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
+                               title="View server side detail" class="btn btn-primary m-1">
+                                <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
+                            <a th:href="@{/crawl/portal-tasks/pause/{id}(id=${task.id})}"
+                               title="Pause" class="btn btn-primary m-1">
+                                <i class="fas fa-pause ml-1"></i></a>
+                        </div>
+                    </div>
                     <div class="card my-3">
                         <div class="card-body">
                             <dl>
@@ -71,11 +105,8 @@
                                 <dd th:text="${task.status}"></dd>
                                 <dt>Server Task Id</dt>
                                 <dd>
-                                    <a
-                                            th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
-                                            th:text="${task.serverTaskId}"
-                                            target="_blank"
-                                    ></a>
+                                    <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
+                                       th:text="${task.serverTaskId}" target="_blank"></a>
                                 </dd>
                             </dl>
                         </div>
@@ -99,20 +130,6 @@
                 </div>
             </div>
         </div>
-
-        <div class="card-footer">
-            <a th:href="@{/crawl/portal-tasks/}" class="btn btn-primary m-1">
-                <i class="fas fa-list ml-1"></i></a>
-            <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}" class="btn btn-primary m-1">
-                <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
-
-            <!--            <a th:href="@{/crawl/portal-tasks/edit/{id}(id=${task.id})}" class="btn btn-primary m-1">-->
-<!--                <i class="fas fa-edit ml-1"></i></a>-->
-<!--            <a th:href="@{/crawl/portal-tasks/start/{id}(id=${task.id})}" class="btn btn-primary m-1">-->
-<!--                <i class="fas fa-play ml-1"></i></a>-->
-            <a th:href="@{/crawl/portal-tasks/pause/{id}(id=${task.id})}" class="btn btn-primary m-1">
-                <i class="fas fa-pause ml-1"></i></a>
-        </div>
     </div>
 
     <script>
@@ -120,5 +137,8 @@
     </script>
 
 </div>
+
+<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+
 </body>
 </html>

@@ -70,7 +70,8 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
 
     @GetMapping("/jd/add")
     fun showJdAddForm(model: Model): String {
-        model.addAttribute("rule", CrawlRule())
+        val rule = CrawlRule()
+        model.addAttribute("rule", rule)
         return "crawl/rules/jd/add"
     }
 

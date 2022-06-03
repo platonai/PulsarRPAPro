@@ -25,6 +25,7 @@
                     <div class="card my-3">
                         <div class="card-header">SQL Template</div>
                         <div class="card-body">
+                            <div class="my-3">SQL template is applied to item pages to extract fields.</div>
                             <pre><code class="language-sql" th:text="${rule.sqlTemplate}"></code>
                             </pre>
                         </div>
@@ -37,10 +38,10 @@
                     </div>
                     <div class="card my-3">
                         <div class="card-body">
-                            <div>Out link Selector</div>
+                            <div>Out Link Selector</div>
                             <div><pre th:text="${rule.outLinkSelector}"></pre></div>
-                            <div>Next page Selector</div>
-                            <div><pre th:text="${rule.nextPageSelector}"></pre></div>
+<!--                            <div>Next page Selector</div>-->
+<!--                            <div><pre th:text="${rule.nextPageSelector}"></pre></div>-->
                         </div>
                     </div>
                     <div class="card my-3">
@@ -173,6 +174,8 @@
 <script>
     hljs.initHighlightingOnLoad();
 </script>
+
+<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
 
 </body>
 </html>
