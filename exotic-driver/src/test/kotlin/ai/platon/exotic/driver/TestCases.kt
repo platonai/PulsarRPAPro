@@ -10,10 +10,15 @@ class TestCases {
     @Test
     fun testFormatDuration() {
         val d = Duration.parse("pt12345h")
+        val longFormat = ExoticUtils.formatLongDuration(d.seconds)
+        val shortFormat = ExoticUtils.formatShortDuration(d.seconds)
+        val format = ExoticUtils.formatDuration(d.seconds)
         assertEquals("PT12345H", d.toString())
-        assertEquals("1 y, 149 ds and 9 hs", ExoticUtils.formatDuration(d.seconds))
-//        println(d)
-//        println(ExoticUtils.formatDuration(d.seconds))
+//        println(longFormat)
+//        println(shortFormat)
+        assertEquals("1 year, 149 days and 9 hours", longFormat)
+        assertEquals("1 y, 149 ds and 9 hs", shortFormat)
+        assertEquals(shortFormat, format)
     }
 
     @Test

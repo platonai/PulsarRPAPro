@@ -13,8 +13,7 @@ object ExoticUtils {
 
     fun formatDuration(seconds: Long): String {
         var readableDuration = formatLongDuration(seconds)
-        val parts = readableDuration.count { it == ',' }
-        if (parts > 2) {
+        if (readableDuration.contains(",")) {
             readableDuration = formatShortDuration(seconds)
         }
         return readableDuration
