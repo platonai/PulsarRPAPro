@@ -3,9 +3,9 @@ package ai.platon.exotic.driver.common
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.browser.Browsers
-import java.nio.file.Files
 
 object ExoticUtils {
+
     fun openBrowser(url: String) {
         val chromeBinary = Browsers.searchChromeBinary()
         val dataDir = AppPaths.getTmp("exotic-chrome")

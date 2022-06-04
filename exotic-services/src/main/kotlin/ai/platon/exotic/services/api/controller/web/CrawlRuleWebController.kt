@@ -5,6 +5,8 @@ import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
+import ai.platon.pulsar.common.LinkExtractors
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -13,6 +15,7 @@ import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
 import javax.validation.Valid
+import kotlin.random.Random
 
 @Controller
 @RequestMapping("crawl/rules")
@@ -20,6 +23,8 @@ class CrawlRuleWebController(
     private val repository: CrawlRuleRepository,
     private val crawlTaskRunner: CrawlTaskRunner,
 ) {
+    private val amazonSeeds = LinkExtractors.fromResource("sites/amazon/best-sellers.txt")
+
     @GetMapping("/")
     fun list(
         @RequestParam(defaultValue = "0") pageNumber: Int = 0,
@@ -53,14 +58,12 @@ select
     dom_base_uri(dom) as `url`,
     dom_first_text(dom, '#productTitle') as `title`,
     dom_first_text(dom, '#bylineInfo') as `brand`,
-    dom_first_text(dom, '#price') as `price`
+    dom_first_text(dom, '#corePrice_desktop, #price, .a-price') as `price`
 from load_and_select('{{url}}', ':root');
         """.trimIndent()
 
-        rule.portalUrls = """
-https://www.amazon.com/Best-Sellers-Beauty-Personal-Care/zgbs/beauty
-https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
-        """.trimIndent()
+        val n = 2 + Random.nextInt(4)
+        rule.portalUrls = amazonSeeds.shuffled().take(n).joinToString("\n")
         rule.outLinkSelector = "a[href~=/dp/]"
         rule.nextPageSelector = "ul.a-pagination li.a-last a"
 
