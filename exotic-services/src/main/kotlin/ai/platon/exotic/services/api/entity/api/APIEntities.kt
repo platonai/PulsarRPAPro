@@ -2,7 +2,7 @@ package ai.platon.exotic.services.api.entity.api
 
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.pulsar.driver.CompactedScrapeResponse
-import org.apache.commons.lang.StringUtils
+import org.apache.commons.lang3.StringUtils
 import org.bson.types.ObjectId
 import java.time.Instant
 
