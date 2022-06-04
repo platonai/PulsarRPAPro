@@ -5,9 +5,9 @@ import ai.platon.exotic.driver.common.PROP_FETCH_NEXT_OFFSET
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.driver.crawl.entity.ItemDetail
 import ai.platon.exotic.services.api.entity.SysProp
+import ai.platon.exotic.services.api.entity.converters.IntegratedProductConverter
 import ai.platon.exotic.services.api.persist.IntegratedProductRepository
 import ai.platon.exotic.services.api.persist.SysPropRepository
-import ai.platon.exotic.services.api.entity.converters.IntegratedProductConverter
 import org.slf4j.LoggerFactory
 import org.springframework.data.repository.findByIdOrNull
 import org.springframework.stereotype.Component

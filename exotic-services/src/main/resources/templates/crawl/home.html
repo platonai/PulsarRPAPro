@@ -10,29 +10,24 @@
 <div th:replace="layout :: nav"></div>
 
 <div class="container">
-    <div class="row my-5">
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body p-5 text-center bg-light">
-                    <a th:href="@{/crawl/rules/}" class="d-block m-5 font-weight-bold">Rules</a>
-                    <p class="text-info">Rules tell the system how and when to crawl the Web.</p>
-                </div>
+    <div class="card-deck mb-3 mt-5 text-center">
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/rules/}">Rules</a></h3>
+                <p class="text-info">How and when to crawl the Web.</p>
+                <br />
             </div>
         </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body p-5 text-center bg-light">
-                    <a th:href="@{/crawl/portal-tasks/}" class="d-block m-5 font-weight-bold">Portal Tasks</a>
-                    <p class="text-info">Portal tasks are crawl tasks starting with a portal url.</p>
-                </div>
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/portal-tasks/}">Portal Tasks</a></h3>
+                <p class="text-info">The crawls starting with a portal url and then the out links.</p>
             </div>
         </div>
-        <div class="col-4">
-            <div class="card">
-                <div class="card-body p-5 text-center bg-light">
-                    <a th:href="@{/crawl/remote/tasks/}" class="d-block m-5 font-weight-bold">Remote Tasks</a>
-                    <p class="text-info">Remote tasks track the server side execution of each webpage.</p>
-                </div>
+        <div class="card mb-4 box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/remote/tasks/}">Status & Results</a></h3>
+                <p class="text-info">The scraping status and results of each webpage.</p>
             </div>
         </div>
     </div>

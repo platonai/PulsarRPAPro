@@ -6,7 +6,6 @@ import ai.platon.exotic.driver.common.PRODUCT_MAX_PENDING_TASKS
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.component.ScrapeResultCollector
-import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_SECOND
 import ai.platon.pulsar.common.stringify
 import org.slf4j.LoggerFactory

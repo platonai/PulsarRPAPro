@@ -1,7 +1,7 @@
 package ai.platon.exotic.examples.sites.topEc.chinese.login.tmall
 
-import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.exotic.examples.sites.topEc.chinese.login.taobao.TaobaoLoginHandler
+import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.session.PulsarSession
 
 fun main() {

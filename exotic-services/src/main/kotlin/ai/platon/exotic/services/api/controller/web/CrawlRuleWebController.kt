@@ -2,11 +2,10 @@ package ai.platon.exotic.services.api.controller.web
 
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
-import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
+import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.pulsar.common.LinkExtractors
-import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
@@ -109,8 +108,6 @@ from load_and_select('{{url}}', ':root');
             return "crawl/rules/edit"
         }
 
-//        rule.adjustFields()
-
         repository.save(rule)
 
         return "redirect:/crawl/rules/view/$id"
@@ -121,7 +118,6 @@ from load_and_select('{{url}}', ':root');
         val rule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
 
         rule.status = RuleStatus.Paused.toString()
-//        rule.adjustFields()
         repository.save(rule)
 
         return "redirect:/crawl/rules/"

@@ -18,28 +18,26 @@
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-dom</artifactId>
-			<version>${pulsar.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-persist</artifactId>
 		</dependency>
-
 		<dependency>
-			<groupId>ai.platon.scent</groupId>
-			<artifactId>scent-rest</artifactId>
-			<version>${scent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ai.platon.scent</groupId>
-			<artifactId>scent-boot</artifactId>
-			<version>${scent.version}</version>
+			<groupId>ai.platon.pulsar</groupId>
+			<artifactId>pulsar-ql-common</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-driver</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>bson</artifactId>
+			<version>4.2.3</version>
 		</dependency>
 
 		<dependency>
@@ -113,7 +111,7 @@
             <groupId>org.jetbrains.kotlin</groupId>
             <artifactId>kotlin-test-junit</artifactId>
 		</dependency>
-    </dependencies>
+	</dependencies>
 
 	<profiles>
 		<profile>

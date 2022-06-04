@@ -3,7 +3,6 @@ package ai.platon.exotic.examples.sites.spa.wemix
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.crawl.AbstractWebDriverHandler
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
-import ai.platon.pulsar.session.PulsarSession
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 

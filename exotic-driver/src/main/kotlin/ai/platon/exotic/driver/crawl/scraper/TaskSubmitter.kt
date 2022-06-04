@@ -2,8 +2,10 @@ package ai.platon.exotic.driver.crawl.scraper
 
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.chrono.scheduleAtFixedRate
-import ai.platon.pulsar.common.readable
-import ai.platon.pulsar.driver.*
+import ai.platon.pulsar.driver.Driver
+import ai.platon.pulsar.driver.DriverSettings
+import ai.platon.pulsar.driver.ScrapeException
+import ai.platon.pulsar.driver.ScrapeResponse
 import ai.platon.pulsar.driver.utils.SQLTemplate
 import com.google.gson.Gson
 import org.apache.commons.lang3.RandomStringUtils
@@ -58,7 +60,7 @@ open class TaskSubmitter(
     fun scrape(task: ListenableScrapeTask): ListenableScrapeTask {
         ++scrapeId
         logger.info("{}.\tScraping 1/{}/{} task | {} {}",
-            scrapeId, pendingTasks.size, task.task.url, task.task.args, totalTaskCount)
+            scrapeId, pendingTasks.size, totalTaskCount, task.task.url, task.task.args)
         return submit(task)
     }
 

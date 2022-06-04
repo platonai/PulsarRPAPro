@@ -5,6 +5,19 @@ import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.browser.Browsers
 
 object ExoticUtils {
+    fun formatTime(s: String, time: Long): String {
+        return if (time == 0L) "" else time.toString() + " " + s + if (time == 1L) "" else "s"
+    }
+
+    fun formatDuration(seconds: Long): String {
+        return if (seconds == 0L) "now" else listOf(
+            formatTime("y", seconds / 31536000),
+            formatTime("d", seconds / 86400 % 365),
+            formatTime("h", seconds / 3600 % 24),
+            formatTime("m", seconds / 60 % 60),
+            formatTime("s", seconds % 3600 % 60)
+        ).filter { e -> e !== "" }.joinToString().replace(", (?!.+,)".toRegex(), " and ")
+    }
 
     fun openBrowser(url: String) {
         val chromeBinary = Browsers.searchChromeBinary()

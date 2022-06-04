@@ -1,6 +1,6 @@
 package ai.platon.exotic.driver.crawl
 
-import ai.platon.exotic.driver.common.*
+import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.crawl.entity.ItemDetail
 import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
 import ai.platon.exotic.driver.crawl.scraper.ListenableScrapeTask

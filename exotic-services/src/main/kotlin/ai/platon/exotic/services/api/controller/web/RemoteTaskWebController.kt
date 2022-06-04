@@ -4,7 +4,6 @@ import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.services.api.entity.api.ExpandedScrapeResponse
 import ai.platon.exotic.services.common.jackson.scentObjectMapper
 import com.google.gson.GsonBuilder
-import org.bson.types.ObjectId
 import org.springframework.data.domain.PageRequest
 import org.springframework.http.MediaType
 import org.springframework.stereotype.Controller

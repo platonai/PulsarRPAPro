@@ -228,6 +228,16 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>ai.platon.pulsar</groupId>
+				<artifactId>pulsar-dom</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.pulsar</groupId>
+				<artifactId>pulsar-ql-common</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>

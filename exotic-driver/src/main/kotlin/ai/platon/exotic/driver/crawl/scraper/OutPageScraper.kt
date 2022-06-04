@@ -1,8 +1,8 @@
 package ai.platon.exotic.driver.crawl.scraper
 
 import ai.platon.exotic.driver.common.DEV_MAX_OUT_PAGES
-import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.common.IS_DEVELOPMENT
+import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.pulsar.common.urls.UrlUtils

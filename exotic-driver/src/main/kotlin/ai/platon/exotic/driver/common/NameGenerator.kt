@@ -1,9 +1,7 @@
 package ai.platon.exotic.driver.common
 
-import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.ResourceLoader
 import org.apache.commons.lang3.RandomStringUtils
-import java.time.Instant
 import kotlin.random.Random
 
 object NameGenerator {

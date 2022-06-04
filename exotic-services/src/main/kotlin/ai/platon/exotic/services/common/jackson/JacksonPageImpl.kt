@@ -7,8 +7,6 @@ import org.springframework.data.domain.PageImpl
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 
-import java.util.ArrayList
-
 class JacksonPageImpl<T> : PageImpl<T> {
     @JsonCreator(mode = JsonCreator.Mode.PROPERTIES)
     constructor(@JsonProperty("content") content: List<T>,

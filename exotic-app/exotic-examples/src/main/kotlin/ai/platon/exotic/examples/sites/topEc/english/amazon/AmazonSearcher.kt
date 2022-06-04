@@ -1,7 +1,6 @@
 package ai.platon.exotic.examples.sites.topEc.english.amazon
 
 import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.context.withContext
 import ai.platon.pulsar.crawl.AbstractWebPageWebDriverHandler
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.dom.Documents

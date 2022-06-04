@@ -23,64 +23,33 @@
             <div class="row">
                 <div class="col-8">
 
-                    <div class="card border-0 my-3">
-                        <div class="card-body p-0">
-                            <table class="table table-sm">
-                                <thead>
-                                <tr>
-                                    <th>Submitted Count</th>
-                                    <th>Success Count</th>
-                                    <th>Retry Count</th>
-                                    <th>Failed Count</th>
-                                    <th>Finished Count</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td th:text="${task.submittedCount}"></td>
-                                    <td th:text="${task.successCount}"></td>
-                                    <td th:text="${task.retryCount}"></td>
-                                    <td th:text="${task.failedCount}"></td>
-                                    <td th:text="${task.finishedCount}"></td>
-                                </tr>
-                                </tbody>
-                            </table>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl class="flex-row m-0">
+                                <dt class="d-inline-flex px-2">Submitted</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.submittedCount}"></dd>
+                                <dt class="d-inline-flex px-2">Success</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.successCount}"></dd>
+                                <dt class="d-inline-flex px-2">Retry</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.retryCount}"></dd>
+                                <dt class="d-inline-flex px-2">Failed</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.failedCount}"></dd>
+                                <dt class="d-inline-flex px-2">Finished</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.finishedCount}"></dd>
+                            </dl>
                         </div>
                     </div>
                     <div class="card my-3">
                         <div class="card-header">Portal Url & Parameters</div>
                         <div class="card-body">
-                            <div class="row">
-                                <div class="col-8">
-                                    <pre th:text="${task.url}"></pre>
-                                </div>
-                                <div class="col">
-                                    <pre th:text="${task.args}"></pre>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col">
-                                    <dl>
-                                        <dt>Out Link Selector</dt>
-                                        <dd><pre th:text="${task.rule.outLinkSelector}"></pre></dd>
-                                    </dl>
-                                </div>
-                            </div>
-<!--                            <div class="row">-->
-<!--                                <div class="col">-->
-<!--                                    <dl>-->
-<!--                                        <dt>Next Page Selector</dt>-->
-<!--                                        <dd><pre th:text="${task.rule.nextPageSelector}"></pre></dd>-->
-<!--                                    </dl>-->
-<!--                                </div>-->
-<!--                            </div>-->
+                            <pre><code class="py-3 text-wrap" th:text="|${task.url} ${task.args} -outLink ${task.rule.outLinkSelector}|"></code></pre>
                         </div>
                     </div>
                     <div class="card my-3">
                         <div class="card-header">SQL Template</div>
                         <div class="card-body">
-                            <div class="my-3">The SQL Template is applied to item pages.</div>
                             <pre><code class="language-sql" th:text="${task.rule.sqlTemplate}"></code></pre>
+                            <div class="my-3">The SQLs are executed to extract fields from <b class="text-info">item pages</b>.</div>
                         </div>
                     </div>
                 </div>
@@ -99,16 +68,24 @@
                     </div>
                     <div class="card my-3">
                         <div class="card-body">
-                            <dl>
-                                <dt>Id</dt>
-                                <dd th:text="${task.id}"></dd>
-                                <dt>Status</dt>
-                                <dd th:text="${task.status}"></dd>
-                                <dt>Server Task Id</dt>
-                                <dd>
+                            <dl class="flex-row">
+                                <dt class="d-inline-flex px-2">Id</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.id}"></dd>
+                                <dt class="d-inline-flex px-2">Status</dt>
+                                <dd class="d-inline-flex px-2" th:text="${task.status}"></dd>
+                                <dt class="d-inline-flex px-2">Server Task Id</dt>
+                                <dd class="d-inline-flex px-2">
                                     <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
                                        th:text="${task.serverTaskId}" target="_blank"></a>
                                 </dd>
+                            </dl>
+                        </div>
+                    </div>
+                    <div class="card my-3">
+                        <div class="card-body">
+                            <dl class="flex-row">
+                                <dt class="d-inline-flex px-2">Out Link Selector</dt>
+                                <dd class="d-inline-flex px-2"><pre th:text="${task.rule.outLinkSelector}"></pre></dd>
                             </dl>
                         </div>
                     </div>

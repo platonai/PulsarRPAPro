@@ -10,7 +10,6 @@ import ai.platon.exotic.services.api.persist.PortalTaskRepository
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.collect.queue.ConcurrentNEntrantQueue
 import ai.platon.pulsar.common.stringify
-import ai.platon.pulsar.common.urls.ComparableUrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
@@ -23,7 +22,6 @@ import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import java.time.Instant
 import java.time.temporal.ChronoUnit
-import java.util.concurrent.ConcurrentLinkedQueue
 
 @Component
 class CrawlTaskRunner(

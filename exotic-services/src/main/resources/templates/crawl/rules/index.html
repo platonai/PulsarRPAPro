@@ -52,12 +52,7 @@
                                 <td th:text="${rule.id}"></td>
                                 <td th:text="${rule.name}"></td>
                                 <td th:text="${rule.label}"></td>
-                                <td th:switch="${rule.period.toString()}">
-                                    <block th:case="'PT-1H'">
-                                        <span th:text="${rule.cronExpression}"></span>
-                                    </block>
-                                    <span th:case="*" th:text="${rule.period}"></span>
-                                </td>
+                                <td th:text="${rule.descriptivePeriod}"></td>
                                 <td th:text="${#arrays.length(rule.portalUrls.split('\n'))}"></td>
                                 <td th:text="${rule.status}"></td>
                                 <td th:text="${rule.startTime}"></td>

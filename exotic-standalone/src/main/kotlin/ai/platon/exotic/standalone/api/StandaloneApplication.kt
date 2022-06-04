@@ -2,11 +2,9 @@ package ai.platon.exotic.standalone.api
 
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.persist.WebDb
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import de.flapdoodle.embed.mongo.MongodExecutable
-import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder

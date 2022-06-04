@@ -1,8 +1,14 @@
 package ai.platon.exotic.driver.crawl.entity
 
+import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.exotic.driver.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
+import com.cronutils.descriptor.CronDescriptor
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.parser.CronParser
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -12,7 +18,9 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
+import java.util.*
 import javax.persistence.*
+
 
 @Table(name = "crawl_rules")
 @Entity
@@ -114,6 +122,24 @@ class CrawlRule {
 
     final fun randomName(): String {
         return NameGenerator.gen()
+    }
+
+    val descriptivePeriod: String
+        get() {
+            val expression = cronExpression
+            return when {
+                period.isNegative && expression != null -> descriptCron(expression)
+                period.toDays() > 360 -> "Once"
+                else -> ExoticUtils.formatDuration(period.seconds)
+            }
+        }
+
+    private fun descriptCron(expression: String): String {
+        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+        val parser = CronParser(cronDefinition)
+        val quartzCron: Cron = parser.parse(expression)
+        val descriptor = CronDescriptor.instance(Locale.getDefault())
+        return descriptor.describe(quartzCron)
     }
 
     @PrePersist

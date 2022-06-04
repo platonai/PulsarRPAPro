@@ -1,10 +1,8 @@
 package ai.platon.exotic.driver
 
 import ai.platon.exotic.driver.crawl.ExoticCrawler
-import ai.platon.pulsar.common.alwaysTrue
-import ai.platon.pulsar.driver.Driver
-import ai.platon.pulsar.driver.utils.SQLTemplate
 import ai.platon.pulsar.driver.utils.ResourceLoader
+import ai.platon.pulsar.driver.utils.SQLTemplate
 import java.nio.file.Files
 
 fun main() {
