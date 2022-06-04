@@ -2,7 +2,9 @@ package ai.platon.exotic.driver.common
 
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.ProcessLauncher
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.browser.Browsers
+import java.nio.file.Files
 
 object ExoticUtils {
     fun formatTime(s: String, time: Long): String {
@@ -17,6 +19,16 @@ object ExoticUtils {
             formatTime("m", seconds / 60 % 60),
             formatTime("s", seconds % 3600 % 60)
         ).filter { e -> e !== "" }.joinToString().replace(", (?!.+,)".toRegex(), " and ")
+    }
+
+    fun prepareDatabase() {
+        val dbPath = AppPaths.SYS_USER_HOME.resolve("exotic-h2.mv.db")
+        if (!Files.exists(dbPath)) {
+            val inStream = ResourceLoader.getResourceAsStream("db/exotic-h2.mv.db")
+            if (inStream != null) {
+                Files.copy(inStream, dbPath)
+            }
+        }
     }
 
     fun openBrowser(url: String) {
