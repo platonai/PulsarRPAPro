@@ -30,6 +30,28 @@
         <th:block th:replace="${links}" />
     </th:block>
 
+    <style>
+        .bd-navbar {
+            min-height: 4rem;
+            background-color: #17a2b8;
+            position: sticky;
+            top: 0;
+            z-index: 1071;
+        }
+        .bd-navbar .navbar-nav .nav-link.active {
+            font-weight: 500;
+        }
+        .bd-navbar .navbar-nav .nav-link.active, .bd-navbar .navbar-nav .nav-link:hover {
+            color: #fff;
+            background-color: transparent;
+        }
+        .btn-bd-download {
+             font-weight: 500;
+             color: #ffe484;
+             border-color: #ffe484;
+         }
+    </style>
+
     <!--/* Default scripts; can be replaced by the calling templates */-->
     <script src="../static/js/jquery/jquery.min.js" th:src="@{/js/jquery/jquery.min.js}"></script>
 

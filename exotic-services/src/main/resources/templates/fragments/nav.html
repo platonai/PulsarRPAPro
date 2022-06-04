@@ -6,7 +6,7 @@
 </head>
 
 <body>
-<nav th:fragment="nav" class="navbar navbar-expand navbar-light flex-column flex-md-row bd-navbar">
+<nav th:fragment="nav" class="navbar navbar-expand navbar-dark flex-column flex-md-row bd-navbar">
     <a class="navbar-brand mr-0 mr-md-2" th:href="@{/crawl/}" aria-label="Exotic">
         <svg class="d-block" width="36" height="36" viewBox="0 0 36 36"
              xmlns="http://www.w3.org/2000/svg" focusable="false"><title>Exotic</title>
@@ -21,7 +21,8 @@
                 <a class="nav-link " th:href="@{/crawl/}" onclick="gtag('send', 'event', 'Navbar', 'Community links', 'Bootstrap');">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link active" href="https://github.com/platonai/exotic" onclick="gtag('send', 'event', 'Navbar', 'Community links', 'Docs');">Documentation</a>
+                <a class="nav-link active" href="https://github.com/platonai/exotic"
+                   onclick="gtag('send', 'event', 'Navbar', 'Community links', 'Docs');">Documentation</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link " href="https://github.com/platonai/exotic" onclick="gtag('send', 'event', 'Navbar', 'Community links', 'Examples');">Examples</a>
@@ -60,7 +61,9 @@
         </li>
     </ul>
 
-    <a class="btn d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3" href="http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar" target="_blank">Download</a>
+    <a class="btn btn-bd-download d-none d-lg-inline-block mb-3 mb-md-0 ml-md-3"
+       onclick="gtag('send', 'event', 'Navbar', 'Download');"
+       href="http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar" target="_blank">Download</a>
 </nav>
 </body>
 </html>

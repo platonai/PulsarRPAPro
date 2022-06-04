@@ -32,27 +32,19 @@
                         </div>
                     </div>
                     <div class="card my-3">
-                        <div class="card-header">Portal Urls</div>
                         <div class="card-body">
-                            <div><pre th:text="${rule.portalUrls}"></pre></div>
-                        </div>
-                    </div>
-                    <div class="card my-3">
-                        <div class="card-body">
-                            <div>Out Link Selector</div>
-                            <div><pre th:text="${rule.outLinkSelector}"></pre></div>
-<!--                            <div>Next page Selector</div>-->
-<!--                            <div><pre th:text="${rule.nextPageSelector}"></pre></div>-->
-                        </div>
-                    </div>
-                    <div class="card my-3">
-                        <div class="card-body">
-                            <dl>
-                                <dt>Label</dt>
-                                <dd th:text="${rule.label} ?: 'No label'"></dd>
+                            <dl class="flex-row">
+                                <dt class="d-inline-flex px-2">Portal Urls</dt>
+                                <dd class="d-inline-flex px-2"><pre th:text="${rule.portalUrls}"></pre></dd>
 
-                                <dt>Description</dt>
-                                <dd th:text="${rule.description} ?: 'No description'"></dd>
+                                <dt class="d-inline-flex px-2">Out Link Selector</dt>
+                                <dd class="d-inline-flex px-2"><pre th:text="${rule.outLinkSelector}"></pre></dd>
+
+                                <dt class="d-inline-flex px-2">Label</dt>
+                                <dd  class="d-inline-flex px-2" th:text="${rule.label} ?: 'No label'"></dd>
+
+                                <dt class="d-inline-flex px-2">Description</dt>
+                                <dd class="d-inline-flex px-2" th:text="${rule.description} ?: 'No description'"></dd>
                             </dl>
                         </div>
                     </div>
