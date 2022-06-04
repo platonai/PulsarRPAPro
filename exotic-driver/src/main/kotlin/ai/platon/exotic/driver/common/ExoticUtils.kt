@@ -12,6 +12,25 @@ object ExoticUtils {
     }
 
     fun formatDuration(seconds: Long): String {
+        var readableDuration = formatLongDuration(seconds)
+        val parts = readableDuration.count { it == ',' }
+        if (parts > 2) {
+            readableDuration = formatShortDuration(seconds)
+        }
+        return readableDuration
+    }
+
+    fun formatLongDuration(seconds: Long): String {
+        return if (seconds == 0L) "now" else listOf(
+            formatTime("year", seconds / 31536000),
+            formatTime("day", seconds / 86400 % 365),
+            formatTime("hour", seconds / 3600 % 24),
+            formatTime("min", seconds / 60 % 60),
+            formatTime("second", seconds % 3600 % 60)
+        ).filter { it !== "" }.joinToString().replace(", (?!.+,)".toRegex(), " and ")
+    }
+
+    fun formatShortDuration(seconds: Long): String {
         return if (seconds == 0L) "now" else listOf(
             formatTime("y", seconds / 31536000),
             formatTime("d", seconds / 86400 % 365),
@@ -19,6 +38,10 @@ object ExoticUtils {
             formatTime("m", seconds / 60 % 60),
             formatTime("s", seconds % 3600 % 60)
         ).filter { e -> e !== "" }.joinToString().replace(", (?!.+,)".toRegex(), " and ")
+    }
+
+    fun prepareDatabaseOrFail() {
+        kotlin.runCatching { prepareDatabase() }.onFailure { System.err.println(it.message) }
     }
 
     fun prepareDatabase() {
