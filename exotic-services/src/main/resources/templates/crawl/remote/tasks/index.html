@@ -7,14 +7,17 @@
 </head>
 
 <body>
-<div class="container-fluid my-1">
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
-            <li class="breadcrumb-item active">Remote Tasks</li>
-        </ol>
-    </nav>
+<div th:replace="layout :: nav"></div>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
+        <li class="breadcrumb-item active">Remote Tasks</li>
+    </ol>
+</nav>
+
+<div class="container-fluid ">
 
     <div class="card">
         <div class="card-body">
@@ -77,7 +80,7 @@
     </div>
 </div>
 
-<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
 
 </body>
 

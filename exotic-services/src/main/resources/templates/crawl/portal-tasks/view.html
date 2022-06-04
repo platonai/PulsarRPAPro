@@ -7,16 +7,17 @@
 
 <body>
 
-<div class="container my-1">
+<div th:replace="layout :: nav"></div>
 
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
-            <li class="breadcrumb-item"><a th:href="@{/crawl/portal-tasks/}">Portal Tasks</a></li>
-            <li th:text="${task.id}" class="breadcrumb-item active" aria-current="page"></li>
-        </ol>
-    </nav>
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/crawl/portal-tasks/}">Portal Tasks</a></li>
+        <li th:text="${task.id}" class="breadcrumb-item active" aria-current="page"></li>
+    </ol>
+</nav>
 
+<div class="container">
     <div th:switch="${task}">
         <div th:case="*">
             <div class="row">
@@ -86,13 +87,13 @@
                 <div class="col">
                     <div class="card my-3">
                         <div class="card-body">
-                            <a th:href="@{/crawl/portal-tasks/}" title="List" class="btn btn-primary m-1">
+                            <a th:href="@{/crawl/portal-tasks/}" title="List" class="btn btn-info m-1">
                                 <i class="fas fa-list ml-1"></i></a>
                             <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
-                               title="View server side detail" class="btn btn-primary m-1">
+                               title="View server side detail" class="btn btn-info m-1">
                                 <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
                             <a th:href="@{/crawl/portal-tasks/pause/{id}(id=${task.id})}"
-                               title="Pause" class="btn btn-primary m-1">
+                               title="Pause" class="btn btn-info m-1">
                                 <i class="fas fa-pause ml-1"></i></a>
                         </div>
                     </div>

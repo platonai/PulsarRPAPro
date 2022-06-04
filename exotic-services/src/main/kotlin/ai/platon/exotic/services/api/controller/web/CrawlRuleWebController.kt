@@ -5,6 +5,7 @@ import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
+import ai.platon.pulsar.common.getLogger
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Controller
@@ -77,7 +78,7 @@ https://www.amazon.com/Best-Sellers-Electronics/zgbs/electronics
 
     @PostMapping("/add")
     fun add(@Valid @ModelAttribute("rule") rule: CrawlRule, result: BindingResult, model: Model): String {
-        println(prettyScentObjectWritter().writeValueAsString(rule))
+        getLogger(this).info(prettyScentObjectWritter().writeValueAsString(rule))
 
         if (result.hasErrors()) {
             // model.addAttribute("rule", rule)

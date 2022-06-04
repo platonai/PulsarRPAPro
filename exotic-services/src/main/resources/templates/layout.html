@@ -57,14 +57,7 @@
 
 <body>
 <!--/* Header fragment */-->
-
-<!--/* The element with breadcrumb class will be passed to the header fragment */-->
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">PlatonAI</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-    </button>
-</nav>
+<div th:fragment="nav()" th:replace="fragments/nav :: nav"></div>
 
 <!--/* The value passed from calling template will be inserted in this element */-->
 <div class="container" th:fragment="content(value)" th:insert="${value}">
@@ -83,7 +76,7 @@
 </div>
 
 <!--/* Footer fragment */-->
-<footer th:fragment="footer" class="text-center">&copy; 2022 Default Footer</footer>
+<div th:fragment="footer()" th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
 
 </body>
 </html>

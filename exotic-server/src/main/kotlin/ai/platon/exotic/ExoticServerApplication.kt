@@ -2,10 +2,12 @@ package ai.platon.exotic
 
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.persist.WebDb
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import de.flapdoodle.embed.mongo.MongodExecutable
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -40,6 +42,18 @@ class ExoticServerApplication(
         logger.info("User the overridden WebDb bean which depends on embeddedMongoServer" +
                 " to ensure the correct shutdown order")
         return WebDb(immutableConfig)
+    }
+
+    @Autowired
+    lateinit var webDb: WebDb
+
+    @Primary
+    @DependsOn("embeddedMongoServer", "webDb")
+    @Bean
+    fun createMiscMessageWriter(): MiscMessageWriter {
+        logger.info("User the overridden MiscMessageWriter bean which depends on embeddedMongoServer" +
+                " to ensure the correct shutdown order")
+        return MiscMessageWriter(webDb, immutableConfig)
     }
 
     @Bean

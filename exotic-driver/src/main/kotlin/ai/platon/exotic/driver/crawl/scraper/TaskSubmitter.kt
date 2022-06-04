@@ -1,6 +1,8 @@
 package ai.platon.exotic.driver.crawl.scraper
 
+import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.chrono.scheduleAtFixedRate
+import ai.platon.pulsar.common.readable
 import ai.platon.pulsar.driver.*
 import ai.platon.pulsar.driver.utils.SQLTemplate
 import com.google.gson.Gson
@@ -9,6 +11,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.time.Duration
 import java.time.Instant
+import java.time.temporal.ChronoUnit
 import java.util.*
 import java.util.concurrent.ConcurrentSkipListMap
 import kotlin.random.Random
@@ -189,10 +192,10 @@ open class TaskSubmitter(
         val rand = Random.nextInt(10)
         val description = if (rand == 0) " | (failed/retry/responses/checking/pending/finished)" else ""
         logger.info(
-            "{}.\tCollected {}/{}/{}/{}/{}/{} responses in {}, next check: {}s$description",
+            "{}.\tCollected {}/{}/{}/{}/{}/{} responses in {}, recheck after {}s$description",
             collectId,
             localFailedCount, localRetryCount, responses.size, checkingIds.size, pendingTasks.size, totalFinishedTaskCount,
-            elapsedTime, nextCheckTime
+            DateTimes.readableDuration(elapsedTime, ChronoUnit.MILLIS), nextCheckTime
         )
 
         return responses

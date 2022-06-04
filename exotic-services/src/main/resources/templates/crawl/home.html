@@ -7,27 +7,31 @@
 
 <body>
 
-<div class="container-fluid my-2">
+<div th:replace="layout :: nav"></div>
 
-    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Home</a></li>
-        </ol>
-    </nav>
-
-    <div>
-        <ol>
-            <li>
-                <a th:href="@{/crawl/rules/}" class="m-1">Rules</a>
-            </li>
-            <li>
-                <a th:href="@{/crawl/portal-tasks/}" class="m-1">Portal Tasks</a>
-            </li>
-            <li>
-                <a th:href="@{/crawl/remote/tasks/}" class="m-1">Remote Tasks</a>
-            </li>
-        </ol>
+<div class="container">
+    <div class="row my-5">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body p-5 text-center">
+                    <a th:href="@{/crawl/rules/}" class="m-1">Rules</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body p-5 text-center">
+                    <a th:href="@{/crawl/portal-tasks/}" class="m-1">Portal Tasks</a>
+                </div>
+            </div>
+        </div>
+        <div class="col-4">
+            <div class="card">
+                <div class="card-body p-5 text-center">
+                    <a th:href="@{/crawl/remote/tasks/}" class="m-1">Remote Tasks</a>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 </body>

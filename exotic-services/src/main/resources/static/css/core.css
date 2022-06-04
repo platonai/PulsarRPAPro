@@ -1,3 +1,12 @@
 em.required { color: red}
 
-.nav-item { margin-right: 1rem; }
+.bd-navbar {
+    min-height: 4rem;
+}
+
+.bd-navbar .navbar-nav-svg {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    vertical-align: text-top;
+}

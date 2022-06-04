@@ -84,7 +84,7 @@ class ExoticScheduler(
         if (!serverIsRunning()) {
             return
         }
-BrowserSettings.headless()
+
         try {
             val submitter = exoticCrawler.outPageScraper.taskSubmitter
             val maxPendingTaskCount = if (IS_DEVELOPMENT) DEV_MAX_PENDING_TASKS else PRODUCT_MAX_PENDING_TASKS

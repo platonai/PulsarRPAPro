@@ -7,15 +7,17 @@
 
 <body>
 
-<div class="container-fluid my-2">
+<div th:replace="layout :: nav"></div>
 
-    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Crawl Home</a></li>
-            <li class="breadcrumb-item active">Remote Dashboard</li>
-        </ol>
-    </nav>
+<!--/* The element with breadcrumb class will be passed to the header fragment */-->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Crawl Home</a></li>
+        <li class="breadcrumb-item active">Remote Dashboard</li>
+    </ol>
+</nav>
+
+<div class="container-fluid ">
 
     <div>
         <div class="card">
@@ -33,7 +35,7 @@
     hljs.initHighlightingOnLoad();
 </script>
 
-<div th:replace="fragments/footer :: footer">&copy; 2016 The Static Templates</div>
+<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
 
 </body>
 
