@@ -46,7 +46,7 @@ object ExoticUtils {
     fun prepareDatabase() {
         val dbPath = AppPaths.SYS_USER_HOME.resolve("exotic-h2.mv.db")
         if (!Files.exists(dbPath)) {
-            val inStream = ResourceLoader.getResourceAsStream("db/exotic-h2.mv.db")
+            val inStream = ResourceLoader.getResourceAsStream("db/exotic-h2.mv.db.data")
             if (inStream != null) {
                 Files.copy(inStream, dbPath)
             }
