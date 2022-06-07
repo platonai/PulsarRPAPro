@@ -8,6 +8,7 @@ cd "$APP_HOME" || exit;
 
 echo "Deploy the project ..."
 echo "Changing version ..."
+echo
 
 HOST=master
 
@@ -15,6 +16,16 @@ SNAPSHOT_VERSION=$(head -n 1 "$APP_HOME/VERSION")
 VERSION=${SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 echo "$VERSION" > "$APP_HOME"/VERSION
 find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$VERSION/" {} \;
+
+SNIPPET=$(grep SNAPSHOT pom.xml)
+if [ -n "$SNIPPET" ]; then
+  echo "Found SNAPSHOT artifacts in your pom.xml:"
+  echo ">>>>>>>>"
+  echo "$SNIPPET"
+  echo "<<<<<<<<"
+  echo "Please upgrade to release versions of the artifacts"
+  exit 0
+fi
 
 mvn clean
 mvn
