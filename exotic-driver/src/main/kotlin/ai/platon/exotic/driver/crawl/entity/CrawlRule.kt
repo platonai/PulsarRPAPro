@@ -10,6 +10,7 @@ import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder
 import com.cronutils.parser.CronParser
 import org.apache.commons.lang3.StringUtils
+import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -21,7 +22,6 @@ import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
 import javax.persistence.*
-
 
 @Table(name = "crawl_rules")
 @Entity
@@ -96,11 +96,11 @@ class CrawlRule {
 
     @CreatedDate
     @Column(name = "created_date")
-    var createdDate: Instant = Instant.EPOCH
+    var createdDate: Instant = Instant.now()
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    var lastModifiedDate: Instant = Instant.EPOCH
+    var lastModifiedDate: Instant = Instant.now()
 
 //    @OneToMany(fetch = FetchType.LAZY)
     @OneToMany(mappedBy = "rule", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])

@@ -13,6 +13,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import java.time.Instant
 import javax.validation.Valid
 import kotlin.random.Random
 
@@ -87,7 +88,9 @@ from load_and_select('{{url}}', ':root');
             return "crawl/rules/add"
         }
 
-//        rule.adjustFields()
+        rule.createdDate = Instant.now()
+        rule.status = RuleStatus.Created.toString()
+
         repository.save(rule)
         return "redirect:/crawl/rules/"
     }
@@ -107,6 +110,13 @@ from load_and_select('{{url}}', ':root');
         if (result.hasErrors()) {
             return "crawl/rules/edit"
         }
+
+        val old = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
+        rule.status = old.status
+        rule.crawlCount = old.crawlCount
+        rule.createdDate = old.createdDate
+        rule.lastCrawlTime = old.lastCrawlTime
+        rule.crawlHistory = old.crawlHistory
 
         repository.save(rule)
 

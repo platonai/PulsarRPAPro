@@ -1,6 +1,7 @@
 package ai.platon.exotic.services.api.controller.api
 
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
+import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
 import ai.platon.pulsar.common.ResourceLoader
 import org.springframework.web.bind.annotation.*
@@ -19,7 +20,7 @@ class CrawlRuleController(
     @PostMapping("add")
     fun add(@RequestBody rule: CrawlRule): CrawlRule {
         rule.createdDate = Instant.now()
-        rule.lastModifiedDate = rule.createdDate
+        rule.status = RuleStatus.Created.toString()
 
         if (rule.portalUrls.contains("jd.com")) {
             val sqlTemplate = ResourceLoader.readAllLines("sites/jd/template/extract/x-item.sql")
@@ -30,7 +31,6 @@ class CrawlRuleController(
             rule.sqlTemplate = sqlTemplate
         }
 
-//        rule.adjustFields()
         repository.save(rule)
 
         return rule

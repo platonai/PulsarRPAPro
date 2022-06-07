@@ -48,7 +48,7 @@ class CrawlTaskRunner(
         val page = PageRequest.of(0, 1000, sort)
 
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
-            .filter { it.startTime <= now }
+            .filter { (it.startTime?.epochSecond ?: 0) <= now.epochSecond }
 
         rules.forEach { rule -> startCrawl(rule) }
     }
@@ -78,8 +78,9 @@ class CrawlTaskRunner(
         try {
             rule.status = RuleStatus.Running.toString()
             rule.crawlCount?.inc()
-            rule.lastCrawlTime = Instant.now()
-            rule.lastModifiedDate = Instant.now()
+            val now = Instant.now()
+            rule.lastCrawlTime = now
+            rule.lastModifiedDate = now
             crawlRuleRepository.save(rule)
             crawlRuleRepository.flush()
 
@@ -288,9 +289,10 @@ class CrawlTaskRunner(
     }
 
     private fun shouldRun0(rule: CrawlRule): Boolean {
+        val lastCrawlTime = rule.lastCrawlTime ?: Instant.EPOCH
         if (rule.period.seconds > 0) {
             val now = Instant.now()
-            if (rule.lastCrawlTime + rule.period <= now) {
+            if (lastCrawlTime + rule.period <= now) {
                 return true
             }
         }
@@ -306,8 +308,8 @@ class CrawlTaskRunner(
         quartzCron.validate()
         val executionTime = ExecutionTime.forCron(quartzCron)
 
-        val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
-        val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
+        val zonedLastCrawlTime = lastCrawlTime.atZone(DateTimes.zoneId)
+        val timeToNextExecution = executionTime.timeToNextExecution(zonedLastCrawlTime)
         if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
             return true
         }
