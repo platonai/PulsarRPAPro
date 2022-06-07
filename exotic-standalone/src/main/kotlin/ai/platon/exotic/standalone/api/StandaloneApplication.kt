@@ -1,5 +1,6 @@
 package ai.platon.exotic.standalone.api
 
+import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.persist.WebDb
@@ -54,6 +55,8 @@ class StandaloneApplication(
 }
 
 fun main(argv: Array<String>) {
+    ExoticUtils.prepareDatabaseOrFail()
+
     SpringApplicationBuilder(StandaloneApplication::class.java)
         .profiles("h2")
         .initializers(ScentContextInitializer())
