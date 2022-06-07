@@ -101,6 +101,9 @@ Finally, we have the perfect extract rules to match our most complex requirement
 ----
 java -jar exotic-standalone*.jar serve
 ----
+The web console should be open in seconds if Exotic running in GUI mode, or open it manually:
+
+http://localhost:2718/exotic/crawl/
 
 == Explore the Exotic executable jar
 Run the executable jar directly for helps to explore more power provided:
