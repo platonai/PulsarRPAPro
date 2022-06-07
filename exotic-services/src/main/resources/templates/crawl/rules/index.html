@@ -39,10 +39,11 @@
                                 <th></th>
                                 <th>Name</th>
                                 <th>Label</th>
-                                <th title="For cron: minute, hour, dom, month, dow">Period/Cron</th>
-                                <th>Tasks</th>
+                                <th>Schedule</th>
+                                <th class="px-1">Runs</th>
+                                <th class="px-1">Tasks</th>
                                 <th>Status</th>
-                                <th>Start At</th>
+                                <th>Start Date</th>
                                 <th>Last Crawl At</th>
                                 <th>Actions</th>
                             </tr>
@@ -53,9 +54,10 @@
                                 <td th:text="${rule.name}"></td>
                                 <td th:text="${rule.label}"></td>
                                 <td th:text="${rule.descriptivePeriod}"></td>
+                                <td th:text="${rule.crawlCount ?: 0}"></td>
                                 <td th:text="${#arrays.length(rule.portalUrls.split('\n'))}"></td>
                                 <td th:text="${rule.status}"></td>
-                                <td th:text="${#temporals.format(rule.startTime, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td th:text="${#temporals.format(rule.startTime, 'yy-MM-dd Z')}"></td>
                                 <td th:text="${#temporals.format(rule.lastCrawlTime, 'yy-MM-dd h:mm a Z')}"></td>
                                 <td>
                                     <a th:href="@{/crawl/rules/view/{id}(id=${rule.id})}" title="View" class="btn btn-info">

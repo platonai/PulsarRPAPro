@@ -34,10 +34,12 @@ class CrawlTaskRunner(
     private val retryingPortalTasks = ConcurrentNEntrantQueue<ScrapeTask>(5)
     private val retryingItemTasks = ConcurrentNEntrantQueue<ScrapeTask>(3)
 
+    @Synchronized
     fun loadUnfinishedTasks() {
         // portalTaskRepository.findAllByStatus("Running")
     }
 
+    @Synchronized
     fun startCreatedCrawlRules() {
         val now = Instant.now()
 
@@ -51,6 +53,7 @@ class CrawlTaskRunner(
         rules.forEach { rule -> startCrawl(rule) }
     }
 
+    @Synchronized
     fun restartCrawlRulesNextRound() {
         val status = listOf(RuleStatus.Running, RuleStatus.Finished).map { it.toString() }
         val sort = Sort.by(Sort.Order.desc("id"))
@@ -70,39 +73,15 @@ class CrawlTaskRunner(
         }
     }
 
-    private fun shouldRun0(rule: CrawlRule): Boolean {
-        if (rule.period.seconds > 0) {
-            val now = Instant.now()
-            if (rule.lastCrawlTime + rule.period <= now) {
-                return true
-            }
-        }
-
-        val expression = rule.cronExpression
-        if (expression.isNullOrBlank()) {
-            return false
-        }
-
-        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
-        val parser = CronParser(cronDefinition)
-        val quartzCron: Cron = parser.parse(expression)
-        quartzCron.validate()
-        val executionTime = ExecutionTime.forCron(quartzCron)
-
-        val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
-        val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
-        if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
-            return true
-        }
-
-        return false
-    }
-
+    @Synchronized
     fun startCrawl(rule: CrawlRule) {
         try {
             rule.status = RuleStatus.Running.toString()
-            rule.lastCrawlTime = Instant.now().truncatedTo(ChronoUnit.SECONDS)
-            rule.lastModifiedDate = Instant.now().truncatedTo(ChronoUnit.SECONDS)
+            rule.crawlCount?.inc()
+            rule.lastCrawlTime = Instant.now()
+            rule.lastModifiedDate = Instant.now()
+            crawlRuleRepository.save(rule)
+            crawlRuleRepository.flush()
 
             val portalUrls = rule.portalUrls
 
@@ -116,6 +95,7 @@ class CrawlTaskRunner(
             val pagedPortalUrls = portalUrls.split("\n")
                 .map { it.trim() }
                 .filter { UrlUtils.isValidUrl(it) }
+                .distinct()
                 .flatMap { url -> createPagedUrls(url, maxPages) }
             if (pagedPortalUrls.isEmpty()) {
                 logger.info("No portal urls in rule #{}", rule.id)
@@ -305,6 +285,34 @@ class CrawlTaskRunner(
         }
 
         return listenableScrapeTask
+    }
+
+    private fun shouldRun0(rule: CrawlRule): Boolean {
+        if (rule.period.seconds > 0) {
+            val now = Instant.now()
+            if (rule.lastCrawlTime + rule.period <= now) {
+                return true
+            }
+        }
+
+        val expression = rule.cronExpression
+        if (expression.isNullOrBlank()) {
+            return false
+        }
+
+        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+        val parser = CronParser(cronDefinition)
+        val quartzCron: Cron = parser.parse(expression)
+        quartzCron.validate()
+        val executionTime = ExecutionTime.forCron(quartzCron)
+
+        val lastCrawlTime = rule.lastCrawlTime.atZone(DateTimes.zoneId)
+        val timeToNextExecution = executionTime.timeToNextExecution(lastCrawlTime)
+        if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
+            return true
+        }
+
+        return false
     }
 
     private fun createPagedUrls(url: String, maxPages: Int): List<String> {

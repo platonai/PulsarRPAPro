@@ -24,20 +24,21 @@
                 <div>
                     <h2 th:case="null">No task yet</h2>
                     <div th:case="*">
-                        <table class="table table-striped table-responsive-md">
+                        <table class="table table-striped table-sm table-responsive-sm">
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th>Priority</th>
+                                <th th:title="Priority">Pri</th>
 
-                                <th>Submitted</th>
-                                <th>Success</th>
-                                <th>Retry</th>
-                                <th>Failed</th>
-                                <th>Finished</th>
+                                <th th:title="Submitted">Sub</th>
+                                <th th:title="Success">Suc</th>
+                                <th th:title="Retry">Ret</th>
+                                <th th:title="Failed">Fai</th>
+                                <th th:title="Finished">Fin</th>
 
                                 <th>Start At</th>
                                 <th>Last Modified At</th>
+                                <th>Url</th>
                                 <th>Rule</th>
 
                                 <th>Actions</th>
@@ -54,6 +55,9 @@
                                 <td th:text="${task.finishedCount}"></td>
                                 <td th:text="${#temporals.format(task.startTime, 'yy-MM-dd h:mm a Z')}"></td>
                                 <td th:text="${#temporals.format(task.lastModifiedDate, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td>
+                                    <a th:href="${task.url}" th:text="${task.abbreviatedUrl}" target="_blank"></a>
+                                </td>
                                 <td>
                                     <a th:href="@{/crawl/rules/view/{id}(id=${task.rule.id})}"
                                        th:text="${task.rule.name}"

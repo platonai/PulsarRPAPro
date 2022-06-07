@@ -74,7 +74,11 @@
                                 <dd class="d-inline-flex px-2" th:text="${rule.name}"></dd>
                                 <dt class="d-inline-flex px-2">Status</dt>
                                 <dd class="d-inline-flex px-2" th:text="${rule.status}"></dd>
-<!--                                <dt>Max Pages</dt>-->
+
+                                <dt class="d-inline-flex px-2">Runs</dt>
+                                <dd class="d-inline-flex px-2" th:text="${rule.crawlCount ?: 0}"></dd>
+
+                                <!--                                <dt>Max Pages</dt>-->
 <!--                                <dd th:text="${rule.maxPages}"></dd>-->
                             </dl>
                         </div>
@@ -85,15 +89,16 @@
                                 <dt>Start Time</dt>
                                 <dd th:text="${#temporals.format(rule.startTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
 
-                                <dt>Period</dt>
+                                <dt>Crawl Period</dt>
                                 <dd th:text="${#strings.capitalize(rule.descriptivePeriod)}"></dd>
+
+                                <dt>Last Crawl Time</dt>
+                                <dd th:text="${#temporals.format(rule.lastCrawlTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
 
                                 <dt>Dead Time</dt>
                                 <dd th:text="${#temporals.format(rule.deadTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
                             </dl>
                             <dl>
-                                <dt>Last Crawl Time</dt>
-                                <dd th:text="${#temporals.format(rule.lastCrawlTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
                                 <dt>Created At</dt>
                                 <dd th:text="${#temporals.format(rule.createdDate, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
                                 <dt>Last Modified</dt>

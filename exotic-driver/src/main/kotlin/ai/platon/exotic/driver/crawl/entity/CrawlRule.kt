@@ -70,6 +70,9 @@ class CrawlRule {
     @Column(name = "last_crawl_time")
     var lastCrawlTime: Instant = Instant.EPOCH
 
+    @Column(name = "start_count")
+    var crawlCount: Int? = 0
+
     @Column(name = "crawl_history", length = 1024)
     var crawlHistory: String = ""
 
@@ -147,26 +150,11 @@ class CrawlRule {
     @PreUpdate
     @PostLoad
     final fun adjustFields() {
-        period = period.truncatedTo(ChronoUnit.MINUTES)
-        startTime = startTime.truncatedTo(ChronoUnit.SECONDS)
-        lastCrawlTime = lastCrawlTime.truncatedTo(ChronoUnit.SECONDS)
-
         val count = cronExpression?.split(" ") ?: 0
         if (count == 5) {
             cronExpression = "0 $cronExpression"
         }
 
-        if (startTime == Instant.EPOCH) {
-            startTime = lastCrawlTime
-        }
-
         name = name.takeIf { it.isNotBlank() } ?: randomName()
-
-        if (label.isNullOrBlank()) {
-            label = null
-        }
-        if (description.isNullOrBlank()) {
-            description = null
-        }
     }
 }
