@@ -30,7 +30,10 @@ VERSION_AWARE_FILES=(
 )
 # replace version numbers to be the next numbers in files
 for F in "${VERSION_AWARE_FILES[@]}"; do
+  # 1.9.11 -> 1.9.12
   sed -i "s/\b$PREFIX.[0-9]\{1,\}\b/$NEXT_VERSION/g" "$F";
+  # v1.9.11 -> v1.9.12
+  sed -i "s/\bv$PREFIX.[0-9]\{1,\}\b/v$NEXT_VERSION/g" "$F";
 done
 
 COMMENT=${NEXT_SNAPSHOT_VERSION//"-SNAPSHOT"/""}
