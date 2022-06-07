@@ -93,7 +93,6 @@ class CrawlRule {
      * */
     @Column(name = "timezone_offset_minutes")
     var timezoneOffsetMinutes: Int? = -480
-
     @CreatedDate
     @Column(name = "created_date")
     var createdDate: Instant = Instant.now()
@@ -109,8 +108,24 @@ class CrawlRule {
     val zoneOffset: ZoneOffset
         get() {
             val minutes = timezoneOffsetMinutes ?: -480
-            return ZoneOffset.ofHoursMinutes(minutes % 60, minutes / 60)
+            return ZoneOffset.ofHoursMinutes(minutes / 60, minutes % 60)
         }
+
+    val descriptivePeriod: String
+        get() {
+            val expression = cronExpression
+            return when {
+                period.isNegative && expression != null -> describeCron(expression)
+                period.toDays() > 360 -> "once"
+                else -> "every " + ExoticUtils.formatDuration(period.seconds)
+            }
+        }
+
+    val localCreatedDateTime: LocalDateTime
+        get() = createdDate.atOffset(zoneOffset).toLocalDateTime()
+
+    val localLastModifiedDateTime: LocalDateTime
+        get() = lastModifiedDate.atOffset(zoneOffset).toLocalDateTime()
 
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
@@ -127,16 +142,6 @@ class CrawlRule {
     final fun randomName(): String {
         return NameGenerator.gen()
     }
-
-    val descriptivePeriod: String
-        get() {
-            val expression = cronExpression
-            return when {
-                period.isNegative && expression != null -> describeCron(expression)
-                period.toDays() > 360 -> "once"
-                else -> "every " + ExoticUtils.formatDuration(period.seconds)
-            }
-        }
 
     private fun describeCron(expression: String): String {
         val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)

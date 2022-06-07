@@ -76,11 +76,11 @@ class CrawlTaskRunner(
     @Synchronized
     fun startCrawl(rule: CrawlRule) {
         try {
-            rule.status = RuleStatus.Running.toString()
-            rule.crawlCount?.inc()
             val now = Instant.now()
+
+            rule.status = RuleStatus.Running.toString()
+            rule.crawlCount = rule.crawlCount?.inc()
             rule.lastCrawlTime = now
-            rule.lastModifiedDate = now
             crawlRuleRepository.save(rule)
             crawlRuleRepository.flush()
 
