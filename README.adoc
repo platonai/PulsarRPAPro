@@ -8,7 +8,7 @@ Exotic (stand for exotic star) is the professional edition of Pulsar with advanc
 . STEP2: test the SQLs and improve them to match frontend business requirements if necessary
 . STEP3: create crawl rules in the web console to run extract SQLs continuously
 
-Check out https://github.com/platonai/pulsar[Pulsar] to see the full power of Exotic.
+Check out https://github.com/platonai/pulsar[Pulsar] to learn about the challenges of scraping web data at scale and how Pulsar solves them.
 
 Exotic also demonstrates:
 

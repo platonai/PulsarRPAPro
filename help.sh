@@ -5,4 +5,4 @@ if (( FILE_COUNT == 0 )); then
 fi
 
 cd exotic-standalone/target/ || exit
-java -jar exotic-standalone*.jar serve
+java -jar exotic-standalone*.jar

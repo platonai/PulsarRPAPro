@@ -128,13 +128,13 @@ class CrawlRule {
         get() {
             val expression = cronExpression
             return when {
-                period.isNegative && expression != null -> descriptCron(expression)
-                period.toDays() > 360 -> "Once"
-                else -> ExoticUtils.formatDuration(period.seconds)
+                period.isNegative && expression != null -> describeCron(expression)
+                period.toDays() > 360 -> "once"
+                else -> "every " + ExoticUtils.formatDuration(period.seconds)
             }
         }
 
-    private fun descriptCron(expression: String): String {
+    private fun describeCron(expression: String): String {
         val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
         val parser = CronParser(cronDefinition)
         val quartzCron: Cron = parser.parse(expression)
