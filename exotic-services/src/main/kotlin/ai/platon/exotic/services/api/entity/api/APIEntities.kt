@@ -12,6 +12,6 @@ class ExpandedScrapeResponse(
     val id = response.id
     val timestamp = if (id != null) ObjectId(id).timestamp.toLong() else 0L
     val objectTime = if (timestamp > 0) Instant.ofEpochSecond(timestamp) else Instant.EPOCH
-    val abbreviatedUrl = StringUtils.abbreviateMiddle(response.url, "...", 50)
+    val abbreviatedUrl = StringUtils.abbreviateMiddle(response.url, "...", 45)
     val resultSetAsJson get() = prettyScentObjectWritter().writeValueAsString(response.resultSet)
 }

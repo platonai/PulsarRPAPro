@@ -40,7 +40,7 @@
                                 <th title="Status Code">SC</th>
                                 <th title="Page Status Code">PSC</th>
                                 <th title="Page Content Bytes">Bytes</th>
-                                <th>Is Done</th>
+                                <th>Done</th>
                                 <th>Created At</th>
                                 <th>Result Set</th>
                                 <th>Url</th>
@@ -54,7 +54,7 @@
                                 <td th:text="${task.response.pageStatusCode}"></td>
                                 <td th:text="${task.response.pageContentBytes}"></td>
                                 <td th:text="${task.response.isDone}"></td>
-                                <td th:text="${task.objectTime}"></td>
+                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a Z')}"></td>
                                 <td>
                                     <a href="javascript:" class="preview btn btn-info" th:data-target-id="${task.id}">
                                         <i class="fas fa-eye ml-1"></i></a>
