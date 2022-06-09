@@ -43,7 +43,7 @@ cd exotic-standalone/target/
 == Run Auto Extract
 [source,bash]
 ----
-java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -expires 1s
+java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh
 ----
 
 Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
