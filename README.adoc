@@ -40,6 +40,15 @@ mvn clean && mvn
 cd exotic-standalone/target/
 ----
 
+== Run the standalone server and open web console
+[source,bash]
+----
+java -jar exotic-standalone*.jar serve
+----
+If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
+
+http://localhost:2718/exotic/crawl/
+
 == Run Auto Extract
 [source,bash]
 ----
@@ -93,17 +102,6 @@ select
 from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Printer-Filament-Standard-Colours-Series-1.75mm-1kg-i.182524985.8326053759?sp_atk=3afa9679-22cb-4c30-a1db-9d271e15b7a2&xptdk=3afa9679-22cb-4c30-a1db-9d271e15b7a2', 'div.page-product');
 "
 ----
-
-== Run the standalone server and open web console
-Finally, we have the perfect extract rules to match our most complex requirements, we can use the web console to manage the crawlers and run them on demand.
-
-[source,bash]
-----
-java -jar exotic-standalone*.jar serve
-----
-If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
-
-http://localhost:2718/exotic/crawl/
 
 == Explore the Exotic executable jar
 Run the executable jar directly for helps to explore more power provided:
