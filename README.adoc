@@ -49,7 +49,7 @@ If Exotic is running in GUI mode, the web console should open within a few secon
 
 http://localhost:2718/exotic/crawl/
 
-Note: you may need to remove the wildchar charactor `*` in cmd or Power Shell on Windows.
+Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*`.
 
 == Run Auto Extract
 [source,bash]
