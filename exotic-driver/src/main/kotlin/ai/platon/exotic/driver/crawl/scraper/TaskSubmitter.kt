@@ -23,7 +23,7 @@ open class TaskSubmitter(
     private val autoCollect: Boolean = true,
 ): AutoCloseable {
     var logger: Logger = LoggerFactory.getLogger(TaskSubmitter::class.java)
-    var dryRun = false
+    var dryRun = System.getProperty("scrape.submitter.dry.run") == "true"
     var driver = Driver(driverSettings)
 
     private val pendingTasks: MutableMap<String, ListenableScrapeTask> = ConcurrentSkipListMap()

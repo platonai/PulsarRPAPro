@@ -87,22 +87,22 @@
                         <div class="card-body">
                             <dl>
                                 <dt>Start Time</dt>
-                                <dd th:text="${#temporals.format(rule.startTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(rule.startTime, 'yyyy-MM-dd h:mm:ss a')}"></dd>
 
                                 <dt>Crawl Period</dt>
                                 <dd th:text="${#strings.capitalize(rule.descriptivePeriod)}"></dd>
 
                                 <dt>Last Crawl Time</dt>
-                                <dd th:text="${#temporals.format(rule.lastCrawlTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(rule.lastCrawlTime, 'yyyy-MM-dd h:mm:ss a')}"></dd>
 
                                 <dt>Dead Time</dt>
-                                <dd th:text="${#temporals.format(rule.deadTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(rule.deadTime, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                             </dl>
                             <dl>
                                 <dt>Created At</dt>
-                                <dd th:text="${#temporals.format(rule.createdDate, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(rule.createdDate, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                                 <dt>Last Modified</dt>
-                                <dd th:text="${#temporals.format(rule.lastModifiedDate, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(rule.lastModifiedDate, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                             </dl>
                         </div>
                     </div>
@@ -145,7 +145,7 @@
                                 <td th:text="${task.retryCount}"></td>
                                 <td th:text="${task.failedCount}"></td>
                                 <td th:text="${task.finishedCount}"></td>
-                                <td th:text="${#temporals.format(task.startTime, 'yyyy-MM-dd h:mm:ss a Z')}"></td>
+                                <td th:text="${#temporals.format(task.startTime, 'yyyy-MM-dd h:mm:ss a')}"></td>
 
                                 <td><a th:href="@{/crawl/portal-tasks/view/{id}(id=${task.id})}"
                                        title="Client side view" class="btn btn-info"><i class="fas fa-eye ml-1"></i></a>

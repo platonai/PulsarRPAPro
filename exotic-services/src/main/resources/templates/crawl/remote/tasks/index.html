@@ -54,7 +54,7 @@
                                 <td th:text="${task.response.pageStatusCode}"></td>
                                 <td th:text="${task.response.pageContentBytes}"></td>
                                 <td th:text="${task.response.isDone ? 'Yes' : 'No'}"></td>
-                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a')}"></td>
                                 <td>
                                     <a href="javascript:" class="preview btn btn-info" th:data-target-id="${task.id}">
                                         <i class="fas fa-eye ml-1"></i></a>

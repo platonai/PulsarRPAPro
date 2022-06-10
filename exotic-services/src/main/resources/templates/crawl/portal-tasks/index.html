@@ -53,8 +53,8 @@
                                 <td th:text="${task.retryCount}"></td>
                                 <td th:text="${task.failedCount}"></td>
                                 <td th:text="${task.finishedCount}"></td>
-                                <td th:text="${#temporals.format(task.startTime, 'yy-MM-dd h:mm a Z')}"></td>
-                                <td th:text="${#temporals.format(task.lastModifiedDate, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td th:text="${#temporals.format(task.startTime, 'yy-MM-dd h:mm a')}"></td>
+                                <td th:text="${#temporals.format(task.lastModifiedDate, 'yy-MM-dd h:mm a')}"></td>
                                 <td>
                                     <a th:href="${task.url}" th:text="${task.abbreviatedUrl}" target="_blank"></a>
                                 </td>

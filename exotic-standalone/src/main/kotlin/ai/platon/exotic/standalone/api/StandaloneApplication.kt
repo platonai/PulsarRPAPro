@@ -57,6 +57,7 @@ class StandaloneApplication(
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()
 
+    // System.setProperty("scrape.submitter.dry.run", "true")
     SpringApplicationBuilder(StandaloneApplication::class.java)
         .profiles("h2")
         .initializers(ScentContextInitializer())
