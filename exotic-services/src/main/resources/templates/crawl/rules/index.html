@@ -53,7 +53,7 @@
                                 <td th:text="${rule.id}"></td>
                                 <td th:text="${rule.name}"></td>
                                 <td th:text="${rule.label}"></td>
-                                <td th:text="${rule.descriptivePeriod}"></td>
+                                <td th:text="${#strings.capitalize(rule.descriptivePeriod)}"></td>
                                 <td th:text="${rule.crawlCount ?: 0}"></td>
                                 <td th:text="${#arrays.length(rule.portalUrls.split('\n'))}"></td>
                                 <td th:text="${rule.status}"></td>
