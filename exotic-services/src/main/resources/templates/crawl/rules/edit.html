@@ -40,14 +40,14 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="portalUrls" class="col-form-label">Portal Urls<em class="required">*</em></label>
+                            <label for="portalUrls" class="col-form-label">Portal urls to start crawl from:<em class="required">*</em></label>
                             <textarea th:field="*{portalUrls}" th:required="required" th:rows="3"
                                       class="form-control" id="portalUrls"></textarea>
                             <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="*{portalUrls}"
                                   class="text-danger"></span>
                         </div>
                         <div class="form-group">
-                            <label for="outLinkSelector" class="col-form-label">Out Link Selector<em class="required">*</em></label>
+                            <label for="outLinkSelector" class="col-form-label">The CSS selector to extract out links from portal urls:<em class="required">*</em></label>
                             <input type="text" th:field="*{outLinkSelector}" th:required="required"
                                    class="form-control" id="outLinkSelector"
                                    placeholder="CSS selector for item links">
@@ -67,7 +67,7 @@
 
                 <div class="card my-3">
                     <div class="card-header">
-                        <label for="sqlTemplate" class="col-form-label">SQL Template<em class="required">*</em></label>
+                        <label for="sqlTemplate" class="col-form-label">The SQL template to extract fields from <b class="text-info">item pages</b><em class="required">*</em></label>
                     </div>
                     <div class="card-body">
                         <div class="form-group">
@@ -76,10 +76,10 @@
                             <span th:if="${#fields.hasErrors('sqlTemplate')}" th:errors="*{sqlTemplate}"
                                   class="text-danger"></span>
                         </div>
-                        <div class="my-3">The SQLs will be executed to extract fields from <b class="text-info">item pages</b>.</div>
+                        <p>Check out the <a href="https://github.com/platonai/exotic" target="_blank">document</a>
+                            to learn how to automatically generate the SQLs.</p>
                     </div>
                 </div>
-
             </div>
             <div class="col-md-4">
                 <div class="card">
