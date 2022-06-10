@@ -154,23 +154,24 @@ open class TaskSubmitter(
                 task.task.response = response
 
                 when {
+                    // 1601 must before isDone
+                    response.statusCode == 1601 -> {
+                        ++localRetryCount
+                        ++totalRetryTaskCount
+                        task.onRetry()
+                    }
                     response.isDone -> {
-                        ++localFailedCount
                         ++totalFinishedTaskCount
 
                         if (response.statusCode == 200) {
                             ++totalSuccessTaskCount
                             task.onSuccess()
                         } else {
+                            ++localFailedCount
                             ++totalFailedTaskCount
                             task.onFailed()
                         }
                         task.onFinished()
-                    }
-                    response.statusCode == 1601 -> {
-                        ++localRetryCount
-                        ++totalRetryTaskCount
-                        task.onRetry()
                     }
                 }
             } else {
