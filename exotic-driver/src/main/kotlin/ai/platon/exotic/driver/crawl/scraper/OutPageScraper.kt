@@ -157,27 +157,38 @@ open class OutPageScraper(
         args: String
     ): List<ListenableScrapeTask> {
         val priority = listenablePortalTask.task.priority
-        val tasks = urls.map { ScrapeTask(it, args, priority, sqlTemplate) }
-            .map { ListenableScrapeTask(it) }
-            .onEach {
-                it.onSubmitted = { listenablePortalTask.onItemSubmitted(it.task) }
-                it.onRetry = { listenablePortalTask.onItemRetry(it.task) }
-                it.onSuccess = { listenablePortalTask.onItemSuccess(it.task) }
-                it.onFailed = { listenablePortalTask.onItemFailed(it.task) }
-                it.onFinished = { listenablePortalTask.onItemFinished(it.task) }
-                it.onTimeout = { listenablePortalTask.onItemTimeout(it.task) }
-            }
 
-        return tasks
+        return urls.map { ScrapeTask(it, args, priority, sqlTemplate) }
+            .map { createListenableScrapeTask(listenablePortalTask, it) }
     }
 
+    private fun createListenableScrapeTask(
+        listenablePortalTask: ListenablePortalTask,
+        task: ScrapeTask,
+    ): ListenableScrapeTask {
+        return ListenableScrapeTask(task).also {
+            it.onSubmitted = { listenablePortalTask.onItemSubmitted(it.task) }
+            it.onRetry = { listenablePortalTask.onItemRetry(it.task) }
+            it.onSuccess = { listenablePortalTask.onItemSuccess(it.task) }
+            it.onFailed = { listenablePortalTask.onItemFailed(it.task) }
+            it.onFinished = { listenablePortalTask.onItemFinished(it.task) }
+            it.onTimeout = { listenablePortalTask.onItemTimeout(it.task) }
+        }
+    }
+
+    /**
+     * -scrollCount 25: scroll down 25 extra times
+     * */
     private fun buildPortalArgs(rule: CrawlRule, refresh: Boolean): String {
-        var args = rule.buildArgs()
+        var args = rule.buildArgs() + " -scrollCount 25"
         args += if (refresh) " -refresh" else ""
         args += " -authToken " + driverSettings.authToken
         return args
     }
 
+    /**
+     * -scrollCount 25: scroll down 25 extra times
+     * */
     private fun buildItemArgs(rule: CrawlRule, portalRefresh: Boolean): String {
         var args = rule.buildArgs() + " -scrollCount 20"
         args += if (portalRefresh) " -expires 2h" else " -expires 3600d"

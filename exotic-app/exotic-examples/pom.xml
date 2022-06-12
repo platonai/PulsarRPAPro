@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.9.9-SNAPSHOT</version>
+        <version>1.9.10-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-examples</artifactId>

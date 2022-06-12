@@ -120,20 +120,20 @@
         </encoder>
     </appender>
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="DRFA"/>
         <appender-ref ref="Console"/>
     </root>
 
-    <logger name="ai.platon.scent" level="WARN"/>
-    <logger name="ai.platon.scent.proxy" level="WARN"/>
-    <logger name="ai.platon.scent.crawl.parser" level="WARN"/>
+    <logger name="ai.platon.scent" level="INFO"/>
+    <logger name="ai.platon.scent.proxy" level="INFO"/>
+    <logger name="ai.platon.scent.crawl.parser" level="INFO"/>
     <logger name="ai.platon.scent.analysis" level="INFO"/>
 
-    <logger name="ai.platon.scent.ql.h2.context" level="WARN"/>
+    <logger name="ai.platon.scent.ql.h2.context" level="INFO"/>
 
-    <logger name="ai.platon.scent.rest.api.schedule" level="WARN"/>
-    <logger name="ai.platon.scent.rest.api.service.scrape" level="WARN"/>
+    <logger name="ai.platon.scent.rest.api.schedule" level="INFO"/>
+    <logger name="ai.platon.scent.rest.api.service.scrape" level="INFO"/>
 
     <logger name="ai.platon.scent.rest.api.service.v1.ScrapeServiceV1.Task" level="INFO" additivity="false">
         <appender-ref ref="API"/>
@@ -159,11 +159,12 @@
         <appender-ref ref="HARVEST"/>
     </logger>
 
-    <logger name="ai.platon.pulsar" level="WARN"/>
+    <logger name="ai.platon.pulsar" level="INFO"/>
+    <logger name="ai.platon.pulsar.crawl.StreamingCrawler" level="INFO"/>
     <logger name="ai.platon.pulsar.crawl.component" level="INFO"/>
     <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="INFO"/>
 
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="WARN"/>
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="INFO"/>
 
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>
@@ -196,7 +197,7 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="WARN"/>
+    <logger name="ai.platon.exotic" level="INFO"/>
     <logger name="ai.platon.exotic.driver" level="INFO"/>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>

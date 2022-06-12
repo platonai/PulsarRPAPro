@@ -76,7 +76,7 @@ class ScrapeTask constructor(
 
     val createdTime: Instant = Instant.now()
     var lastCheckTime: Instant = Instant.EPOCH
-    var timeout: Duration = Duration.ofHours(2)
+    var timeout: Duration = Duration.ofHours(1)
 
     var submitCount = 0
     var collectedCount = 0

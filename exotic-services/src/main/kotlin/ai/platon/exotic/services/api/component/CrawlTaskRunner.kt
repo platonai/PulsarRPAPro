@@ -21,7 +21,6 @@ import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
 import java.time.Instant
-import java.time.temporal.ChronoUnit
 
 @Component
 class CrawlTaskRunner(
@@ -31,7 +30,7 @@ class CrawlTaskRunner(
 ) {
     private val logger = LoggerFactory.getLogger(CrawlTaskRunner::class.java)
 
-    private val retryingPortalTasks = ConcurrentNEntrantQueue<ScrapeTask>(5)
+    private val retryingPortalTasks = ConcurrentNEntrantQueue<PortalTask>(5)
     private val retryingItemTasks = ConcurrentNEntrantQueue<ScrapeTask>(3)
 
     @Synchronized
@@ -48,7 +47,7 @@ class CrawlTaskRunner(
         val page = PageRequest.of(0, 1000, sort)
 
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
-            .filter { (it.startTime?.epochSecond ?: 0) <= now.epochSecond }
+            .filter { it.startTime.epochSecond <= now.epochSecond }
 
         rules.forEach { rule -> startCrawl(rule) }
     }
@@ -104,7 +103,7 @@ class CrawlTaskRunner(
 
             // the client controls the retry
             val portalTasks = pagedPortalUrls.map {
-                PortalTask(it, "-refresh -nMaxRetry 0", 3).also {
+                PortalTask(it, "-refresh", 3).also {
                     it.rule = rule
                     it.status = TaskStatus.CREATED
                 }
@@ -147,9 +146,10 @@ class CrawlTaskRunner(
     }
 
     fun submitRetryingScrapeTasks(limit: Int) {
-        val retryingTasks = retryingItemTasks.take(limit)
-        retryingTasks.forEach {
-            scraper.scrape(createListenableScrapeTask(it))
+        var n = limit
+        while (n-- > 0) {
+            retryingPortalTasks.poll()?.let { scraper.scrapeOutPages(createListenablePortalTask(it)) }
+            // retryingItemTasks.poll()?.let { scraper.scrape(createListenableScrapeTask(it)) }
         }
     }
 
@@ -170,9 +170,11 @@ class CrawlTaskRunner(
                 it.status = TaskStatus.RETRYING
 
                 portalTask.status = TaskStatus.RETRYING
+//                ++portalTask.retryCount
                 portalTaskRepository.save(portalTask)
 
-                retryingPortalTasks.add(it)
+//                retryingPortalTasks.add(it)
+                logger.info("Portal task is retrying #{} | {}", portalTask.id, portalTask.url)
             },
             onSuccess = {
                 it.status = TaskStatus.OK
@@ -185,111 +187,59 @@ class CrawlTaskRunner(
 
                 portalTask.status = TaskStatus.FAILED
                 portalTaskRepository.save(portalTask)
+
+                logger.info("Portal task is failed #{} | {}", portalTask.id, portalTask.url)
             },
             onFinished = {
-
+//                logger.info("Portal task is finished #{} | {}", portalTask.id, portalTask.url)
             },
             onTimeout = {
-
+                logger.info("Portal task is timeout #{} | {}", portalTask.id, portalTask.url)
             },
 
             onItemSubmitted = {
                 it.status = TaskStatus.SUBMITTED
 
-                portalTask.status = TaskStatus.SUBMITTED
-                // portalTask.serverTaskId = it.id
                 ++portalTask.submittedCount
                 portalTaskRepository.save(portalTask)
             },
             onItemRetry = {
                 it.status = TaskStatus.RETRYING
 
-                portalTask.status = TaskStatus.RETRYING
                 ++portalTask.retryCount
                 portalTaskRepository.save(portalTask)
 
-                it.status = TaskStatus.RETRYING
-                retryingItemTasks.add(it)
+                logger.debug("Item task is retrying #{} {} | {}", portalTask.id, it.serverTaskId, it.url)
+
+//                if (it.submitCount <= itemMaxSubmits) {
+//                    it.status = TaskStatus.RETRYING
+//                    retryingItemTasks.add(it)
+//                } else {
+//                    logger.info("Task if failed after {} tries | {}", itemMaxSubmits, it.url)
+//                    it.status = TaskStatus.FAILED
+//                }
             },
             onItemSuccess = {
                 it.status = TaskStatus.OK
-
-                portalTask.status = TaskStatus.OK
                 ++portalTask.successCount
             },
             onItemFailed = {
                 it.status = TaskStatus.FAILED
-
-                portalTask.status = TaskStatus.FAILED
                 ++portalTask.failedCount
-                ++portalTask.finishedCount
-                portalTaskRepository.save(portalTask)
+                logger.info("Item task is failed #{} {} | {}", portalTask.id, it.serverTaskId, it.url)
             },
             onItemFinished = {
                 ++portalTask.finishedCount
                 portalTaskRepository.save(portalTask)
             },
             onItemTimeout = {
-
+                logger.info("Item task is timeout #{} {} | {}", portalTask.id, it.serverTaskId, it.url)
             },
         )
     }
 
-    fun createListenableScrapeTask(task: ScrapeTask, refresh: Boolean = false): ListenableScrapeTask {
-        val portalTask = task.companionPortalTask
-        val listenableScrapeTask = ListenableScrapeTask(task)
-        listenableScrapeTask.onSubmitted = {
-            task.status = TaskStatus.SUBMITTED
-
-            portalTask?.also {
-                it.status = TaskStatus.SUBMITTED
-                // portalTask.serverTaskId = it.id
-                ++it.submittedCount
-                portalTaskRepository.save(it)
-            }
-        }
-        listenableScrapeTask.onRetry = {
-            portalTask?.also {
-                it.status = TaskStatus.RETRYING
-                ++it.retryCount
-                portalTaskRepository.save(it)
-            }
-
-            task.status = TaskStatus.RETRYING
-            retryingItemTasks.add(task)
-        }
-        listenableScrapeTask.onSuccess = {
-            task.status = TaskStatus.OK
-
-            portalTask?.also {
-                it.status = TaskStatus.OK
-                ++it.successCount
-                ++it.finishedCount
-                portalTaskRepository.save(it)
-            }
-        }
-        listenableScrapeTask.onFailed = {
-            task.status = TaskStatus.FAILED
-
-            portalTask?.also {
-                it.status = TaskStatus.FAILED
-                ++it.failedCount
-                ++it.finishedCount
-                portalTaskRepository.save(it)
-            }
-        }
-        listenableScrapeTask.onFinished = {
-
-        }
-        listenableScrapeTask.onTimeout = {
-
-        }
-
-        return listenableScrapeTask
-    }
-
     private fun shouldRun0(rule: CrawlRule): Boolean {
-        val lastCrawlTime = rule.lastCrawlTime ?: Instant.EPOCH
+        val lastCrawlTime = rule.lastCrawlTime
         if (rule.period.seconds > 0) {
             val now = Instant.now()
             if (lastCrawlTime + rule.period <= now) {

@@ -37,8 +37,8 @@
                             <thead>
                             <tr>
                                 <th>Id</th>
-                                <th title="Status Code">SC</th>
-                                <th title="Page Status Code">PSC</th>
+                                <th title="Status">Status</th>
+                                <th title="Page Status">Page Status</th>
                                 <th title="Page Content Bytes">Bytes</th>
                                 <th>Done</th>
                                 <th>Created At</th>
@@ -50,11 +50,11 @@
                             <tbody>
                             <tr th:each="task : ${tasks}" th:class="${task.response.statusCode == 200 ? '' : 'table-warning'}">
                                 <td><a th:text="${task.id}" th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}" target="_blank"></a></td>
-                                <td th:text="${task.response.statusCode}"></td>
-                                <td th:text="${task.response.pageStatusCode}"></td>
-                                <td th:text="${task.response.pageContentBytes}"></td>
+                                <td th:text="${task.status}"></td>
+                                <td th:text="${task.pageStatus}"></td>
+                                <td th:text="${task.contentLength}"></td>
                                 <td th:text="${task.response.isDone ? 'Yes' : 'No'}"></td>
-                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a')}"></td>
                                 <td>
                                     <a href="javascript:" class="preview btn btn-info" th:data-target-id="${task.id}">
                                         <i class="fas fa-eye ml-1"></i></a>

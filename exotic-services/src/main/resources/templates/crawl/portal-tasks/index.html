@@ -31,8 +31,8 @@
                                 <th th:title="Priority">Pri</th>
 
                                 <th th:title="Submitted">Sub</th>
-                                <th th:title="Success">Suc</th>
                                 <th th:title="Retry">Ret</th>
+                                <th th:title="Success">Suc</th>
                                 <th th:title="Failed">Fai</th>
                                 <th th:title="Finished">Fin</th>
 
@@ -49,12 +49,12 @@
                                 <td><a th:text="${task.id}" th:href="${task.url}" target="_blank"></a></td>
                                 <td th:text="${task.priority}"></td>
                                 <td th:text="${task.submittedCount}"></td>
-                                <td th:text="${task.successCount}"></td>
                                 <td th:text="${task.retryCount}"></td>
+                                <td th:text="${task.successCount}"></td>
                                 <td th:text="${task.failedCount}"></td>
                                 <td th:text="${task.finishedCount}"></td>
-                                <td th:text="${#temporals.format(task.startTime, 'yy-MM-dd h:mm a Z')}"></td>
-                                <td th:text="${#temporals.format(task.lastModifiedDate, 'yy-MM-dd h:mm a Z')}"></td>
+                                <td th:text="${#temporals.format(task.startTime, 'yy-MM-dd h:mm a')}"></td>
+                                <td th:text="${#temporals.format(task.lastModifiedDate, 'yy-MM-dd h:mm a')}"></td>
                                 <td>
                                     <a th:href="${task.url}" th:text="${task.abbreviatedUrl}" target="_blank"></a>
                                 </td>

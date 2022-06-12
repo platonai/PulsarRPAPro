@@ -53,7 +53,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col">
+                <div class="col-4">
                     <div class="card my-3">
                         <div class="card-body">
                             <a th:href="@{/crawl/portal-tasks/}" title="List" class="btn btn-info m-1">
@@ -93,15 +93,15 @@
                         <div class="card-body">
                             <dl>
                                 <dt>Start At</dt>
-                                <dd th:text="${#temporals.format(task.startTime, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(task.startTime, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                             </dl>
                             <dl>
                                 <dt>Created At</dt>
-                                <dd th:text="${#temporals.format(task.createdDate, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(task.createdDate, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                             </dl>
                             <dl>
                                 <dt>Modified At</dt>
-                                <dd th:text="${#temporals.format(task.lastModifiedDate, 'yyyy-MM-dd h:mm:ss a Z')}"></dd>
+                                <dd th:text="${#temporals.format(task.lastModifiedDate, 'yyyy-MM-dd h:mm:ss a')}"></dd>
                             </dl>
                         </div>
                     </div>
