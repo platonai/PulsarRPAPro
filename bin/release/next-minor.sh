@@ -26,7 +26,6 @@ find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$NEXT_SNAPSHO
 # The following files contains the version number to upgrade
 VERSION_AWARE_FILES=(
   "$APP_HOME/README.adoc"
-  "$APP_HOME/exotic-services/src/main/resources/templates/fragments/nav.html"
 )
 # replace version numbers to be the next numbers in files
 for F in "${VERSION_AWARE_FILES[@]}"; do
@@ -35,6 +34,9 @@ for F in "${VERSION_AWARE_FILES[@]}"; do
   # v1.9.11 -> v1.9.12
   sed -i "s/\bv$PREFIX.[0-9]\{1,\}\b/v$NEXT_VERSION/g" "$F";
 done
+
+F="$APP_HOME/exotic-services/src/main/resources/templates/fragments/nav.html"
+sed -i "s/\bv$PREFIX.[0-9]\{1,\}\b/v$NEXT_VERSION/g" "$F";
 
 COMMENT=${NEXT_SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 
