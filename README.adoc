@@ -54,7 +54,7 @@ Note: if you are using CMD or PowerShell on Windows, you may need to remove the 
 == Run Auto Extract
 [source,bash]
 ----
-java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh
+java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
 ----
 
 Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
