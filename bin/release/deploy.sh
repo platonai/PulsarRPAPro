@@ -27,6 +27,9 @@ if [ -n "$SNIPPET" ]; then
   exit 0
 fi
 
+# use the product version of logback
+cat "$APP_HOME"/exotic-standalone/src/main/resources/logback-prod.xml > "$APP_HOME"/exotic-standalone/src/main/resources/logback.xml
+
 mvn clean
 mvn
 
