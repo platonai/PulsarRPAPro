@@ -6,6 +6,7 @@
     <property name="logging.file" value="${logging.prefix}.log" />
 
     <!-- Special task relative logs -->
+    <property name="logging.s.file" value="${logging.prefix}.s.log" />
     <property name="logging.c.file" value="${logging.prefix}.c.log" />
     <property name="logging.m.file" value="${logging.prefix}.m.log" />
     <property name="logging.hv.file" value="${logging.prefix}.hv.log" />
@@ -41,6 +42,16 @@
         </encoder>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
             <fileNamePattern>${logging.dir}/${logging.file}.%d{.yyyy-MM-dd}</fileNamePattern>
+        </rollingPolicy>
+    </appender>
+
+    <appender name="SERVER" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <File>${logging.dir}/${logging.s.file}</File>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%.10thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${logging.dir}/${logging.s.file}.%d{.yyyy-MM-dd}</fileNamePattern>
         </rollingPolicy>
     </appender>
 
@@ -120,20 +131,33 @@
         </encoder>
     </appender>
 
-    <root level="INFO">
+    <root level="WARN">
         <appender-ref ref="DRFA"/>
-        <appender-ref ref="Console"/>
     </root>
 
-    <logger name="ai.platon.scent" level="INFO"/>
-    <logger name="ai.platon.scent.proxy" level="INFO"/>
-    <logger name="ai.platon.scent.crawl.parser" level="INFO"/>
-    <logger name="ai.platon.scent.analysis" level="INFO"/>
+    <logger name="ai.platon.scent" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.scent.proxy" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.scent.crawl.parser" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.scent.analysis" level="INFO">
+        <appender-ref ref="SERVER"/>
+    </logger>
 
-    <logger name="ai.platon.scent.ql.h2.context" level="INFO"/>
+    <logger name="ai.platon.scent.ql.h2.context" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
 
-    <logger name="ai.platon.scent.rest.api.schedule" level="INFO"/>
-    <logger name="ai.platon.scent.rest.api.service.scrape" level="INFO"/>
+    <logger name="ai.platon.scent.rest.api.schedule" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.scent.rest.api.service.scrape" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
 
     <logger name="ai.platon.scent.rest.api.service.v1.ScrapeServiceV1.Task" level="INFO" additivity="false">
         <appender-ref ref="API"/>
@@ -159,12 +183,23 @@
         <appender-ref ref="HARVEST"/>
     </logger>
 
-    <logger name="ai.platon.pulsar" level="INFO"/>
-    <logger name="ai.platon.pulsar.crawl.StreamingCrawler" level="INFO"/>
-    <logger name="ai.platon.pulsar.crawl.component" level="INFO"/>
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="INFO"/>
+    <logger name="ai.platon.pulsar" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.pulsar.crawl.StreamingCrawler" level="INFO">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.pulsar.crawl.component" level="INFO">
+        <appender-ref ref="SERVER"/>
+    </logger>
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
 
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="INFO"/>
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="WARN">
+        <appender-ref ref="SERVER"/>
+    </logger>
 
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>
@@ -175,30 +210,34 @@
     <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulator.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.pulsar.common.collect.HyperlinkExtractor" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.common.collect.HyperlinkExtractor" level="WARN" additivity="false">
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.pulsar.common.collect.FatLinkExtractor" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.common.collect.FatLinkExtractor" level="WARN" additivity="false">
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.pulsar.browser" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.browser" level="WARN" additivity="false">
         <appender-ref ref="BROWSER"/>
     </logger>
-    <logger name="ai.platon.pulsar.common.metrics.AppMetrics" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.common.metrics.AppMetrics" level="WARN" additivity="false">
         <appender-ref ref="METRICS"/>
     </logger>
-    <logger name="ai.platon.pulsar.common.CounterReporter" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.common.CounterReporter" level="WARN" additivity="false">
         <appender-ref ref="COUNTERS"/>
     </logger>
-    <logger name="ai.platon.pulsar.ql.h2.utils.Jdbc" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.ql.h2.utils.Jdbc" level="WARN" additivity="false">
         <appender-ref ref="SQL"/>
     </logger>
-    <logger name="ai.platon.pulsar.common.collect" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.common.collect" level="WARN" additivity="false">
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="INFO"/>
-    <logger name="ai.platon.exotic.driver" level="INFO"/>
+    <logger name="ai.platon.exotic" level="WARN">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.exotic.driver" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>
 
@@ -220,7 +259,7 @@
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>
     <logger name="org.apache.zookeeper" level="ERROR"/>
-    <logger name="org.apache.solr" level="INFO"/>
+    <logger name="org.apache.solr" level="WARN"/>
     <logger name="org.apache.hadoop" level="WARN"/>
     <logger name="io.netty" level="WARN"/>
     <logger name="org.apache.hadoop.mapreduce.Job" level="WARN"/>

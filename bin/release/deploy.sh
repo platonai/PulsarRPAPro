@@ -31,16 +31,20 @@ fi
 cat "$APP_HOME"/exotic-standalone/src/main/resources/logback-prod.xml > "$APP_HOME"/exotic-standalone/src/main/resources/logback.xml
 
 mvn clean
-mvn -PREST-war
+mvn
+cd "$APP_HOME"/exotic-services || exit
+mvn -PREST-war war:war
+cd "$APP_HOME" || exit
 
 exitCode=$?
 [ $exitCode -eq 0 ] && echo "Build successfully" || exit 1
 
 REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic
-ssh $HOST mkdir -p $REMOTE_BASE_DIR
+ssh "$HOST" mkdir -p "$REMOTE_BASE_DIR"
 
-scp -r "$APP_HOME"/exotic-services/target/exotic-services-"$VERSION".jar "$HOST:$REMOTE_BASE_DIR/"
+scp -r "$APP_HOME"/exotic-services/target/exotic.war "$HOST:$REMOTE_BASE_DIR/"
 scp -r "$APP_HOME"/exotic-standalone/target/exotic-standalone-"$VERSION".jar "$HOST:$REMOTE_BASE_DIR/"
+
 exitCode=$?
 [ $exitCode -eq 0 ] && echo "Copy to remote destination successfully" || exit 1
 
