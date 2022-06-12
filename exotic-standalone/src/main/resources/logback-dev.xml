@@ -133,7 +133,6 @@
 
     <root level="INFO">
         <appender-ref ref="DRFA"/>
-        <appender-ref ref="Console"/>
     </root>
 
     <logger name="ai.platon.scent" level="INFO">
@@ -233,8 +232,12 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="INFO"/>
-    <logger name="ai.platon.exotic.driver" level="INFO"/>
+    <logger name="ai.platon.exotic" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.exotic.driver" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>
 
