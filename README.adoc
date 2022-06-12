@@ -6,7 +6,7 @@ Exotic (stand for exotic star) is the professional edition of Pulsar with advanc
 
 . STEP1: automatically extract every field in webpages using advanced AI and generate extract SQLs
 . STEP2: test the SQLs and improve them to match frontend business requirements if necessary
-. STEP3: create crawl rules in the web console to run extract SQLs continuously
+. STEP3: create crawl rules in the web console to run extract SQLs continuously and download all the web data to drive your business forward
 
 Check out https://github.com/platonai/pulsar[Pulsar] to learn about the challenges of scraping web data at scale and how Pulsar solves them.
 
