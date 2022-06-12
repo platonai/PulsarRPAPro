@@ -9,7 +9,7 @@ import java.text.NumberFormat
 import java.time.Instant
 
 /**
- * TODO: rename to ScrapeTaskView
+ * TODO: rename to be ScrapeTaskView
  * */
 class ExpandedScrapeResponse(
     val response: CompactedScrapeResponse
@@ -18,9 +18,9 @@ class ExpandedScrapeResponse(
     val timestamp = if (id != null) ObjectId(id).timestamp.toLong() else 0L
     val objectTime = if (timestamp > 0) Instant.ofEpochSecond(timestamp) else Instant.EPOCH
     val abbreviatedUrl = StringUtils.abbreviateMiddle(response.url, "...", 45)
-        .removePrefix("http://")
-        .removePrefix("https://")
-        .removePrefix("www.")
+        ?.removePrefix("http://")
+        ?.removePrefix("https://")
+        ?.removePrefix("www.")
     val status: String get() {
         val code = when {
             response.pageStatusCode == ResourceStatus.SC_GONE -> ResourceStatus.SC_EXPECTATION_FAILED
