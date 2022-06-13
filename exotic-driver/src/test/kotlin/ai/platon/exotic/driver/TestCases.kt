@@ -1,9 +1,14 @@
 package ai.platon.exotic.driver
 
 import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.common.NameGenerator
+import org.apache.commons.lang3.SystemUtils
 import org.junit.jupiter.api.Assertions.assertEquals
+import org.junit.jupiter.api.Assertions.assertTrue
 import org.junit.jupiter.api.Test
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.time.Duration
 
 class TestCases {
@@ -25,5 +30,13 @@ class TestCases {
     fun testNameGenerator() {
         val name = NameGenerator.gen()
         println(name)
+    }
+
+    @Test
+    fun testDevCheck() {
+        if (Files.exists(Paths.get(SystemUtils.USER_HOME + "/.pulsar/conf/DEVELOPMENT"))) {
+//            println("IS_DEVELOPMENT")
+            assertTrue(IS_DEVELOPMENT)
+        }
     }
 }
