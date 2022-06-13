@@ -1,11 +1,13 @@
 package ai.platon.exotic.standalone.api
 
 import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.pulsar.common.Runtimes
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.persist.WebDb
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import de.flapdoodle.embed.mongo.MongodExecutable
+import org.apache.commons.lang3.SystemUtils
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -14,6 +16,8 @@ import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
+import java.nio.file.Files
+import java.nio.file.Paths
 
 @SpringBootApplication(
     scanBasePackages = [
@@ -57,7 +61,7 @@ class StandaloneApplication(
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()
 
-    // System.setProperty("scrape.submitter.dry.run", "true")
+//    System.setProperty("scrape.submitter.dry.run", "true")
     SpringApplicationBuilder(StandaloneApplication::class.java)
         .profiles("h2")
         .initializers(ScentContextInitializer())
