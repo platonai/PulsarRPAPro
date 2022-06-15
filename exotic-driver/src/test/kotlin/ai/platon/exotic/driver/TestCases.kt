@@ -2,6 +2,7 @@ package ai.platon.exotic.driver
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.exotic.driver.common.IS_DEVELOPMENT
+import ai.platon.exotic.driver.common.IS_PRODUCT
 import ai.platon.exotic.driver.common.NameGenerator
 import org.apache.commons.lang3.SystemUtils
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -33,10 +34,10 @@ class TestCases {
     }
 
     @Test
-    fun testDevCheck() {
-        if (Files.exists(Paths.get(SystemUtils.USER_HOME + "/.pulsar/conf/DEVELOPMENT"))) {
-//            println("IS_DEVELOPMENT")
-            assertTrue(IS_DEVELOPMENT)
+    fun testProdCheck() {
+        if (Files.exists(Paths.get(SystemUtils.USER_HOME + "/.pulsar/conf/PRODUCT"))) {
+//            println("PRODUCT")
+            assertTrue(IS_PRODUCT)
         }
     }
 }

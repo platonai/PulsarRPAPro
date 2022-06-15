@@ -1,6 +1,5 @@
 package ai.platon.exotic.driver.common
 
-import ai.platon.pulsar.common.AppContext
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimes
 import java.nio.file.Files
@@ -25,6 +24,7 @@ const val PRODUCT_MAX_OUT_PAGES = 1000
 const val DEV_MAX_PENDING_TASKS = 20
 const val PRODUCT_MAX_PENDING_TASKS = 50
 
-val IS_DEVELOPMENT = Files.exists(AppPaths.get("conf/DEVELOPMENT"))
+val IS_PRODUCT = Files.exists(AppPaths.get("conf/PRODUCT"))
+val IS_DEVELOPMENT = !IS_PRODUCT
 
 val DOOMSDAY = DateTimes.toLocalDateTime(DateTimes.doomsday)

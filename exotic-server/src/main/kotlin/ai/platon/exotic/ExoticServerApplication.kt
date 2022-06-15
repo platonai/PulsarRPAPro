@@ -44,18 +44,6 @@ class ExoticServerApplication(
         return WebDb(immutableConfig)
     }
 
-    @Autowired
-    lateinit var webDb: WebDb
-
-    @Primary
-    @DependsOn("embeddedMongoServer", "webDb")
-    @Bean
-    fun createMiscMessageWriter(): MiscMessageWriter {
-        logger.info("User the overridden MiscMessageWriter bean which depends on embeddedMongoServer" +
-                " to ensure the correct shutdown order")
-        return MiscMessageWriter(webDb, immutableConfig)
-    }
-
     @Bean
     fun javaTimeModule(): JavaTimeModule {
         return JavaTimeModule()
