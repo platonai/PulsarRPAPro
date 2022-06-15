@@ -52,10 +52,17 @@ http://localhost:2718/exotic/crawl/
 Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*`.
 
 == Run Auto Extract
+
+We can use the `harvest` command to leans from a set of item pages using unsupervised machine learning.
+
 [source,bash]
 ----
 java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
 ----
+
+The url in the command above is a portal url, for example, the url of a product list page.
+
+Exotic visits the portal url, finds out the best out link set of item pages, fetches the item pages and then learn from them.
 
 Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
 
