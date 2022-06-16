@@ -6,7 +6,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic</artifactId>
-        <version>1.9.11-SNAPSHOT</version>
+        <version>1.9.12-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-standalone</artifactId>
