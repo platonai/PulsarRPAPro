@@ -16,6 +16,6 @@ We suggest you to put `proxy.providers.txt` in your user home directory, that is
     # Disable all proxy providers
     bin/tools/proxy/proxymgr dispd -all
 
-Run the script for helps:
+Run the script for help:
 
     bin/tools/proxy/proxymgr
