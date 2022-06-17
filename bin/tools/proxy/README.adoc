@@ -4,7 +4,7 @@ Vincent Zhang <ivincent.zhang@gmail.com>
 :toc:
 :icons: font
 
-The most simple way to use proxy is to put `proxy.providers.txt` into the directory: `~/.pulsar/proxy/providers-enabled`. The file `proxy.providers.txt` contains the url to fetch proxies from external proxy vendors.
+The easiest way to use proxy is to put `proxy.providers.txt` into the directory: `~/.pulsar/proxy/providers-enabled`. The file `proxy.providers.txt` contains the url to fetch proxies from external proxy vendors.
 
 Currently, we support two external proxy vendors: zmhttp.com and dailiyun.com, other vendor supports will be added later.
 
