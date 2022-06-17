@@ -8,7 +8,7 @@ The most simple way to use proxy is to put `proxy.providers.txt` into the direct
 
 Currently, we support two external proxy vendors: zmhttp.com and dailiyun.com, other vendor supports will be added later.
 
-We suggest you to put `proxy.providers.txt` in your user home directory, that is, `~` under Linux, %USERPROFILE% under Windows, and use script `proxymgr` to enable/disable/list the proxies:
+We suggest you to put `proxy.providers.txt` in your user home directory, that is, `~` under Linux, `%USERPROFILE%` under Windows, and use script `proxymgr` to enable/disable/list the proxies:
 
     # Enable all proxy providers
     bin/tools/proxy/proxymgr epd -all
