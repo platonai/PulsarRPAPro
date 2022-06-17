@@ -119,3 +119,8 @@ Run the executable jar directly for helps to explore more power provided:
 java -jar exotic-standalone*.jar
 ----
 This command will print the help message and most useful examples.
+
+== Q & A
+Q: How to use proxies?
+
+A: Check out link:bin/tools/proxy/README.adoc[here].
