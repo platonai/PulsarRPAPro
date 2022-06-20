@@ -113,7 +113,7 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 ----
 
 == Explore the Exotic executable jar
-Run the executable jar directly for helps to explore more power provided:
+Run the executable jar directly for help to explore more power provided:
 [source,bash]
 ----
 java -jar exotic-standalone*.jar
