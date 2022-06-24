@@ -149,8 +149,6 @@ class CrawlRuleWebController(
 //        rule.adjustFields()
         repository.save(rule)
 
-        crawlTaskRunner.startCrawl(rule)
-
         return "redirect:/crawl/rules/"
     }
 }
