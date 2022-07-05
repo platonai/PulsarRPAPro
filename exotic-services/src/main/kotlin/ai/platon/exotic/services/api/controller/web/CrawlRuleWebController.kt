@@ -141,14 +141,28 @@ class CrawlRuleWebController(
         return "redirect:/crawl/rules/"
     }
 
-    @GetMapping("archive/{id}")
-    fun archive(@PathVariable("id") id: Long, model: Model): String {
+    @GetMapping("admin/")
+    fun adminList(
+        @RequestParam(defaultValue = "0") pageNumber: Int = 0,
+        @RequestParam(defaultValue = "500") pageSize: Int = 500,
+        model: Model
+    ): String {
+        val sort = Sort.Direction.DESC
+        val sortProperty = "id"
+        val pageable = PageRequest.of(pageNumber, pageSize, sort, sortProperty)
+        val rules = repository.findAll(pageable)
+        model.addAttribute("rules", rules)
+        return "crawl/rules/admin/index"
+    }
+
+    @GetMapping("admin/archive/{id}")
+    fun adminArchive(@PathVariable("id") id: Long, model: Model): String {
         val rule = repository.findById(id).orElseThrow { IllegalArgumentException("Invalid rule Id: $id") }
 
         rule.status = RuleStatus.Archived.toString()
 //        rule.adjustFields()
         repository.save(rule)
 
-        return "redirect:/crawl/rules/"
+        return "redirect:/crawl/rules/admin/"
     }
 }

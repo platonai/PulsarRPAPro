@@ -2,7 +2,7 @@
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
 <head th:replace="layout :: head(~{this :: title}, null, null)">
-    <title>Rule List</title>
+    <title>Admin - Rule List</title>
 </head>
 
 <body>
@@ -70,6 +70,8 @@
                                         <i class="fas fa-play ml-1"></i></a>
                                     <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" title="Pause" class="btn btn-info">
                                         <i class="fas fa-pause ml-1"></i></a>
+                                    <a th:href="@{/crawl/rules/admin/archive/{id}(id=${rule.id})}" class="btn btn-info m-1">
+                                        <i class="fas fa-trash-alt ml-1"></i></a>
                                 </td>
                             </tr>
                             </tbody>
