@@ -4,13 +4,12 @@ import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.exotic.driver.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
+import ai.platon.pulsar.common.urls.UrlUtils
 import com.cronutils.descriptor.CronDescriptor
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder
 import com.cronutils.parser.CronParser
-import org.apache.commons.lang3.StringUtils
-import org.hibernate.annotations.DynamicUpdate
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -111,6 +110,10 @@ class CrawlRule {
             return ZoneOffset.ofHoursMinutes(minutes / 60, minutes % 60)
         }
 
+    val portalUrlList get() = portalUrls.split("\n")
+        .filter { it.isNotBlank() }
+        .filter { UrlUtils.isValidUrl(it) }
+
     val descriptivePeriod: String
         get() {
             val expression = cronExpression
@@ -119,6 +122,21 @@ class CrawlRule {
                 period.toDays() > 360 -> "once"
                 else -> "every " + ExoticUtils.formatDuration(period.seconds)
             }
+        }
+
+    val deducedDomain: String
+        get() {
+            val host = portalUrlList.firstOrNull()?.let { UrlUtils.getURLOrNull(it) }?.host
+            if (host != null) {
+                // TODO: use URLUtil.getDomainName
+                val parts = host.split(".")
+                return if (parts[0] == "www") {
+                    parts.drop(1).joinToString(".")
+                } else {
+                    parts.takeLast(2).joinToString(".")
+                }
+            }
+            return "-"
         }
 
     val localCreatedDateTime: LocalDateTime

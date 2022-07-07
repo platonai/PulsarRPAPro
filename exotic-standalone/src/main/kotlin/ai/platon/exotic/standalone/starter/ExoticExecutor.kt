@@ -27,6 +27,8 @@ class ExoticExecutor(val argv: Array<String>) {
 
     var parsed = false
         private set
+    var arrange = false
+        private set
     var harvest = false
         private set
     var scrape = false
@@ -78,6 +80,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         when {
+            arrange -> arrange()
             harvest -> harvest()
             scrape -> scrape()
             server -> runServer()
@@ -115,6 +118,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
             if (arg.equals("scrape", true)) scrape = true
             if (arg.equals("harvest", true)) harvest = true
+            if (arg.equals("arrange", true)) arrange = true
             if (arg.equals("sql", true)) sql = "help"
             if (arg.equals("serve", true)) server = true
             if (arg.equals("server", true)) server = true
@@ -129,6 +133,9 @@ class ExoticExecutor(val argv: Array<String>) {
         when {
             scrape -> {
                 lastHelpMessage = formatOptionHelp(scrapeOptions())
+            }
+            arrange -> {
+                lastHelpMessage = "Detect the url groups"
             }
             harvest -> {
                 lastHelpMessage = formatOptionHelp(harvestOptions())
@@ -175,6 +182,20 @@ class ExoticExecutor(val argv: Array<String>) {
         }
     }
 
+    internal fun arrange() {
+        val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
+        if (!UrlUtils.isValidUrl(portalUrl)) {
+            System.err.println("The portal url is invalid")
+            return
+        }
+
+        runBlocking {
+            val harvester = VerboseHarvester()
+            val groups = harvester.arrangeLinks(configuredUrl)
+            harvester.printAllAnchorGroups(groups)
+        }
+    }
+
     internal fun harvest() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isValidUrl(portalUrl)) {
@@ -216,12 +237,21 @@ class ExoticExecutor(val argv: Array<String>) {
             val isLastArg = i == argv.size - 1
 
             if (arg == "harvest") {
-                if (i == argv.size - 1) {
+                if (isLastArg) {
                     criticalHelp = true
                     break
                 }
 
                 harvest = true
+                configuredUrl = argv.drop(i + 1).joinToString(" ")
+                break
+            } else if (arg == "arrange") {
+                if (isLastArg) {
+                    criticalHelp = true
+                    break
+                }
+
+                arrange = true
                 configuredUrl = argv.drop(i + 1).joinToString(" ")
                 break
             } else if (arg == "scrape") {

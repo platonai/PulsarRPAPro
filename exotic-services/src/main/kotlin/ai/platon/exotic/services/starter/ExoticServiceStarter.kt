@@ -15,6 +15,8 @@ import org.springframework.boot.builder.SpringApplicationBuilder
 class ExoticStarterApplication
 
 fun main(args: Array<String>) {
+//    System.setProperty("scrape.submitter.dry.run", "true")
+
     SpringApplicationBuilder(ExoticStarterApplication::class.java)
         .profiles("h2")
         .registerShutdownHook(true)
