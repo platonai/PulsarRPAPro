@@ -1,7 +1,7 @@
 = Exotic Examples
 
 == Auto Extract Examples
-A typical auto extract example is for shopee.com:
+A typical auto extract example for shopee.com:
 [source,kotlin]
 ----
 fun main() {
