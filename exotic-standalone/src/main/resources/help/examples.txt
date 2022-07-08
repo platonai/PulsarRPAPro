@@ -1,10 +1,10 @@
 Examples:
 
-# arrange links
-    java -jar exotic-standalone*.jar arrange https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/
-
 # harvest automatically with diagnosis
     java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose
+
+# arrange links
+    java -jar exotic-standalone*.jar arrange https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/
 
 # harvest automatically with page component specified
     java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -outLink a[href~=/dp/] -component "#centerCol" -component "#buybox"
