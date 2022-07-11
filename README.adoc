@@ -13,7 +13,6 @@ Check out https://github.com/platonai/pulsar[Pulsar] to learn about the challeng
 Exotic also demonstrates:
 
 * How to use Pulsar as a library
-* How to use Pulsar driver to access the Pulsar REST service
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
