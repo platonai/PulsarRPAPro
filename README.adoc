@@ -56,13 +56,11 @@ cd exotic-standalone/target/
 == Run the standalone server and open web console
 [source,bash]
 ----
-java -jar exotic-standalone*.jar serve
+java -jar exotic-standalone.jar serve
 ----
 If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
 
 http://localhost:2718/exotic/crawl/
-
-Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*`.
 
 == Run Auto Extract
 
@@ -70,7 +68,7 @@ We can use the `harvest` command to leans from a set of item pages using unsuper
 
 [source,bash]
 ----
-java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
+java -jar exotic-standalone.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
 ----
 
 The url in the command above should be a portal url, for example, the url of a product list page.
@@ -129,7 +127,7 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 Run the executable jar directly for help to explore more power provided:
 [source,bash]
 ----
-java -jar exotic-standalone*.jar
+java -jar exotic-standalone.jar
 ----
 This command will print the help message and most useful examples.
 
