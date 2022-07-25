@@ -134,4 +134,4 @@ This command will print the help message and most useful examples.
 == Q & A
 Q: How to use proxies?
 
-A: Follow this guide for proxy rotation: link:bin/tools/proxy/README.adoc[here].
+A: Follow link:bin/tools/proxy/README.adoc[this] guide for proxy rotation.
