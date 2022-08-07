@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.sites.simuwang
+package ai.platon.exotic.examples.sites.language.zh.simuwang
 
 import ai.platon.pulsar.crawl.event.CloseMaskLayerHandler
 import ai.platon.pulsar.crawl.event.LoginHandler

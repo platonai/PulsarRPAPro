@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.sites.simuwang
+package ai.platon.exotic.examples.sites.language.zh.simuwang
 
 open class SiMuSQLCrawler: SiMuCrawler() {
     val sql = """

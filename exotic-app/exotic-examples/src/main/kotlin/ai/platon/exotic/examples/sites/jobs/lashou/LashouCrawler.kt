@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.sites.lashou
+package ai.platon.exotic.examples.sites.jobs.lashou
 
 import ai.platon.pulsar.ql.context.SQLContexts
 

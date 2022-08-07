@@ -130,7 +130,7 @@
 							<option>all-open:annotation=javax.persistence.Embeddable</option>
 							<option>all-open:annotation=javax.persistence.MappedSuperclass</option>
 						</pluginOptions>
-						<jvmTarget>${java.version}</jvmTarget>
+						<jvmTarget>${javac.target.version}</jvmTarget>
 					</configuration>
 				</plugin>
 				<plugin>
