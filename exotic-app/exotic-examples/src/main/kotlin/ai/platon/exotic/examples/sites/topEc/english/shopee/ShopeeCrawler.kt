@@ -8,6 +8,7 @@ import ai.platon.pulsar.persist.WebPage
 import org.jsoup.nodes.Document
 
 fun main() {
+    BrowserSettings.headless()
     BrowserSettings.withWorseNetwork()
 
     val portalUrls = """

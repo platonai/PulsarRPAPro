@@ -1,13 +1,10 @@
 package ai.platon.exotic.examples.sites.topEc.english.amazon
 
-import ai.platon.pulsar.ql.context.SQLContexts
+import ai.platon.exotic.examples.common.VerboseHarvester
 
 fun main() {
     val portalUrl = "https://www.amazon.com/Best-Sellers/zgbs"
     val args = "-i 1s -ii 5s -ol a[href~=/dp/] -ignoreFailure"
 
-    val session = SQLContexts.createSession()
-    // session.loadOutPages(portalUrl, args)
-    session.load(portalUrl, args)
-    println("Done.")
+    VerboseHarvester().harvest(portalUrl, args)
 }

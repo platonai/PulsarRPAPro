@@ -1,0 +1,24 @@
+<html lang="zh">
+<head>
+    <title>Exotic</title>
+</head>
+<body>
+<!--/*  Multiple fragments may be defined in one file */-->
+<div th:fragment="how-to-work">
+    <div class="card">
+        <div class="card-header">
+            How the system works?
+        </div>
+        <div class="card-body">
+            <p>For each portal url:</p>
+            <ol>
+                <li>Fetch the portal page according to scheduling rules</li>
+                <li>Extract out links from the portal page using <b class="text-info">out link selector</b></li>
+                <li>Fetch each out pages, which is also called item pages</li>
+                <li>Extract fields from the item pages using the SQL template</li>
+            </ol>
+        </div>
+    </div>
+</div>
+</body>
+</html>

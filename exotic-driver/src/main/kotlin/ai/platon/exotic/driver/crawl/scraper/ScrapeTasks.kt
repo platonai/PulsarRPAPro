@@ -60,10 +60,10 @@ class ListenablePortalTask(
 
 class ScrapeTask constructor(
     val url: String,
-    val args: String,
-    val priority: Int,
-    val sqlTemplate: String,
-) {
+    var args: String,
+    var priority: Int,
+    var sqlTemplate: String,
+): Comparable<ScrapeTask> {
     var response: ScrapeResponse = ScrapeResponse()
 
     /**
@@ -76,8 +76,10 @@ class ScrapeTask constructor(
 
     val createdTime: Instant = Instant.now()
     var lastCheckTime: Instant = Instant.EPOCH
-    var timeout: Duration = Duration.ofHours(2)
+    var timeout: Duration = Duration.ofHours(1)
 
+    var submitCount = 0
+    var collectedCount = 0
     var status: TaskStatus = TaskStatus.CREATED
     /**
      * The companion portal task if it's a portal task
@@ -87,6 +89,7 @@ class ScrapeTask constructor(
 
     val nextCheckTime get() = lastCheckTime.plusSeconds(response.estimatedWaitTime.coerceAtMost(60))
     val shouldCheck get() = nextCheckTime < Instant.now()
+    var collectedTime = Instant.EPOCH
 
     val isTimeout get() = Duration.between(createdTime, Instant.now()) > timeout
 
@@ -94,6 +97,18 @@ class ScrapeTask constructor(
     var exception: Exception? = null
 
     val configuredUrl get() = "$url $args"
+
+    override fun equals(other: Any?): Boolean {
+        return other is ScrapeTask && configuredUrl == other.configuredUrl
+    }
+
+    override fun hashCode(): Int {
+        return configuredUrl.hashCode()
+    }
+
+    override fun compareTo(other: ScrapeTask): Int {
+        return configuredUrl.compareTo(other.configuredUrl)
+    }
 }
 
 class ListenableScrapeTask(

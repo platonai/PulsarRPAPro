@@ -1,7 +1,7 @@
 package ai.platon.exotic.examples.sites.topEc.chinese
 
-import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.exotic.examples.sites.topEc.chinese.login.taobao.TaobaoLoginHandler
+import ai.platon.pulsar.context.PulsarContexts
 
 fun main() {
     val urls = """

@@ -1,8 +1,15 @@
 package ai.platon.exotic.driver.crawl.entity
 
+import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.exotic.driver.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
+import ai.platon.pulsar.common.urls.UrlUtils
+import com.cronutils.descriptor.CronDescriptor
+import com.cronutils.model.Cron
+import com.cronutils.model.CronType
+import com.cronutils.model.definition.CronDefinitionBuilder
+import com.cronutils.parser.CronParser
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -12,6 +19,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
+import java.util.*
 import javax.persistence.*
 
 @Table(name = "crawl_rules")
@@ -61,6 +69,9 @@ class CrawlRule {
     @Column(name = "last_crawl_time")
     var lastCrawlTime: Instant = Instant.EPOCH
 
+    @Column(name = "start_count")
+    var crawlCount: Int? = 0
+
     @Column(name = "crawl_history", length = 1024)
     var crawlHistory: String = ""
 
@@ -81,14 +92,13 @@ class CrawlRule {
      * */
     @Column(name = "timezone_offset_minutes")
     var timezoneOffsetMinutes: Int? = -480
-
     @CreatedDate
     @Column(name = "created_date")
-    var createdDate: Instant = Instant.EPOCH
+    var createdDate: Instant = Instant.now()
 
     @LastModifiedDate
     @Column(name = "last_modified_date")
-    var lastModifiedDate: Instant = Instant.EPOCH
+    var lastModifiedDate: Instant = Instant.now()
 
 //    @OneToMany(fetch = FetchType.LAZY)
     @OneToMany(mappedBy = "rule", fetch = FetchType.EAGER, cascade = [CascadeType.ALL])
@@ -97,8 +107,43 @@ class CrawlRule {
     val zoneOffset: ZoneOffset
         get() {
             val minutes = timezoneOffsetMinutes ?: -480
-            return ZoneOffset.ofHoursMinutes(minutes % 60, minutes / 60)
+            return ZoneOffset.ofHoursMinutes(minutes / 60, minutes % 60)
         }
+
+    val portalUrlList get() = portalUrls.split("\n")
+        .filter { it.isNotBlank() }
+        .filter { UrlUtils.isValidUrl(it) }
+
+    val descriptivePeriod: String
+        get() {
+            val expression = cronExpression
+            return when {
+                period.isNegative && expression != null -> describeCron(expression)
+                period.toDays() > 360 -> "once"
+                else -> "every " + ExoticUtils.formatDuration(period.seconds)
+            }
+        }
+
+    val deducedDomain: String
+        get() {
+            val host = portalUrlList.firstOrNull()?.let { UrlUtils.getURLOrNull(it) }?.host
+            if (host != null) {
+                // TODO: use URLUtil.getDomainName
+                val parts = host.split(".")
+                return if (parts[0] == "www") {
+                    parts.drop(1).joinToString(".")
+                } else {
+                    parts.takeLast(2).joinToString(".")
+                }
+            }
+            return "-"
+        }
+
+    val localCreatedDateTime: LocalDateTime
+        get() = createdDate.atOffset(zoneOffset).toLocalDateTime()
+
+    val localLastModifiedDateTime: LocalDateTime
+        get() = lastModifiedDate.atOffset(zoneOffset).toLocalDateTime()
 
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
@@ -116,26 +161,23 @@ class CrawlRule {
         return NameGenerator.gen()
     }
 
-    /**
-     * TODO: use EntityListeners
-     * */
-    final fun adjustFields() {
-        period = period.truncatedTo(ChronoUnit.MINUTES)
-        startTime = startTime.truncatedTo(ChronoUnit.SECONDS)
-        lastCrawlTime = lastCrawlTime.truncatedTo(ChronoUnit.SECONDS)
-        createdDate = createdDate.truncatedTo(ChronoUnit.SECONDS)
-        lastModifiedDate = lastModifiedDate.truncatedTo(ChronoUnit.SECONDS)
+    private fun describeCron(expression: String): String {
+        val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
+        val parser = CronParser(cronDefinition)
+        val quartzCron: Cron = parser.parse(expression)
+        val descriptor = CronDescriptor.instance(Locale.getDefault())
+        return descriptor.describe(quartzCron)
+    }
 
+    @PrePersist
+    @PreUpdate
+    @PostLoad
+    final fun adjustFields() {
         val count = cronExpression?.split(" ") ?: 0
         if (count == 5) {
             cronExpression = "0 $cronExpression"
         }
 
-        if (startTime == Instant.EPOCH) {
-            startTime = lastCrawlTime
-        }
-
         name = name.takeIf { it.isNotBlank() } ?: randomName()
-        label = label ?: ""
     }
 }

@@ -1,6 +1,7 @@
 package ai.platon.exotic.driver.crawl.entity
 
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
+import org.apache.commons.lang3.StringUtils
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
 import org.springframework.data.jpa.domain.support.AuditingEntityListener
@@ -52,4 +53,6 @@ class PortalTask(
 
     @LastModifiedDate
     var lastModifiedDate: Instant = Instant.now()
+
+    val abbreviatedUrl get() = StringUtils.abbreviateMiddle(url, "...", 35)
 }

@@ -1,9 +1,10 @@
 package ai.platon.exotic.examples.sites.topEc.english.ebay
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.exotic.examples.common.VerboseHarvester
 
 fun main() {
     val portalUrl = "https://www.ebay.com/b/Dolce-Gabbana-Bags-Handbags-for-Women/169291/bn_716146"
     val args = "-i 1s -ii 5d -ol a[href~=itm] -ignoreFailure"
-    PulsarContexts.createSession().loadOutPages(portalUrl, args)
+
+    VerboseHarvester().harvest(portalUrl, args)
 }

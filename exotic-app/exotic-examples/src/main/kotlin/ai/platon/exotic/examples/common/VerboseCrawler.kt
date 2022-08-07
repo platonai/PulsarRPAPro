@@ -9,7 +9,6 @@ import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.session.PulsarSession
 import org.slf4j.LoggerFactory
 import java.net.URL
-import java.util.concurrent.atomic.AtomicBoolean
 
 open class VerboseCrawler(
     val context: PulsarContext

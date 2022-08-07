@@ -7,26 +7,66 @@
 
 <body>
 
-<div class="container-fluid my-2">
+<div th:replace="layout :: nav"></div>
 
-    <!--/* The element with breadcrumb class will be passed to the header fragment */-->
-    <nav aria-label="breadcrumb">
-        <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Home</a></li>
-        </ol>
-    </nav>
-
-    <div>
-        <ol>
-            <li>
-                <a th:href="@{/crawl/rules/}" class="m-1">Rules</a>
-            </li>
-            <li>
-                <a th:href="@{/crawl/portal-tasks/}" class="m-1">Portal Tasks</a>
-            </li>
-        </ol>
+<div class="card my-3 rounded-0">
+    <div class="card-body">
+        <h2 class="text-center text-info">Never write another web scraper!</h2>
+        <h5 class="text-center text-info">Exotic automatically generates all the extract rules
+            and scrape web data completely and accurately at scale.</h5>
     </div>
 </div>
+
+<div class="container my-5">
+    <div class="card-deck text-center">
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/rules/}">Rules</a></h3>
+                <p class="text-info">Tells how and when to scrape web data.</p>
+                <br />
+            </div>
+        </div>
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/remote/tasks/}">Data</a></h3>
+                <p class="text-info">View & download the web data.</p>
+            </div>
+        </div>
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/portal-tasks/}">Tasks</a></h3>
+                <p class="text-info">Check the task status.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<h3 class="text-center my-5">
+    <a th:href="@{'/crawl/rules/add'}" class="btn btn-info text-uppercase">Getting Started</a>
+</h3>
+
+<div class="container">
+    <div class="card my-3 bg-dark border-0">
+        <div class="card-body">
+            <h3 class="text-uppercase card-title">Features</h3>
+            <ul class="card-text text-secondary">
+                <li>Web spider: browser rendering, ajax data crawling</li>
+                <li>Auto extract: extract valuable data from pages using advanced AI</li>
+                <li>Performance: highly optimized, rendering hundreds of pages in parallel on a single machine without be blocked</li>
+                <li>Data quantity assurance: smart retry, accurate scheduling, web data lifetime management</li>
+                <li>Large scale: fully distributed, designed for large scale crawling</li>
+                <li>Simple API: single line of code to scrape, or single SQL to turn a website into a table</li>
+                <li>X-SQL: extended SQL to manage web data: Web crawling, scraping, Web content mining, Web BI</li>
+                <li>Bot stealth: IP rotation, web driver stealth, never get banned</li>
+                <li>RPA: simulating human behaviors, SPA crawling, or do something else awesome</li>
+                <li>Big data: various backend storage support: MongoDB/HBase/Gora</li>
+                <li>Logs & metrics: monitored closely and every event is recorded</li>
+                <li>Web UI: create powerful crawlers without code skills</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
 </body>
 
 </html>

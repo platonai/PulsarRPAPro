@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Rule List</title>
+</head>
+
+<body>
+
+<div class="container-fluid my-2">
+
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a th:href="@{/crawl/}" >Crawl Home</a></li>
+        </ol>
+    </nav>
+
+    <div>
+        Welcome to the Exotic server!
+    </div>
+</div>
+</body>
+
+</html>

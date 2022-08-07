@@ -8,42 +8,87 @@
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
     <meta charset="utf-8">
     <meta http-equiv="x-ua-compatible" content="ie=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
     <!--/* Default links; can be replaced by the calling templates */-->
 
     <link href="../static/css/core.css" rel="stylesheet" media="screen"
           th:href="@{/css/core.css}" />
-    <link href="../static/css/bootstrap.min.css" rel="stylesheet" media="screen"
-          th:href="@{/css/bootstrap.min.css}"/>
 <!--    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">-->
     <link href="../static/css/fontawesome/all.css" rel="stylesheet" media="screen"
           th:href="@{/css/fontawesome/all.css}"/>
+
+    <link href="../static/vendor/bootstrap-4.3.1/css/bootstrap.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/bootstrap-4.3.1/css/bootstrap.css}"/>
+
+    <link href="../static/vendor/highlightjs/styles/default.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/highlightjs/styles/default.css}"/>
+    <link href="../static/vendor/jquery-ui-1.13.1/jquery-ui.min.css" rel="stylesheet" media="screen"
+          th:href="@{/vendor/jquery-ui-1.13.1/jquery-ui.min.css}" />
 
     <!--/* Per-page placeholder for additional links */-->
     <th:block th:if="${links} != null">
         <th:block th:replace="${links}" />
     </th:block>
 
+    <style>
+        body {
+            background-color: #343a40 !important;
+        }
+
+        .bd-navbar {
+            min-height: 4rem;
+            background-color: #17a2b8;
+            position: sticky;
+            top: 0;
+            z-index: 1071;
+        }
+        .bd-navbar .navbar-nav .nav-link.active {
+            font-weight: 500;
+        }
+        .bd-navbar .navbar-nav .nav-link.active, .bd-navbar .navbar-nav .nav-link:hover {
+            color: #fff;
+            background-color: transparent;
+        }
+        .btn-bd-download {
+             font-weight: 500;
+             color: #ffe484;
+             border-color: #ffe484;
+         }
+
+        .breadcrumb {
+            border-radius: 0;
+        }
+    </style>
+
     <!--/* Default scripts; can be replaced by the calling templates */-->
-    <script src="../static/js/jquery.min.js" th:src="@{/js/jquery.min.js}"></script>
-    <script src="../static/js/bootstrap.min.js" th:src="@{/js/bootstrap.min.js}"></script>
+    <script src="../static/js/jquery/jquery.min.js" th:src="@{/js/jquery/jquery.min.js}"></script>
+
+    <script src="../static/vendor/jquery-ui-1.13.1/external/jquery/jquery.js" th:src="@{/vendor/jquery-ui-1.13.1/external/jquery/jquery.js}"></script>
+    <script src="../static/vendor/jquery-ui-1.13.1/jquery-ui.min.js" th:src="@{/vendor/jquery-ui-1.13.1/jquery-ui.min.js}"></script>
+    <script src="../static/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js" th:src="@{/vendor/bootstrap-4.3.1/js/bootstrap.bundle.min.js}"></script>
     <script src="../static/js/crawl-common.js" th:src="@{/js/crawl-common.js}"></script>
+    <script src="../static/vendor/highlightjs/highlight.pack.js" th:src="@{/vendor/highlightjs/highlight.pack.js}"></script>
 
     <!--/* Per-page placeholder for additional scripts */-->
     <th:block th:if="${scripts} != null">
         <th:block th:replace="${scripts}" />
     </th:block>
 
+    <!-- Global site tag (gtag.js) - Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-WVR0BFHCVV"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-WVR0BFHCVV');
+    </script>
 </head>
 
 <body>
 <!--/* Header fragment */-->
-
-<nav aria-label="breadcrumb" th:fragment="header(breadcrumb)">
-    <ol class="breadcrumb">
-        <li><a href="#">Fake</a></li>
-    </ol>
-</nav>
+<div th:fragment="nav()" th:replace="fragments/nav :: nav"></div>
 
 <!--/* The value passed from calling template will be inserted in this element */-->
 <div class="container" th:fragment="content(value)" th:insert="${value}">
@@ -60,7 +105,9 @@
         Phasellus et placerat elit.
     </p>
 </div>
+
 <!--/* Footer fragment */-->
-<footer th:fragment="footer" class="text-center">&copy; 2022 Default Footer</footer>
+<div th:fragment="footer()" th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
+
 </body>
 </html>

@@ -1,0 +1,21 @@
+= How to use proxy
+Vincent Zhang <ivincent.zhang@gmail.com>
+3.0, July 29, 2022: How to use proxy
+:toc:
+:icons: font
+
+The easiest way to use proxy is to put `proxy.providers.txt` into the directory: `~/.pulsar/proxy/providers-enabled`. The file `proxy.providers.txt` contains the url to fetch proxies from external proxy vendors.
+
+Currently, we support two external proxy vendors: zmhttp.com and dailiyun.com, other vendor supports will be added later.
+
+We suggest you to put `proxy.providers.txt` in your user home directory, that is, `~` under Linux, `%USERPROFILE%` under Windows, and use script `proxymgr` to enable/disable/list the proxies:
+
+    # Enable all proxy providers
+    bin/tools/proxy/proxymgr epd -all
+
+    # Disable all proxy providers
+    bin/tools/proxy/proxymgr dispd -all
+
+Run the script for help:
+
+    bin/tools/proxy/proxymgr

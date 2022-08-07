@@ -1,17 +1,32 @@
 package ai.platon.exotic.services.common
 
-import ai.platon.exotic.services.entity.converters.ModelConverter
+import ai.platon.exotic.services.api.entity.converters.ModelConverter
 import com.cronutils.model.Cron
 import com.cronutils.model.CronType
 import com.cronutils.model.definition.CronDefinitionBuilder
 import com.cronutils.parser.CronParser
+import org.bson.types.ObjectId
 import org.junit.jupiter.api.Test
 import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 import java.time.temporal.ChronoUnit
+import kotlin.test.assertEquals
 
 class TestCases {
+
+    @Test
+    fun testObjectId() {
+        val id = "6298b10ccc253e44baca3f5e"
+        val objectId = ObjectId(id)
+//        println(objectId.timestamp)
+//        println(objectId.date)
+//        println(Instant.ofEpochSecond(objectId.timestamp.toLong()))
+
+        assertEquals(1654173964, objectId.timestamp)
+        assertEquals("Thu Jun 02 20:46:04 CST 2022", objectId.date.toString())
+        assertEquals("2022-06-02T12:46:04Z", Instant.ofEpochSecond(objectId.timestamp.toLong()).toString())
+    }
 
     @Test
     fun testDateTime() {

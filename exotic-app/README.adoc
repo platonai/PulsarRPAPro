@@ -1,0 +1,33 @@
+= Exotic Examples
+
+== Auto Extract Examples
+A typical auto extract example for shopee.com:
+[source,kotlin]
+----
+fun main() {
+    val portalUrl = "https://shopee.sg/Computers-Peripherals-cat.11013247"
+    val args = "-ol a[href~=sp_atk] -tl 20 -ignoreFailure" +
+        " -itemRequireSize 200000 -itemScrollCount 30"
+        " -component .page-product__breadcrumb" +
+        " -component .product-briefing" +
+        " -diagnose -vj"
+
+    VerboseHarvester().harvest(portalUrl, args)
+}
+----
+The example code can be found link:exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[here].
+
+The auto extract examples for top e-comm sites can be found link:exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc[here].
+
+== Scraping Examples
+A typical scraping example is like the following:
+[source,kotlin]
+----
+fun main() {
+    val portalUrl = "https://www.amazon.com/Best-Sellers/zgbs"
+    val args = "-i 1d -ii 7d -ol a[href~=/dp/] -ignoreFailure"
+    val fields = SQLContexts.createSession().scrapeOutPages(portalUrl, args, ":root", listOf("title"))
+    println(fields.joinToString("\n"))
+}
+----
+The scraping examples for top e-comm sites can be found link:exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc[here].

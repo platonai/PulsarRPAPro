@@ -1,8 +1,8 @@
 package ai.platon.exotic.driver.crawl.scraper
 
 import ai.platon.exotic.driver.common.DEV_MAX_OUT_PAGES
-import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.common.IS_DEVELOPMENT
+import ai.platon.exotic.driver.common.PRODUCT_MAX_OUT_PAGES
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
 import ai.platon.pulsar.common.urls.UrlUtils
@@ -13,7 +13,7 @@ import java.time.Duration
 
 open class OutPageScraper(
     val driverSettings: DriverSettings
-) {
+): AutoCloseable {
     var logger: Logger = LoggerFactory.getLogger(OutPageScraper::class.java)
 
     val httpTimeout: Duration = Duration.ofMinutes(3)
@@ -45,6 +45,10 @@ open class OutPageScraper(
                 load_and_select('{{url}}', 'body');
         """.trimIndent()
         val itemSQLTemplate = "$prefix load_and_select('{{url}}', 'body')"
+    }
+
+    fun scrape(task: ListenableScrapeTask) {
+        taskSubmitter.scrape(task)
     }
 
     fun scrape(listenablePortalTask: ListenablePortalTask) {
@@ -89,6 +93,10 @@ open class OutPageScraper(
         taskSubmitter.scrape(listenableScrapeTask)
     }
 
+    override fun close() {
+        taskSubmitter.close()
+    }
+
     private fun createChildTasks(
         listenablePortalTask: ListenablePortalTask,
         scrapeTask: ListenableScrapeTask
@@ -126,8 +134,10 @@ open class OutPageScraper(
         val maxOutPages = if (IS_DEVELOPMENT) DEV_MAX_OUT_PAGES else PRODUCT_MAX_OUT_PAGES
         hrefs = hrefs.removePrefix("(").removeSuffix(")")
 
+        // TODO: normalization
         val urls = hrefs.split(",").asSequence()
             .filter { UrlUtils.isValidUrl(it) }
+            .map { it.substringBeforeLast("#") }
             .map { it.trim() }
             .take(maxOutPages)
             .toList()
@@ -147,27 +157,38 @@ open class OutPageScraper(
         args: String
     ): List<ListenableScrapeTask> {
         val priority = listenablePortalTask.task.priority
-        val tasks = urls.map { ScrapeTask(it, args, priority, sqlTemplate) }
-            .map { ListenableScrapeTask(it) }
-            .onEach {
-                it.onSubmitted = { listenablePortalTask.onItemSubmitted(it.task) }
-                it.onRetry = { listenablePortalTask.onItemRetry(it.task) }
-                it.onSuccess = { listenablePortalTask.onItemSuccess(it.task) }
-                it.onFailed = { listenablePortalTask.onItemFailed(it.task) }
-                it.onFinished = { listenablePortalTask.onItemFinished(it.task) }
-                it.onTimeout = { listenablePortalTask.onItemTimeout(it.task) }
-            }
 
-        return tasks
+        return urls.map { ScrapeTask(it, args, priority, sqlTemplate) }
+            .map { createListenableScrapeTask(listenablePortalTask, it) }
     }
 
+    private fun createListenableScrapeTask(
+        listenablePortalTask: ListenablePortalTask,
+        task: ScrapeTask,
+    ): ListenableScrapeTask {
+        return ListenableScrapeTask(task).also {
+            it.onSubmitted = { listenablePortalTask.onItemSubmitted(it.task) }
+            it.onRetry = { listenablePortalTask.onItemRetry(it.task) }
+            it.onSuccess = { listenablePortalTask.onItemSuccess(it.task) }
+            it.onFailed = { listenablePortalTask.onItemFailed(it.task) }
+            it.onFinished = { listenablePortalTask.onItemFinished(it.task) }
+            it.onTimeout = { listenablePortalTask.onItemTimeout(it.task) }
+        }
+    }
+
+    /**
+     * -scrollCount 25: scroll down 25 extra times
+     * */
     private fun buildPortalArgs(rule: CrawlRule, refresh: Boolean): String {
-        var args = rule.buildArgs()
+        var args = rule.buildArgs() + " -scrollCount 25"
         args += if (refresh) " -refresh" else ""
         args += " -authToken " + driverSettings.authToken
         return args
     }
 
+    /**
+     * -scrollCount 25: scroll down 25 extra times
+     * */
     private fun buildItemArgs(rule: CrawlRule, portalRefresh: Boolean): String {
         var args = rule.buildArgs() + " -scrollCount 20"
         args += if (portalRefresh) " -expires 2h" else " -expires 3600d"

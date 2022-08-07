@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Remote Task - the status & result of the task on the sever side</title>
+</head>
+
+<body>
+
+<div th:replace="layout :: nav"></div>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
+        <li class="breadcrumb-item"><a th:href="@{/crawl/remote/tasks/}">Remote Tasks</a></li>
+        <li th:text="${task.id}" class="breadcrumb-item active" aria-current="page"></li>
+    </ol>
+</nav>
+
+<div class="container ">
+
+    <div th:switch="${task}">
+        <div th:case="*">
+            <div class="card my-3">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-6">
+                            <dl>
+                                <dt>Id</dt>
+                                <dd th:text="${task.id}"></dd>
+                                <dt>statusCode</dt>
+                                <dd th:text="${task.statusCode}"></dd>
+                                <dt>pageStatusCode</dt>
+                                <dd th:text="${task.pageStatusCode}"></dd>
+                            </dl>
+                        </div>
+                        <div class="col-6">
+                            <dl>
+                                <dt>pageContentBytes</dt>
+                                <dd th:text="${task.pageContentBytes}"></dd>
+                                <dt>isDone</dt>
+                                <dd th:text="${task.isDone}"></dd>
+                            </dl>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="card my-3">
+                <div class="card-body">
+                    <pre><code class="language-json" th:text="${json}"></code></pre>
+                </div>
+            </div>
+        </div>
+
+        <div class="card-footer">
+            <a th:href="@{/crawl/remote/tasks/}" class="btn btn-info m-1">
+                <i class="fas fa-list ml-1"></i></a>
+        </div>
+    </div>
+
+    <script>
+        hljs.initHighlightingOnLoad();
+    </script>
+
+</div>
+
+<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
+
+</body>
+</html>

@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, ~{this :: .custom-script})">
+    <title>Remote Task List - view the status & download the web data</title>
+    <script class="custom-script" src="../../../../static/js/remote/tasks.js" th:src="@{'/js/remote/tasks.js'}"></script>
+</head>
+
+<body>
+
+<div th:replace="layout :: nav"></div>
+
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a th:href="@{/crawl/}">Home</a></li>
+        <li class="breadcrumb-item active">Remote Tasks</li>
+    </ol>
+</nav>
+
+<div class="container-fluid ">
+
+    <div class="card">
+        <div class="card-body">
+            <a th:href="@{/api/crawl/remote/tasks/}"
+               title="download" class="btn btn-info" target="_blank">
+                <i class="fas fa-download ml-1"></i></a>
+        </div>
+    </div>
+
+    <div class="card my-3 tasks">
+        <div class="card-body">
+            <div th:switch="${tasks}">
+                <div>
+                    <h2 th:case="null">No task yet</h2>
+                    <div th:case="*">
+                        <table class="table table-striped table-responsive-md">
+                            <thead>
+                            <tr>
+                                <th>Id</th>
+                                <th title="Status">Status</th>
+                                <th title="Page Status">Page Status</th>
+                                <th title="Page Content Bytes">Bytes</th>
+                                <th>Done</th>
+                                <th>Created At</th>
+                                <th>Result Set</th>
+                                <th>Url</th>
+                                <th>Actions</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <tr th:each="task : ${tasks}" th:class="${task.response.statusCode == 200 ? '' : 'table-warning'}">
+                                <td><a th:text="${task.id}" th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}" target="_blank"></a></td>
+                                <td th:text="${task.status}"></td>
+                                <td th:text="${task.pageStatus}"></td>
+                                <td th:text="${task.contentLength}"></td>
+                                <td th:text="${task.response.isDone ? 'Yes' : 'No'}"></td>
+                                <td th:text="${#temporals.format(task.objectTime, 'yy-MM-dd h:mm a')}"></td>
+                                <td>
+                                    <a href="javascript:" class="preview btn btn-info" th:data-target-id="${task.id}">
+                                        <i class="fas fa-eye ml-1"></i></a>
+                                    <div class="card d-none preview" th:id="|a${task.id}|">
+                                        <div class="card-body">
+                                            <pre><code class="language-json" th:text="${task.resultSetAsJson}"></code></pre>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td>
+                                    <a th:href="${task.response.url}" th:text="${task.abbreviatedUrl}" target="_blank"></a>
+                                </td>
+                                <td>
+                                    <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.id})}"
+                                       title="Server side detail" class="btn btn-info">
+                                        <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
+                                </td>
+                            </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
+
+</body>
+
+</html>
