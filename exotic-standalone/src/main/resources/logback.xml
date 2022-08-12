@@ -132,6 +132,7 @@
     </appender>
 
     <root level="WARN">
+        <appender-ref ref="Console"/>
         <appender-ref ref="DRFA"/>
     </root>
 

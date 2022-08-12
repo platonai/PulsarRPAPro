@@ -26,10 +26,10 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:https://github.com/platonai/pulsar.git</connection>
-		<developerConnection>scm:git:https://github.com/platonai/pulsar.git</developerConnection>
-		<url>https://github.com/platonai/pulsar</url>
-		<tag>v0.0.4</tag>
+		<connection>scm:git:https://github.com/platonai/exotic.git</connection>
+		<developerConnection>scm:git:https://github.com/platonai/exotic.git</developerConnection>
+		<url>https://github.com/platonai/exotic</url>
+		<tag>v1.10.0-SNAPSHOT</tag>
 	</scm>
 
 	<developers>
@@ -130,7 +130,7 @@
 							<option>all-open:annotation=javax.persistence.Embeddable</option>
 							<option>all-open:annotation=javax.persistence.MappedSuperclass</option>
 						</pluginOptions>
-						<jvmTarget>${java.version}</jvmTarget>
+						<jvmTarget>${javac.target.version}</jvmTarget>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -290,7 +290,7 @@
 		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.9.5</pulsar.version>
-		<scent.version>1.8.3</scent.version>
+		<pulsar.version>1.9.11-SNAPSHOT</pulsar.version>
+		<scent.version>1.9.8-SNAPSHOT</scent.version>
 	</properties>
 </project>
