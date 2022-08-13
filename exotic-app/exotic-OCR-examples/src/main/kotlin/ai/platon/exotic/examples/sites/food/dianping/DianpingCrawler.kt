@@ -1,6 +1,5 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.crawl.StreamingCrawlLoop
 import ai.platon.pulsar.crawl.StreamingCrawler
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.select.selectHyperlinks
@@ -30,8 +29,13 @@ fun main() {
     val session = context.createSession()
 
     context.crawlLoops.loops.map { it.crawler }.filterIsInstance<StreamingCrawler<*>>().forEach {
-        println("Setting delay policy ...")
-        it.delayPolicy = { Duration.ofSeconds(10) }
+        it.delayPolicy = { fetchNum ->
+            if (fetchNum <= 2) {
+                Duration.ofSeconds(10)
+            } else {
+                Duration.ofMinutes(1)
+            }
+        }
     }
 
     val crawler = RestaurantCrawler(session)
