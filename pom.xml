@@ -5,13 +5,13 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.5.13</version>
+		<version>2.5.4</version>
 		<relativePath/>
 	</parent>
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
-	<version>1.9.12-SNAPSHOT</version>
+	<version>1.10.0-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -26,10 +26,10 @@
 	</licenses>
 
 	<scm>
-		<connection>scm:git:https://github.com/platonai/pulsar.git</connection>
-		<developerConnection>scm:git:https://github.com/platonai/pulsar.git</developerConnection>
-		<url>https://github.com/platonai/pulsar</url>
-		<tag>v1.9.12</tag>
+		<connection>scm:git:https://github.com/platonai/exotic.git</connection>
+		<developerConnection>scm:git:https://github.com/platonai/exotic.git</developerConnection>
+		<url>https://github.com/platonai/exotic</url>
+		<tag>v1.10.0-SNAPSHOT</tag>
 	</scm>
 
 	<developers>
@@ -130,7 +130,7 @@
 							<option>all-open:annotation=javax.persistence.Embeddable</option>
 							<option>all-open:annotation=javax.persistence.MappedSuperclass</option>
 						</pluginOptions>
-						<jvmTarget>${java.version}</jvmTarget>
+						<jvmTarget>${javac.target.version}</jvmTarget>
 					</configuration>
 				</plugin>
 				<plugin>
@@ -228,16 +228,6 @@
 				</exclusions>
 			</dependency>
 			<dependency>
-				<groupId>ai.platon.pulsar</groupId>
-				<artifactId>pulsar-dom</artifactId>
-				<version>${pulsar.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>ai.platon.pulsar</groupId>
-				<artifactId>pulsar-ql-common</artifactId>
-				<version>${pulsar.version}</version>
-			</dependency>
-			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>
@@ -300,7 +290,7 @@
 		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.9.9</pulsar.version>
-		<scent.version>1.9.4</scent.version>
+		<pulsar.version>1.9.11</pulsar.version>
+		<scent.version>1.9.8</scent.version>
 	</properties>
 </project>
