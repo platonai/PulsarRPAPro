@@ -23,13 +23,8 @@ import java.nio.file.Paths
     scanBasePackages = [
         "ai.platon.scent.boot.autoconfigure",
         "ai.platon.scent.rest.api",
-        "ai.platon.exotic.services"
+        "ai.platon.exotic.services.api"
     ]
-)
-@ComponentScan(
-    "ai.platon.scent.rest.api",
-    "ai.platon.exotic.services.api",
-    "ai.platon.exotic.standalone",
 )
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
@@ -52,7 +47,7 @@ class StandaloneApplication(
     @DependsOn("embeddedMongoServer")
     @Bean
     fun createWebDb(): WebDb {
-        logger.info("User the overridden WebDb bean which depends on embeddedMongoServer" +
+        logger.info("Use the overridden WebDb bean which depends on embeddedMongoServer" +
                 " to ensure the correct shutdown order")
         return WebDb(immutableConfig)
     }

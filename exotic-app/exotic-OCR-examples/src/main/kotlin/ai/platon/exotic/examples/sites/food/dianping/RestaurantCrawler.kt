@@ -1,43 +1,97 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.common.AppFiles
-import ai.platon.pulsar.common.AppPaths
-import ai.platon.pulsar.common.HtmlIntegrity
-import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.common.*
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
-import ai.platon.pulsar.protocol.browser.emulator.BrowserEmulatorEventHandler
+import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
+import ai.platon.scent.jackson.prettyScentObjectWritter
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import net.sourceforge.tess4j.Tesseract
-import java.awt.RenderingHints
-import java.awt.Transparency
-import java.awt.image.BufferedImage
 import java.io.ByteArrayInputStream
+import java.time.Instant.MAX
 import java.util.*
 import javax.imageio.ImageIO
+
+object TaskDef {
+
+    val commentSelectors = IntRange(1, 10)
+        .map { i ->
+            listOf(
+                "comment-$i-user-name" to cs(i) + " .content .user-info p",
+                "comment-$i-avePrice" to cs(i) + " .content .shop-info .average",
+                "comment-$i-desc" to cs(i) + " .content p.desc.J-desc",
+//                "comment-$i-publishTime" to cs(i) + " .content .misc-info .time",
+//                "comment-$i-praise" to cs(i) + " .content .misc-info .J-praise",
+//                "comment-$i-response" to cs(i) + " .content .misc-info .J-response",
+//                "comment-$i-favorite" to cs(i) + " .content .misc-info .J-favorite",
+//                "comment-$i-report" to cs(i) + " .content .misc-info .J-report",
+//                "comment-$i-shop" to cs(i) + " .content .misc-info .shop"
+            )
+        }.flatten().associate { it.first to it.second }
+
+    val fieldSelectors = mutableMapOf(
+        "shopName" to ".basic-info .shop-name",
+        "score" to ".basic-info .brief-info .mid-score",
+        "reviewCount" to "#reviewCount",
+        "avgPrice" to "#avgPriceTitle",
+        "commentScores" to "#comment_score",
+        "address" to "#address",
+        "tel" to ".tel",
+    )
+        .also { it.putAll(commentSelectors) }
+
+    val homePage = "https://www.dianping.com/"
+
+    val portalUrls = listOf(
+        "https://www.dianping.com/beijing/ch10/g104",
+        "https://www.dianping.com/beijing/ch10/g105",
+        "https://www.dianping.com/beijing/ch10/g106",
+        "https://www.dianping.com/beijing/ch10/g107",
+        "https://www.dianping.com/beijing/ch10/g109",
+        "https://www.dianping.com/beijing/ch10/g110",
+        "https://www.dianping.com/beijing/ch75/g34309",
+        "https://www.dianping.com/beijing/ch25/g136",
+        "https://www.dianping.com/beijing/ch25/g105",
+        "https://www.dianping.com/beijing/ch25/g106",
+        "https://www.dianping.com/beijing/ch25/g107",
+        "https://www.dianping.com/beijing/ch30",
+        "https://www.dianping.com/beijing/ch30/g141",
+        "https://www.dianping.com/beijing/ch30/g135",
+        "https://www.dianping.com/beijing/ch30/g144",
+        "https://www.dianping.com/beijing/ch30/g134",
+    )
+
+    fun cs(i: Int) = buildCommentSelector(i)
+
+    fun buildCommentSelector(i: Int): String {
+        return "#reviewlist-wrapper li.comment-item:nth-child($i)"
+    }
+
+    fun isShop(url: String): Boolean {
+        return "shop" in url
+    }
+}
 
 class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls, which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
         val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
         // Authorization verification
-        if ("verify" in url) {
-            return HtmlIntegrity.FORBIDDEN
+        return when {
+            "verify" in url -> HtmlIntegrity.FORBIDDEN
+            "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
+            else -> HtmlIntegrity.OK
         }
-        if ("403 Forbidden" in pageSource) {
-            return HtmlIntegrity.FORBIDDEN
-        }
-        return HtmlIntegrity.OK
     }
 }
 
@@ -81,15 +135,6 @@ class Screenshot(
 
         return text
     }
-
-    private fun getScaledImage(srcImg: BufferedImage, w: Int, h: Int): BufferedImage {
-        val resizedImg = BufferedImage(w, h, Transparency.TRANSLUCENT)
-        val g2 = resizedImg.createGraphics()
-        g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BILINEAR)
-        g2.drawImage(srcImg, 0, 0, w, h, null)
-        g2.dispose()
-        return resizedImg
-    }
 }
 
 class RestaurantCrawler(
@@ -99,48 +144,11 @@ class RestaurantCrawler(
 
     private val context = session.context as AbstractPulsarContext
 
-    private val coroutineScope = CoroutineScope(Dispatchers.IO) + CoroutineName("RestaurantCrawler")
-
-    val commentSelectors = IntRange(1, 10)
-        .map { i ->
-            listOf(
-                "comment-$i-user-name" to commentSelector(i) + " .content .user-info p",
-                "comment-$i-avePrice" to commentSelector(i) + " .content .shop-info .average",
-                "comment-$i-desc" to commentSelector(i) + " .content p.desc.J-desc",
-                "comment-$i-publishTime" to commentSelector(i) + " .content .misc-info .time",
-                "comment-$i-praise" to commentSelector(i) + " .content .misc-info .J-praise",
-                "comment-$i-response" to commentSelector(i) + " .content .misc-info .J-response",
-                "comment-$i-favorite" to commentSelector(i) + " .content .misc-info .J-favorite",
-                "comment-$i-report" to commentSelector(i) + " .content .misc-info .J-report",
-                "comment-$i-shop" to commentSelector(i) + " .content .misc-info .shop"
-            )
-        }.flatten().associate { it.first to it.second }
-
-    val fieldSelectors = mutableMapOf(
-        "shopName" to ".basic-info .shop-name",
-        "score" to ".basic-info .brief-info .mid-score",
-        "reviewCount" to "#reviewCount",
-        "avgPrice" to "#avgPriceTitle",
-        "commentScores" to "#comment_score",
-        "address" to "#address",
-        "tel" to ".tel",
-    )
-        .also { it.putAll(commentSelectors) }
-
-    val portalUrl = "https://www.dianping.com/beijing/ch10/g104"
-
-    val warnUpUrls = listOf(
-        "https://www.dianping.com/",
-        "https://www.dianping.com/beijing/ch10/g104",
-        "https://www.dianping.com/beijing/ch75/g34309",
-        "https://www.dianping.com/beijing/ch25/g136",
-        "https://www.dianping.com/beijing/ch25/g105",
-        "https://www.dianping.com/beijing/ch25/g106",
-        "https://www.dianping.com/beijing/ch25/g107",
-    )
+    private val isActive get() = AppContext.isActive
+    private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
 
     init {
-        context.getBean<BrowserEmulatorEventHandler>().htmlIntegrityChecker.checkers.add(0, DianPingHtmlIntegrityChecker())
+        htmlIntegrityChecker.checkers.add(0, DianPingHtmlIntegrityChecker())
     }
 
     fun options(args: String): LoadOptions {
@@ -151,14 +159,17 @@ class RestaurantCrawler(
             // sleepSeconds(3)
         }
 
-        // Warp up the browser to avoid the browser being blocked by the server.
-        eh.loadEventHandler.onAfterBrowserLaunch.addLast { driver ->
-            runBlocking { visit(warnUpUrls[0], driver) }
-            runBlocking { visit(portalUrl, driver) }
+        eh.loadEventHandler.onBeforeFetch.addLast { page ->
 
-            warnUpUrls.shuffled().take(1).forEach {
-                runBlocking { visit(it, driver) }
-            }
+        }
+
+        eh.simulateEventHandler.onBeforeFetch.addLast { page, driver ->
+            waitForPreviousPage(page, driver)
+        }
+
+        // Warp up the browser to avoid being blocked by the server.
+        eh.loadEventHandler.onAfterBrowserLaunch.addLast { page, driver ->
+            warnUpBrowser(page, driver)
         }
 
         val seh = eh.simulateEventHandler
@@ -168,7 +179,7 @@ class RestaurantCrawler(
 
         seh.onBeforeComputeFeature.addLast { page, driver ->
             driver.bringToFront()
-            commentSelectors.entries.mapIndexed { i, _ -> commentSelector(i) + " .more" }
+            TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
                         driver.click(selector)
@@ -178,13 +189,14 @@ class RestaurantCrawler(
         }
 
         seh.onAfterComputeFeature.addLast { page, driver ->
+            driver.evaluate("window.stop()")
+            driver.evaluate("__pulsar_utils__.scrollToTop()") // Scroll to the top of the page.
             driver.bringToFront()
-            fieldSelectors.entries.asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
-                // driver.waitForSelector(selector)
+            TaskDef.fieldSelectors.entries.asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
                 if (driver.exists(selector)) {
                     Screenshot(page, driver).runCatching { doOCR(name, selector) }
                         .onFailure { logger.warn("Unexpected exception", it) }.getOrNull()
-                    delay(300)
+                    delay(500)
                 }
             }
         }
@@ -195,8 +207,9 @@ class RestaurantCrawler(
 
                 val ele = document.selectFirstOrNull(selector)
                 if (ele != null) {
-                    ele.appendElement("br")
-                    ele.appendElement("div").addClass("ocr").text(text.toString())
+                    ele.appendElement("div")
+                        .attr("style", "display: none")
+                        .addClass("ocr").text(text.toString())
                 }
             }
         }
@@ -204,27 +217,62 @@ class RestaurantCrawler(
         return options
     }
 
+    private suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
+        // portalUrls.shuffled().first().let { visit(it, driver) }
+        page.referrer?.let { visit(it, driver) }
+    }
+
     private suspend fun visit(url: String, driver: WebDriver) {
+        val display = driver.browserInstance.id.display
+        logger.info("Visit with browser #{} | {}", display, url)
+
         try {
-            driver.navigateTo(portalUrl)
-            delay(1000)
+            driver.navigateTo(url)
+            driver.waitForSelector("body")
             var n = 10
-            while (n-- > 0) {
+            while (isActive && n-- > 0) {
                 driver.scrollDown(1)
+//                driver.evaluate("__pulsar_utils__.scrollDown()")
                 delay(1000)
             }
+
+            logger.info("Visited | {}", url)
         } catch (e: Exception) {
             logger.warn("Can not visit $url", e)
         }
     }
 
-    private fun commentSelector(i: Int): String {
-        return "#reviewlist-wrapper li.comment-item:nth-child($i)"
+    private suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
+        var tick = 60
+        var checkState = checkPreviousPage(driver)
+        while (isActive && tick-- > 0 && checkState.code != 0) {
+            // The last page does not load completely, wait for it.
+            if (tick % 10 == 0) {
+                val navigateHistory = driver.browserInstance.navigateHistory
+                // println(prettyScentObjectWritter().writeValueAsString(navigateHistory))
+                logger.info("Waiting for page to load | {}.\t{} <- {}", tick, page.url, checkState.message)
+            }
+
+            delay(1000L)
+            checkState = checkPreviousPage(driver)
+        }
+    }
+
+    private fun checkPreviousPage(driver: WebDriver): CheckState {
+        val navigateHistory = driver.browserInstance.navigateHistory
+
+        val lastNav = navigateHistory.lastOrNull {
+            it.pageId > 0 && !it.stopped && TaskDef.isShop(it.url)
+                    && it.createTime < driver.navigateEntry.createTime
+        } ?: return CheckState(0, "No previous page")
+
+        val code = if (lastNav.documentReadyTime == MAX) 1 else 0
+        return CheckState(code, lastNav.url)
     }
 }
 
 /**
- * Running the program directly in the IDE may crash the system, use command line instead:
+ * If running the program directly in the IDE may crash the system, use command line instead:
  *
 java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 -D"loader.main=ai.platon.exotic.examples.sites.food.dianping.RestaurantCrawlerKt" \
@@ -238,7 +286,7 @@ fun main() {
 
     val crawler = RestaurantCrawler()
 
-    val fieldSelectors = crawler.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
+    val fieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
     val fields = crawler.session.scrape(url, crawler.options(args), fieldSelectors)
     println(GsonBuilder().setPrettyPrinting().create().toJson(fields))
 }

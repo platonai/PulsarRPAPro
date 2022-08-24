@@ -48,7 +48,7 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<configuration>
-					<mainClass>ai.platon.exotic.standalone.ExoticStandaloneKt</mainClass>
+					<mainClass>ai.platon.exotic.standalone.starter.ExoticStandaloneStarterKt</mainClass>
 					<addResources>true</addResources>
 					<executable>true</executable>
 				</configuration>
