@@ -132,7 +132,6 @@
     </appender>
 
     <root level="INFO">
-        <appender-ref ref="Console"/>
         <appender-ref ref="DRFA"/>
     </root>
 
@@ -177,6 +176,12 @@
         <appender-ref ref="PAGES"/>
     </logger>
 
+    <logger name="ai.platon.scent.analysis" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
     <logger name="ai.platon.scent.analysis.corpus.AnalysablePageCorpus.Task" level="INFO" additivity="false">
         <appender-ref ref="HARVEST"/>
     </logger>
@@ -206,6 +211,7 @@
         <appender-ref ref="PAGES"/>
     </logger>
     <logger name="ai.platon.pulsar.crawl.component.LoadComponent.Task" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
         <appender-ref ref="PAGES"/>
     </logger>
     <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulator.Task" level="INFO" additivity="false">
