@@ -18,28 +18,22 @@
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-dom</artifactId>
-			<version>${pulsar.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
-			<artifactId>pulsar-persist</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>ai.platon.scent</groupId>
-			<artifactId>scent-rest</artifactId>
-			<version>${scent.version}</version>
-		</dependency>
-		<dependency>
-			<groupId>ai.platon.scent</groupId>
-			<artifactId>scent-boot</artifactId>
-			<version>${scent.version}</version>
+			<artifactId>pulsar-ql-common</artifactId>
 		</dependency>
 
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-driver</artifactId>
 			<version>${project.parent.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mongodb</groupId>
+			<artifactId>bson</artifactId>
+			<version>4.2.3</version>
 		</dependency>
 
 		<dependency>
@@ -78,14 +72,9 @@
 		</dependency>
 
 		<dependency>
-			<groupId>com.h2database</groupId>
-			<artifactId>h2</artifactId>
-			<scope>runtime</scope>
-		</dependency>
-		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
+			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
@@ -116,31 +105,32 @@
 
 	<profiles>
 		<profile>
-			<id>war</id>
+			<id>REST-executable</id>
 			<build>
 				<plugins>
 					<plugin>
+						<groupId>org.springframework.boot</groupId>
+						<artifactId>spring-boot-maven-plugin</artifactId>
+						<configuration>
+							<mainClass>ai.platon.exotic.starter.ExoticServiceStarterKt</mainClass>
+						</configuration>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+		<profile>
+			<id>REST-war</id>
+				<build>
+					<plugins>
+						<plugin>
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
-						<version>3.2.2</version>
 						<configuration>
-							<warName>exotic</warName>
+									<warName>exotic</warName>
 						</configuration>
 					</plugin>
 				</plugins>
 			</build>
 		</profile>
 	</profiles>
-
-	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-				<configuration>
-					<addResources>true</addResources>
-				</configuration>
-			</plugin>
-		</plugins>
-	</build>
 </project>

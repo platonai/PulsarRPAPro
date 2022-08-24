@@ -17,7 +17,7 @@ class StandaloneScheduler {
     @Value("\${server.servlet.context-path}")
     private val serverContextPath: String = "/exotic"
 
-    @Scheduled(initialDelay = 20 * MILLIS_PER_SECOND, fixedDelay = 1000 * MILLIS_PER_DAY)
+    @Scheduled(initialDelay = 10 * MILLIS_PER_SECOND, fixedDelay = 1000 * MILLIS_PER_DAY)
     fun openWebConsole() {
         val contextPath = serverContextPath.removePrefix("/")
         val url = "http://localhost:$serverPort/$contextPath/crawl/rules/"

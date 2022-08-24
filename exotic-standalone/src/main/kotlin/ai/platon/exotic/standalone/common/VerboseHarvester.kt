@@ -99,8 +99,8 @@ open class VerboseHarvester(
         return result
     }
 
-    fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
-        val (url0, args0) = UrlUtils.splitUrlArgs(url)
+    fun harvest(session: ScentSession, portalUrl: String, options: HarvestOptions) {
+        val (url0, args0) = UrlUtils.splitUrlArgs(portalUrl)
         val options0 = session.options("$options $args0")
         options0.topLinks = options0.topLinks.coerceAtLeast(40)
         val result = runBlocking { session.harvest(url0, options0) }

@@ -193,7 +193,6 @@
         <appender-ref ref="SERVER"/>
     </logger>
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler" level="INFO">
-        <appender-ref ref="Console"/>
         <appender-ref ref="SERVER"/>
     </logger>
     <logger name="ai.platon.pulsar.crawl.component" level="INFO">
@@ -210,7 +209,7 @@
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.pulsar.crawl.component.LoadComponent.Task" level="INFO" additivity="false">
+    <logger name="ai.platon.pulsar.crawl.component.LoadComponent.Task" level="INFO" additivity="true">
         <appender-ref ref="Console"/>
         <appender-ref ref="PAGES"/>
     </logger>
@@ -265,11 +264,5 @@
 
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>
-    <logger name="org.apache.zookeeper" level="ERROR"/>
-    <logger name="org.apache.solr" level="INFO"/>
-    <logger name="org.apache.hadoop" level="WARN"/>
-    <logger name="io.netty" level="WARN"/>
-    <logger name="org.apache.hadoop.mapreduce.Job" level="WARN"/>
-    <logger name="io.netty.handler.logging" level="INFO"/>
 
 </configuration>

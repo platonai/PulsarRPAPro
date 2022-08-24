@@ -1,8 +1,10 @@
 package ai.platon.exotic
 
+import ai.platon.exotic.handlers.CombinedHtmlIntegrityChecker
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.persist.WebDb
+import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import de.flapdoodle.embed.mongo.MongodExecutable
@@ -28,18 +30,13 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 @ImportResource("classpath:config/app/app-beans/app-context.xml")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
 class ExoticServerApplication(
-    private val embeddedMongoServer: MongodExecutable,
+    private val browserResponseHandler: BrowserResponseHandler,
     private val immutableConfig: ImmutableConfig
 ) {
-    private val logger = getLogger(this)
-
-    @Primary
-    @DependsOn("embeddedMongoServer")
     @Bean
-    fun createWebDb(): WebDb {
-        logger.info("User the overridden WebDb bean which depends on embeddedMongoServer" +
-                " to ensure the correct shutdown order")
-        return WebDb(immutableConfig)
+    fun initBrowserResponseHandler() {
+        val htmlIntegrityChecker = CombinedHtmlIntegrityChecker(immutableConfig)
+        browserResponseHandler.htmlIntegrityChecker.checkers.add(htmlIntegrityChecker)
     }
 
     @Bean

@@ -1,23 +1,16 @@
 package ai.platon.exotic.standalone.api
 
 import ai.platon.exotic.driver.common.ExoticUtils
-import ai.platon.pulsar.common.Runtimes
-import ai.platon.pulsar.common.config.ImmutableConfig
-import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.persist.WebDb
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
-import de.flapdoodle.embed.mongo.MongodExecutable
-import org.apache.commons.lang3.SystemUtils
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
-import org.springframework.context.annotation.*
+import org.springframework.context.annotation.ComponentScan
+import org.springframework.context.annotation.ImportResource
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
-import java.nio.file.Files
-import java.nio.file.Paths
 
 @SpringBootApplication(
     scanBasePackages = [
@@ -25,6 +18,11 @@ import java.nio.file.Paths
         "ai.platon.scent.rest.api",
         "ai.platon.exotic.services.api"
     ]
+)
+@ComponentScan(
+    "ai.platon.scent.rest.api",
+    "ai.platon.exotic.services.api",
+    "ai.platon.exotic.standalone.api",
 )
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
@@ -34,28 +32,13 @@ import java.nio.file.Paths
 @EnableJpaRepositories("ai.platon.exotic.services.api.persist")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
 // failed to import Applications
-// @Import(ExoticApplication::class, ExoticServerApplication::class)
+//@Import(ExoticApplication::class, ExoticServerApplication::class)
 @EnableScheduling
 @EnableJpaAuditing
-class StandaloneApplication(
-    private val embeddedMongoServer: MongodExecutable,
-    private val immutableConfig: ImmutableConfig
-) {
-    private val logger = getLogger(this)
-
-    @Primary
-    @DependsOn("embeddedMongoServer")
-    @Bean
-    fun createWebDb(): WebDb {
-        logger.info("Use the overridden WebDb bean which depends on embeddedMongoServer" +
-                " to ensure the correct shutdown order")
-        return WebDb(immutableConfig)
-    }
-}
+class StandaloneApplication
 
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()
-
 //    System.setProperty("scrape.submitter.dry.run", "true")
     SpringApplicationBuilder(StandaloneApplication::class.java)
         .profiles("h2")

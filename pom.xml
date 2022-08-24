@@ -228,6 +228,16 @@
 				</exclusions>
 			</dependency>
 			<dependency>
+				<groupId>ai.platon.pulsar</groupId>
+				<artifactId>pulsar-dom</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.pulsar</groupId>
+				<artifactId>pulsar-ql-common</artifactId>
+				<version>${pulsar.version}</version>
+			</dependency>
+			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
 				<version>3.1.0</version>
@@ -291,6 +301,6 @@
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 		<pulsar.version>1.9.12</pulsar.version>
-		<scent.version>1.9.8</scent.version>
+		<scent.version>1.9.9</scent.version>
 	</properties>
 </project>

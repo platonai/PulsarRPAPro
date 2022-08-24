@@ -1,6 +1,5 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.common.MultiSinkWriter
 import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.StreamingCrawler
