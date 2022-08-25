@@ -11,7 +11,7 @@
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
-	<version>1.10.1-SNAPSHOT</version>
+	<version>1.10.2-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -29,7 +29,7 @@
 		<connection>scm:git:https://github.com/platonai/exotic.git</connection>
 		<developerConnection>scm:git:https://github.com/platonai/exotic.git</developerConnection>
 		<url>https://github.com/platonai/exotic</url>
-		<tag>v1.10.1-SNAPSHOT</tag>
+		<tag>v1.10.2-SNAPSHOT</tag>
 	</scm>
 
 	<developers>
