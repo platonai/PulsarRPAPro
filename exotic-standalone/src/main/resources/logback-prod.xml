@@ -177,6 +177,12 @@
         <appender-ref ref="PAGES"/>
     </logger>
 
+    <logger name="ai.platon.scent.analysis" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
     <logger name="ai.platon.scent.analysis.corpus.AnalysablePageCorpus.Task" level="INFO" additivity="false">
         <appender-ref ref="HARVEST"/>
     </logger>
@@ -233,7 +239,7 @@
         <appender-ref ref="COLLECT"/>
     </logger>
 
-    <logger name="ai.platon.exotic" level="WARN">
+    <logger name="ai.platon.exotic" level="INFO">
         <appender-ref ref="Console"/>
     </logger>
     <logger name="ai.platon.exotic.driver" level="INFO">
@@ -259,11 +265,5 @@
 
     <logger name="org.apache.hadoop.conf.Configuration" level="WARN"/>
     <logger name="org.apache.gora" level="ERROR"/>
-    <logger name="org.apache.zookeeper" level="ERROR"/>
-    <logger name="org.apache.solr" level="WARN"/>
-    <logger name="org.apache.hadoop" level="WARN"/>
-    <logger name="io.netty" level="WARN"/>
-    <logger name="org.apache.hadoop.mapreduce.Job" level="WARN"/>
-    <logger name="io.netty.handler.logging" level="INFO"/>
 
 </configuration>

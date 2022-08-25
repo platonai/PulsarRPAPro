@@ -45,10 +45,12 @@ class ExoticApplication(
 
     @Bean
     fun autoReloadThymeleafTemplateResolver(): ITemplateResolver? {
-        if (templatesRoot == null || !Files.exists(Paths.get(templatesRoot))) {
+        if (templatesRoot.isNullOrBlank() || !Files.exists(Paths.get(templatesRoot))) {
             // fail back to default resolver
             return defaultThymeleafTemplateResolver
         }
+
+        println("Use file template resolver for Thymeleaf | $templatesRoot")
 
         val resolver = FileTemplateResolver()
         resolver.suffix = properties.suffix
