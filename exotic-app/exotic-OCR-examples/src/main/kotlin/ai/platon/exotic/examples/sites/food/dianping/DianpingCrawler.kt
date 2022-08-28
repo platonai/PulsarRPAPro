@@ -1,79 +1,66 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.common.message.MiscMessageWriter
+import ai.platon.pulsar.browser.common.BrowserSettings
+import ai.platon.pulsar.common.ResourceLoader
+import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.common.urls.UrlAware
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
-import ai.platon.pulsar.crawl.StreamingCrawler
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
-import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.session.PulsarSession
+import ai.platon.scent.ScentEnvironment
 import ai.platon.scent.context.ScentContexts
-import com.google.gson.GsonBuilder
 import org.jsoup.nodes.Document
 import java.time.Duration
-import java.util.concurrent.atomic.AtomicInteger
+import java.util.concurrent.Executors
+import java.util.concurrent.TimeUnit
 
 class DianpingCrawler(private val session: PulsarSession) {
     private val context = session.context as AbstractPulsarContext
 
     private val crawler = RestaurantCrawler(session)
-    private val fieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
-    private val gson = GsonBuilder().setPrettyPrinting().create()
-    private val totalFieldCount = AtomicInteger()
 
-    private val messageWriter = context.getBean(MiscMessageWriter::class)
-
-    val crawlDelayPolicy = { fetchNum: Int ->
-        if (fetchNum <= 2) {
+    private val retryDelayPolicy = { nextRetryNumber: Int, _: UrlAware? ->
+        if (nextRetryNumber <= 2) {
             Duration.ofSeconds(10)
         } else {
             Duration.ofMinutes(1)
         }
     }
 
-    val parseHandler = { _: WebPage, document: Document ->
-        val fields = fieldSelectors.entries.associateWith { document.select(it.value).text() }
-            .filter { it.value.isNotBlank() }
-//        totalFieldCount.addAndGet(fields.size)
-//        println("fields: ${fields.size} totalFieldCount: ${totalFieldCount.get()}")
-    }
+    private val parseHandler = { _: WebPage, document: Document -> }
 
     init {
-        context.crawlLoops.loops.map { it.crawler }.filterIsInstance<StreamingCrawler<*>>().forEach {
-            it.delayPolicy = crawlDelayPolicy
+        context.crawlLoops.loops.forEach {
+            it.crawler.retryDelayPolicy = retryDelayPolicy
         }
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
-        portalUrls.forEach { portalUrl -> crawlOutPages(portalUrl, args) }
+        portalUrls.forEach { portalUrl -> scrapeOutPages(portalUrl, args) }
+        context.await()
     }
 
-    fun crawlOutPages(portalUrl: String, args: String) {
+    fun scrapeOutPages(portalUrl: String, args: String) {
         val options = crawler.options(args)
-        options.ensureEventHandler().loadEventHandler.onAfterHtmlParse.addLast { _, document: FeaturedDocument ->
-            collectPortalUrls(document) }
 
         val document = session.loadDocument(portalUrl, options)
 
         val links = document.document.selectHyperlinks(options.outLinkSelector)
             .asSequence()
-            .take(100)
-            .map { ParsableHyperlink("$it -refresh", parseHandler) }
+            .take(10000)
+            .map { ParsableHyperlink("$it -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)
             }
             .toList()
             .shuffled()
-        context.submitAll(links).await()
-    }
 
-    private fun collectPortalUrls(document: FeaturedDocument) {
-        document.select("a[data-cat-id]")
-            .forEach { messageWriter.writeLine(it.attr("abs:href"), "portal.urls.txt") }
+        context.submitAll(links)
     }
-
 }
 
 /**
@@ -87,12 +74,19 @@ fun main() {
 //    val args = "-i 1s -ii 5s -ol \"#shop-all-list .tit a[href~=shop]\" -ignoreFailure"
     val args = "-i 1s -ii 10s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
 
-    System.setProperty("privacy.context.number", "3")
-    System.setProperty("browser.max.active.tabs", "2")
+    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "3")
+    System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "3")
+    System.setProperty(CapabilityTypes.BROWSER_HEAVY_RENDERING, "true")
+    System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
+
 //    BrowserSettings.headless()
+//    ScentEnvironment().checkEnvironment()
 
     val context = ScentContexts.create()
     val session = context.createSession()
 
-    DianpingCrawler(session).crawl(TaskDef.portalUrls, args)
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
+        .filter { UrlUtils.isValidUrl(it) }
+        .shuffled()
+    DianpingCrawler(session).crawl(portalUrls, args)
 }

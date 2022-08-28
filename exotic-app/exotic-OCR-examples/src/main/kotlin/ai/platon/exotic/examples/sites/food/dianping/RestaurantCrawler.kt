@@ -1,9 +1,12 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.common.*
+import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.context.support.AbstractPulsarContext
+import ai.platon.pulsar.crawl.CoreMetrics
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
@@ -11,79 +14,31 @@ import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.jackson.prettyScentObjectWritter
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
-import net.sourceforge.tess4j.Tesseract
-import java.io.ByteArrayInputStream
+import java.io.IOException
+import java.nio.file.Files
+import java.text.NumberFormat
 import java.time.Instant.MAX
-import java.util.*
-import javax.imageio.ImageIO
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.random.Random
+import java.awt.Robot
+import java.awt.event.InputEvent
 
-object TaskDef {
-
-    val commentSelectors = IntRange(1, 10)
-        .map { i ->
-            listOf(
-                "comment-$i-user-name" to cs(i) + " .content .user-info p",
-                "comment-$i-avePrice" to cs(i) + " .content .shop-info .average",
-                "comment-$i-desc" to cs(i) + " .content p.desc.J-desc",
-//                "comment-$i-publishTime" to cs(i) + " .content .misc-info .time",
-//                "comment-$i-praise" to cs(i) + " .content .misc-info .J-praise",
-//                "comment-$i-response" to cs(i) + " .content .misc-info .J-response",
-//                "comment-$i-favorite" to cs(i) + " .content .misc-info .J-favorite",
-//                "comment-$i-report" to cs(i) + " .content .misc-info .J-report",
-//                "comment-$i-shop" to cs(i) + " .content .misc-info .shop"
-            )
-        }.flatten().associate { it.first to it.second }
-
-    val fieldSelectors = mutableMapOf(
-        "shopName" to ".basic-info .shop-name",
-        "score" to ".basic-info .brief-info .mid-score",
-        "reviewCount" to "#reviewCount",
-        "avgPrice" to "#avgPriceTitle",
-        "commentScores" to "#comment_score",
-        "address" to "#address",
-        "tel" to ".tel",
-    )
-        .also { it.putAll(commentSelectors) }
-
-    val homePage = "https://www.dianping.com/"
-
-    val portalUrls = listOf(
-        "https://www.dianping.com/beijing/ch10/g104",
-        "https://www.dianping.com/beijing/ch10/g105",
-        "https://www.dianping.com/beijing/ch10/g106",
-        "https://www.dianping.com/beijing/ch10/g107",
-        "https://www.dianping.com/beijing/ch10/g109",
-        "https://www.dianping.com/beijing/ch10/g110",
-        "https://www.dianping.com/beijing/ch75/g34309",
-        "https://www.dianping.com/beijing/ch25/g136",
-        "https://www.dianping.com/beijing/ch25/g105",
-        "https://www.dianping.com/beijing/ch25/g106",
-        "https://www.dianping.com/beijing/ch25/g107",
-        "https://www.dianping.com/beijing/ch30",
-        "https://www.dianping.com/beijing/ch30/g141",
-        "https://www.dianping.com/beijing/ch30/g135",
-        "https://www.dianping.com/beijing/ch30/g144",
-        "https://www.dianping.com/beijing/ch30/g134",
-    )
-
-    fun cs(i: Int) = buildCommentSelector(i)
-
-    fun buildCommentSelector(i: Int): String {
-        return "#reviewlist-wrapper li.comment-item:nth-child($i)"
-    }
-
-    fun isShop(url: String): Boolean {
-        return "shop" in url
-    }
-}
 
 class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
-    // Since we need to check the html integrity of the page, we need active dom urls, which is calculated in javascript.
+    override fun isRelevant(url: String): Boolean {
+        return true
+    }
+
+    // Since we need to check the html integrity of the page, we need active dom urls,
+    // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
         val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
         // Authorization verification
@@ -95,57 +50,21 @@ class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
     }
 }
 
-class Screenshot(
-    val page: WebPage,
-    val driver: WebDriver
-) {
-    companion object {
-        val OCR = "OCR-"
-    }
-
-    private val logger = getLogger(this)
-
-    private val screenshotDir = AppPaths.WEB_CACHE_DIR
-        .resolve("screenshot")
-        .resolve(AppPaths.fileId(page.url))
-
-    private val tesseract get() = Tesseract().apply {
-        setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/")
-        setLanguage("chi_sim")
-        // setConfigs(listOf("--dpi 70"))
-        setTessVariable("user_defined_dpi", "70")
-    }
-
-    suspend fun doOCR(name: String, selector: String): String? {
-        val screenshot = driver.captureScreenshot(selector)
-        if (screenshot == null) {
-            logger.info("Failed to take screenshot | {} | {}", selector, page.url)
-            return null
-        }
-
-        val path = screenshotDir.resolve("$name.jpg")
-        val bytes = Base64.getDecoder().decode(screenshot)
-        if (page.id < 1000) {
-            AppFiles.saveTo(bytes, path, true)
-        }
-
-        val image = ImageIO.read(ByteArrayInputStream(bytes))
-        val text = tesseract.doOCR(image)
-        page.setVar("$OCR$selector", text)
-
-        return text
-    }
-}
-
 class RestaurantCrawler(
     val session: PulsarSession = ScentContexts.createSession()
 ) {
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
+    private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
+    private val messageWriter = context.getBean(MiscMessageWriter::class)
+    private val coreMetrics = context.getBean<CoreMetrics>()
+
+    private val ocrFieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
+    private val totalFields = AtomicInteger()
+    private val numberFormat = NumberFormat.getInstance().apply { maximumFractionDigits = 2 }
 
     private val isActive get() = AppContext.isActive
-    private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
 
     init {
         htmlIntegrityChecker.checkers.add(0, DianPingHtmlIntegrityChecker())
@@ -153,17 +72,34 @@ class RestaurantCrawler(
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
+
+        registerEventHandlers(options)
+        registerItemEventHandlers(options)
+
+        return options
+    }
+
+    private fun registerEventHandlers(options: LoadOptions) {
+        options.ensureEventHandler().loadEventHandler.onAfterHtmlParse.addLast { _, document: FeaturedDocument ->
+            collectPortalUrls(document) }
+    }
+
+    private fun registerItemEventHandlers(options: LoadOptions) {
         val eh = options.ensureItemEventHandler()
 
         eh.loadEventHandler.onBeforeLoad.addLast {
-            // sleepSeconds(3)
         }
 
         eh.loadEventHandler.onBeforeFetch.addLast { page ->
+            page.pageModel.clear()
+        }
 
+        eh.loadEventHandler.onAfterLoad.addLast { page ->
+            dumpPageModel(page)
         }
 
         eh.simulateEventHandler.onBeforeFetch.addLast { page, driver ->
+            waitForReferrer(page, driver)
             waitForPreviousPage(page, driver)
         }
 
@@ -178,7 +114,6 @@ class RestaurantCrawler(
         }
 
         seh.onBeforeComputeFeature.addLast { page, driver ->
-            driver.bringToFront()
             TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
@@ -189,56 +124,113 @@ class RestaurantCrawler(
         }
 
         seh.onAfterComputeFeature.addLast { page, driver ->
-            driver.evaluate("window.stop()")
-            driver.evaluate("__pulsar_utils__.scrollToTop()") // Scroll to the top of the page.
-            driver.bringToFront()
             TaskDef.fieldSelectors.entries.asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
-                if (driver.exists(selector)) {
+                val point = driver.clickablePoint(selector)
+                if (point != null) {
+//                    robot?.mouseMove(point.x.toInt(), point.y.toInt())
+                    driver.moveMouseTo(point.x, point.y)
+
                     Screenshot(page, driver).runCatching { doOCR(name, selector) }
                         .onFailure { logger.warn("Unexpected exception", it) }.getOrNull()
+
                     delay(500)
                 }
             }
         }
 
         eh.loadEventHandler.onAfterHtmlParse.addLast { page, document ->
-            page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }.forEach { (key, text) ->
+            val fields = page.variables.variables
+                .filterKeys { it.startsWith(Screenshot.OCR) }
+                .mapValues { it.toString() }
+            if (fields.isEmpty()) {
+                return@addLast
+            }
+
+            page.pageModel.emplace(0, "OCR", fields)
+
+            fields.forEach { (key, text) ->
                 val selector = key.substringAfter(Screenshot.OCR)
 
-                val ele = document.selectFirstOrNull(selector)
-                if (ele != null) {
-                    ele.appendElement("div")
-                        .attr("style", "display: none")
-                        .addClass("ocr").text(text.toString())
-                }
+                document.selectFirstOrNull(selector)
+                    ?.appendElement("div")
+                    ?.attr("style", "display: none")
+                    ?.addClass("ocr")
+                    ?.text(text)
+            }
+        }.addLast { page, document ->
+            val fields = ocrFieldSelectors.entries.associate { it.key to document.select(it.value).text() }
+                .filter { it.value.isNotBlank() }
+
+            if (fields.isNotEmpty()) {
+                totalFields.addAndGet(fields.size)
+                val elapsedTime = coreMetrics.elapsedTime.truncatedTo(ChronoUnit.SECONDS)
+                val speed = totalFields.get().toDouble() / elapsedTime.seconds
+                val speedText = numberFormat.format(speed)
+                logger.info("Extracted {}/{} fields in {}, {}/s", fields.size, totalFields, elapsedTime, speedText)
             }
         }
-
-        return options
     }
 
     private suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
-        // portalUrls.shuffled().first().let { visit(it, driver) }
         page.referrer?.let { visit(it, driver) }
     }
 
     private suspend fun visit(url: String, driver: WebDriver) {
         val display = driver.browserInstance.id.display
-        logger.info("Visit with browser #{} | {}", display, url)
+        logger.info("Visiting with browser #{} | {}", display, url)
 
         try {
             driver.navigateTo(url)
             driver.waitForSelector("body")
-            var n = 10
+            var n = 5 + Random.nextInt(5)
             while (isActive && n-- > 0) {
-                driver.scrollDown(1)
-//                driver.evaluate("__pulsar_utils__.scrollDown()")
-                delay(1000)
+                driver.scrollDown()
+                val delayMillis = 500L + Random.nextInt(500)
+                delay(delayMillis)
             }
 
-            logger.info("Visited | {}", url)
+            logger.debug("Visited | {}", url)
         } catch (e: Exception) {
             logger.warn("Can not visit $url", e)
+        }
+    }
+
+    private fun collectPortalUrls(document: FeaturedDocument) {
+        document.select("a[data-cat-id]")
+            .forEach { messageWriter.write(it.attr("abs:href"), "portal.urls.txt") }
+    }
+
+    private fun dumpPageModel(page: WebPage) {
+        val fields = page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }
+        if (fields.isEmpty()) {
+            return
+        }
+
+        val pageModel = page.pageModel
+        val fieldGroups = pageModel.fieldGroups.map { it.name to it.fields }
+        if (fieldGroups.isEmpty()) {
+            return
+        }
+
+        val path = Screenshot.generateScreenshotDir(page).resolve("0000pageModel.json")
+        try {
+            val json = prettyScentObjectWritter().writeValueAsString(fieldGroups)
+            Files.deleteIfExists(path)
+            Files.createDirectories(path.parent)
+            Files.writeString(path, json)
+        } catch (e: JsonProcessingException) {
+            logger.warn(e.simplify("dumpPageModel | ", " | " + page.url))
+        } catch (e: IOException) {
+            logger.warn(e.stringify("dumpPageModel | "))
+        }
+    }
+
+    private suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
+        val referrer = page.referrer ?: return
+        val referrerVisited = driver.browserInstance.navigateHistory.any { it.url == referrer }
+        if (!referrerVisited) {
+            logger.debug("Visiting the referrer | {}", referrer)
+            visit(referrer, driver)
         }
     }
 
@@ -248,9 +240,8 @@ class RestaurantCrawler(
         while (isActive && tick-- > 0 && checkState.code != 0) {
             // The last page does not load completely, wait for it.
             if (tick % 10 == 0) {
-                val navigateHistory = driver.browserInstance.navigateHistory
-                // println(prettyScentObjectWritter().writeValueAsString(navigateHistory))
-                logger.info("Waiting for page to load | {}.\t{} <- {}", tick, page.url, checkState.message)
+                val urlToWait = checkState.message
+                logger.info("Waiting for page | {} | {} <- {}", tick, urlToWait, page.url)
             }
 
             delay(1000L)
