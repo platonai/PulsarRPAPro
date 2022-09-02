@@ -1,9 +1,13 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.common.*
+import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.context.support.AbstractPulsarContext
+import ai.platon.pulsar.crawl.CoreMetrics
+import ai.platon.pulsar.crawl.fetch.driver.NavigateEntry
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
@@ -11,141 +15,62 @@ import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.jackson.prettyScentObjectWritter
+import com.fasterxml.jackson.core.JsonProcessingException
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
-import net.sourceforge.tess4j.Tesseract
-import java.io.ByteArrayInputStream
-import java.time.Instant.MAX
-import java.util.*
-import javax.imageio.ImageIO
-
-object TaskDef {
-
-    val commentSelectors = IntRange(1, 10)
-        .map { i ->
-            listOf(
-                "comment-$i-user-name" to cs(i) + " .content .user-info p",
-                "comment-$i-avePrice" to cs(i) + " .content .shop-info .average",
-                "comment-$i-desc" to cs(i) + " .content p.desc.J-desc",
-//                "comment-$i-publishTime" to cs(i) + " .content .misc-info .time",
-//                "comment-$i-praise" to cs(i) + " .content .misc-info .J-praise",
-//                "comment-$i-response" to cs(i) + " .content .misc-info .J-response",
-//                "comment-$i-favorite" to cs(i) + " .content .misc-info .J-favorite",
-//                "comment-$i-report" to cs(i) + " .content .misc-info .J-report",
-//                "comment-$i-shop" to cs(i) + " .content .misc-info .shop"
-            )
-        }.flatten().associate { it.first to it.second }
-
-    val fieldSelectors = mutableMapOf(
-        "shopName" to ".basic-info .shop-name",
-        "score" to ".basic-info .brief-info .mid-score",
-        "reviewCount" to "#reviewCount",
-        "avgPrice" to "#avgPriceTitle",
-        "commentScores" to "#comment_score",
-        "address" to "#address",
-        "tel" to ".tel",
-    )
-        .also { it.putAll(commentSelectors) }
-
-    val homePage = "https://www.dianping.com/"
-
-    val portalUrls = listOf(
-        "https://www.dianping.com/beijing/ch10/g104",
-        "https://www.dianping.com/beijing/ch10/g105",
-        "https://www.dianping.com/beijing/ch10/g106",
-        "https://www.dianping.com/beijing/ch10/g107",
-        "https://www.dianping.com/beijing/ch10/g109",
-        "https://www.dianping.com/beijing/ch10/g110",
-        "https://www.dianping.com/beijing/ch75/g34309",
-        "https://www.dianping.com/beijing/ch25/g136",
-        "https://www.dianping.com/beijing/ch25/g105",
-        "https://www.dianping.com/beijing/ch25/g106",
-        "https://www.dianping.com/beijing/ch25/g107",
-        "https://www.dianping.com/beijing/ch30",
-        "https://www.dianping.com/beijing/ch30/g141",
-        "https://www.dianping.com/beijing/ch30/g135",
-        "https://www.dianping.com/beijing/ch30/g144",
-        "https://www.dianping.com/beijing/ch30/g134",
-    )
-
-    fun cs(i: Int) = buildCommentSelector(i)
-
-    fun buildCommentSelector(i: Int): String {
-        return "#reviewlist-wrapper li.comment-item:nth-child($i)"
-    }
-
-    fun isShop(url: String): Boolean {
-        return "shop" in url
-    }
-}
+import java.io.IOException
+import java.nio.file.Files
+import java.text.NumberFormat
+import java.time.Duration
+import java.time.Instant
+import java.time.temporal.ChronoUnit
+import java.util.concurrent.atomic.AtomicInteger
+import kotlin.random.Random
 
 class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
-    // Since we need to check the html integrity of the page, we need active dom urls, which is calculated in javascript.
+    override fun isRelevant(url: String): Boolean {
+        return true
+    }
+
+    // Since we need to check the html integrity of the page, we need active dom urls,
+    // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
         val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
-            "verify" in url -> HtmlIntegrity.FORBIDDEN
+            "verify" in url -> HtmlIntegrity.ROBOT_CHECK_3
             "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
             else -> HtmlIntegrity.OK
         }
     }
 }
 
-class Screenshot(
-    val page: WebPage,
-    val driver: WebDriver
-) {
-    companion object {
-        val OCR = "OCR-"
-    }
-
-    private val logger = getLogger(this)
-
-    private val screenshotDir = AppPaths.WEB_CACHE_DIR
-        .resolve("screenshot")
-        .resolve(AppPaths.fileId(page.url))
-
-    private val tesseract get() = Tesseract().apply {
-        setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/")
-        setLanguage("chi_sim")
-        // setConfigs(listOf("--dpi 70"))
-        setTessVariable("user_defined_dpi", "70")
-    }
-
-    suspend fun doOCR(name: String, selector: String): String? {
-        val screenshot = driver.captureScreenshot(selector)
-        if (screenshot == null) {
-            logger.info("Failed to take screenshot | {} | {}", selector, page.url)
-            return null
-        }
-
-        val path = screenshotDir.resolve("$name.jpg")
-        val bytes = Base64.getDecoder().decode(screenshot)
-        if (page.id < 1000) {
-            AppFiles.saveTo(bytes, path, true)
-        }
-
-        val image = ImageIO.read(ByteArrayInputStream(bytes))
-        val text = tesseract.doOCR(image)
-        page.setVar("$OCR$selector", text)
-
-        return text
-    }
-}
-
 class RestaurantCrawler(
     val session: PulsarSession = ScentContexts.createSession()
 ) {
+    companion object {
+        const val PREV_PAGE_WILL_READY = 0
+        const val PREV_PAGE_READY = 1
+        const val PREV_PAGE_NEVER_READY = 3
+    }
+
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
 
-    private val isActive get() = AppContext.isActive
     private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
+    private val messageWriter = context.getBean(MiscMessageWriter::class)
+    private val coreMetrics = context.getBean<CoreMetrics>()
+
+    private val ocrFieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
+    private val totalFields = AtomicInteger()
+    private val numberFormat = NumberFormat.getInstance().apply { maximumFractionDigits = 2 }
+
+    private val isActive get() = AppContext.isActive
 
     init {
         htmlIntegrityChecker.checkers.add(0, DianPingHtmlIntegrityChecker())
@@ -153,104 +78,215 @@ class RestaurantCrawler(
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
-        val eh = options.ensureItemEventHandler()
 
-        eh.loadEventHandler.onBeforeLoad.addLast {
-            // sleepSeconds(3)
-        }
-
-        eh.loadEventHandler.onBeforeFetch.addLast { page ->
-
-        }
-
-        eh.simulateEventHandler.onBeforeFetch.addLast { page, driver ->
-            waitForPreviousPage(page, driver)
-        }
-
-        // Warp up the browser to avoid being blocked by the server.
-        eh.loadEventHandler.onAfterBrowserLaunch.addLast { page, driver ->
-            warnUpBrowser(page, driver)
-        }
-
-        val seh = eh.simulateEventHandler
-        seh.onAfterCheckDOMState.addLast { page, driver ->
-            // driver.waitForSelector("#reviewlist-wrapper li.comment-item")
-        }
-
-        seh.onBeforeComputeFeature.addLast { page, driver ->
-            driver.bringToFront()
-            TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }
-                .asFlow().flowOn(Dispatchers.IO).collect { selector ->
-                    if (driver.exists(selector)) {
-                        driver.click(selector)
-                        delay(500)
-                    }
-                }
-        }
-
-        seh.onAfterComputeFeature.addLast { page, driver ->
-            driver.evaluate("window.stop()")
-            driver.evaluate("__pulsar_utils__.scrollToTop()") // Scroll to the top of the page.
-            driver.bringToFront()
-            TaskDef.fieldSelectors.entries.asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
-                if (driver.exists(selector)) {
-                    Screenshot(page, driver).runCatching { doOCR(name, selector) }
-                        .onFailure { logger.warn("Unexpected exception", it) }.getOrNull()
-                    delay(500)
-                }
-            }
-        }
-
-        eh.loadEventHandler.onAfterHtmlParse.addLast { page, document ->
-            page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }.forEach { (key, text) ->
-                val selector = key.substringAfter(Screenshot.OCR)
-
-                val ele = document.selectFirstOrNull(selector)
-                if (ele != null) {
-                    ele.appendElement("div")
-                        .attr("style", "display: none")
-                        .addClass("ocr").text(text.toString())
-                }
-            }
-        }
+        registerEventHandlers(options)
+        registerItemEventHandlers(options)
 
         return options
     }
 
+    private fun registerEventHandlers(options: LoadOptions) {
+        options.ensureEventHandler().loadEventHandler.onAfterHtmlParse.addLast { _, document: FeaturedDocument ->
+            collectPortalUrls(document) }
+    }
+
+    private fun registerItemEventHandlers(options: LoadOptions) {
+        val eh = options.ensureItemEventHandler()
+
+        eh.loadEventHandler.onWillLoad.addLast {
+
+        }
+
+        eh.loadEventHandler.onWillFetch.addLast { page ->
+            page.maxRetries = 6
+            page.pageModel.clear()
+        }
+
+        eh.loadEventHandler.onLoaded.addLast { page ->
+            dumpPageModel(page)
+        }
+
+        eh.simulateEventHandler.onWillFetch.addLast { page, driver ->
+            waitForReferrer(page, driver)
+            waitForPreviousPage(page, driver)
+        }
+
+        // Warp up the browser to avoid being blocked by the server.
+        eh.loadEventHandler.onBrowserLaunched.addLast { page, driver ->
+            warnUpBrowser(page, driver)
+        }
+
+        val seh = eh.simulateEventHandler
+        seh.onWillCheckDOMState.addLast { page, driver ->
+            // driver.waitForSelector("#reviewlist-wrapper li.comment-item")
+        }
+
+        seh.onWillComputeFeature.addLast { page, driver ->
+            driver.bringToFront()
+            TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }.shuffled()
+                .asFlow().flowOn(Dispatchers.IO).collect { selector ->
+                    if (driver.exists(selector)) {
+                        driver.click(selector)
+                        delay(500L, 2_000)
+                    }
+                }
+        }
+
+        seh.onFeatureComputed.addLast { page, driver ->
+            driver.bringToFront()
+            TaskDef.fieldSelectors.entries.shuffled().asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
+                val point = driver.clickablePoint(selector)
+                if (point != null) {
+                    driver.moveMouseTo(point.x, point.y)
+                    Screenshot(page, driver).doOCR(name, selector)
+                    delay(1000, 3000)
+                }
+            }
+        }
+
+        seh.onWillStopTab.addLast { page, driver ->
+            val currentUrl = driver.currentUrl()
+            if (TaskDef.isShop(currentUrl)) {
+                if (Random.nextInt(2) == 0) {
+                    // humanize(page, driver)
+                }
+            }
+        }
+
+        eh.loadEventHandler.onHTMLDocumentParsed.addLast { page, document ->
+            val fields = page.variables.variables
+                .filterKeys { it.startsWith(Screenshot.OCR) }
+                .mapValues { it.value.toString() }
+            if (fields.isEmpty()) {
+                return@addLast
+            }
+
+            page.pageModel.emplace(0, "OCR", fields)
+
+            fields.forEach { (key, text) ->
+                val selector = key.substringAfter(Screenshot.OCR)
+
+                document.selectFirstOrNull(selector)
+                    ?.appendElement("div")
+                    ?.attr("style", "display: none")
+                    ?.addClass("ocr")
+                    ?.text(text)
+            }
+        }.addLast { page, document ->
+            val fields = ocrFieldSelectors.entries.associate { it.key to document.select(it.value).text() }
+                .filter { it.value.isNotBlank() }
+
+            if (fields.isNotEmpty()) {
+                totalFields.addAndGet(fields.size)
+                val elapsedTime = coreMetrics.elapsedTime.truncatedTo(ChronoUnit.SECONDS)
+                val speed = totalFields.get().toDouble() / elapsedTime.seconds
+                val speedText = numberFormat.format(speed)
+                logger.info("Extracted {}/{} fields in {}, {}/s", fields.size, totalFields, elapsedTime, speedText)
+            }
+        }
+    }
+
     private suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
-        // portalUrls.shuffled().first().let { visit(it, driver) }
+//        visit(TaskDef.homePage, driver)
         page.referrer?.let { visit(it, driver) }
+
+        val pattern = page.url.substringAfterLast("/")
+        // driver.clickMatches("ul li a[onclick]", "href", pattern)
+        // TODO: create a new driver with the opened tab
     }
 
     private suspend fun visit(url: String, driver: WebDriver) {
-        val display = driver.browserInstance.id.display
-        logger.info("Visit with browser #{} | {}", display, url)
+        val display = driver.browser.id.display
+        logger.info("Visiting with browser #{} | {}", display, url)
 
-        try {
-            driver.navigateTo(url)
+        driver.navigateTo(url)
+        driver.waitForSelector("body")
+        var n = 2 + Random.nextInt(5)
+        while (n-- > 0 && isActive) {
+            val deltaY = 100.0 + 20 * Random.nextInt(10)
+            driver.mouseWheelDown(deltaY = deltaY)
+            delay(500, 500)
+        }
+
+        logger.debug("Visited | {}", url)
+    }
+
+    private suspend fun humanize(page: WebPage, driver: WebDriver) {
+        val i = Random.nextInt(1, 20)
+        val selector = listOf("#around-info", ".main").shuffled().first()
+        val n = Random.nextInt(1, 5)
+        repeat(n) {
+//            driver.moveMouseTo(500.0 + 1.4372 * i * n, 300.0 + 1.2732 * i * n)
+//            delay(500, 500)
+        }
+
+        val href = driver.clickNthAnchor(i, selector)
+        if (page.id < 1000) {
+            logger.info("Random click and navigate to $href")
+        }
+
+        if (href != null) {
+            driver.waitForNavigation()
             driver.waitForSelector("body")
-            var n = 10
-            while (isActive && n-- > 0) {
-                driver.scrollDown(1)
-//                driver.evaluate("__pulsar_utils__.scrollDown()")
-                delay(1000)
-            }
+            delay(15_000, 10_000)
+            driver.scrollToMiddle(0.25f)
+        }
+    }
 
-            logger.info("Visited | {}", url)
-        } catch (e: Exception) {
-            logger.warn("Can not visit $url", e)
+    private fun collectPortalUrls(document: FeaturedDocument) {
+        document.select("a[data-cat-id]")
+            .forEach { messageWriter.write(it.attr("abs:href"), "portal.urls.txt") }
+    }
+
+    private fun dumpPageModel(page: WebPage) {
+        val fields = page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }
+        if (fields.isEmpty()) {
+            return
+        }
+
+        val pageModel = page.pageModel
+        val fieldGroups = pageModel.fieldGroups.map { it.name to it.fields }
+        if (fieldGroups.isEmpty()) {
+            return
+        }
+
+        val path = Screenshot.generateScreenshotDir(page).resolve("0000pageModel.json")
+        try {
+            val json = prettyScentObjectWritter().writeValueAsString(fieldGroups)
+            Files.deleteIfExists(path)
+            Files.createDirectories(path.parent)
+            Files.writeString(path, json)
+        } catch (e: JsonProcessingException) {
+            logger.warn(e.brief("dumpPageModel | ", " | " + page.url))
+        } catch (e: IOException) {
+            logger.warn(e.stringify("dumpPageModel | "))
+        }
+    }
+
+    private suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
+        val referrer = page.referrer ?: return
+        val referrerVisited = driver.browser.navigateHistory.any { it.url == referrer }
+        if (!referrerVisited) {
+            logger.debug("Visiting the referrer | {}", referrer)
+            visit(referrer, driver)
         }
     }
 
     private suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
-        var tick = 60
+        var tick = 0
         var checkState = checkPreviousPage(driver)
-        while (isActive && tick-- > 0 && checkState.code != 0) {
+        while (tick++ <= 180 && checkState.code == PREV_PAGE_WILL_READY) {
+            if (checkState.message.isBlank()) {
+                // The browser has just started, don't crowd into.
+                delay(1_000, 10_000)
+                break
+            }
+
             // The last page does not load completely, wait for it.
-            if (tick % 10 == 0) {
-                val navigateHistory = driver.browserInstance.navigateHistory
-                // println(prettyScentObjectWritter().writeValueAsString(navigateHistory))
-                logger.info("Waiting for page to load | {}.\t{} <- {}", tick, page.url, checkState.message)
+            val shouldReport = (tick > 150 && tick % 10 == 0)
+            if (shouldReport) {
+                val urlToWait = checkState.message
+                logger.info("Waiting for page | {} | {} <- {}", tick, urlToWait, page.url)
             }
 
             delay(1000L)
@@ -259,15 +295,38 @@ class RestaurantCrawler(
     }
 
     private fun checkPreviousPage(driver: WebDriver): CheckState {
-        val navigateHistory = driver.browserInstance.navigateHistory
+        val navigateHistory = driver.browser.navigateHistory
+        val now = Instant.now()
 
-        val lastNav = navigateHistory.lastOrNull {
-            it.pageId > 0 && !it.stopped && TaskDef.isShop(it.url)
-                    && it.createTime < driver.navigateEntry.createTime
-        } ?: return CheckState(0, "No previous page")
+        val testNav = navigateHistory.lastOrNull { mayWaitFor(it, driver.navigateEntry) }
 
-        val code = if (lastNav.documentReadyTime == MAX) 1 else 0
-        return CheckState(code, lastNav.url)
+        val code = when {
+            testNav == null -> PREV_PAGE_WILL_READY
+            testNav.documentReadyTime > now -> PREV_PAGE_WILL_READY
+            Duration.between(testNav.documentReadyTime, now).seconds > 10 -> PREV_PAGE_READY
+            Duration.between(testNav.lastActiveTime, now).seconds > 60 -> PREV_PAGE_NEVER_READY
+            !isActive -> PREV_PAGE_NEVER_READY
+            !driver.isWorking -> PREV_PAGE_NEVER_READY
+            else -> PREV_PAGE_WILL_READY
+        }
+
+        return CheckState(code, testNav?.url ?: "")
+    }
+
+    private fun mayWaitFor(currentEntry: NavigateEntry, testEntry: NavigateEntry): Boolean {
+        val now = Instant.now()
+
+        val may = testEntry.pageId > 0
+                && !testEntry.stopped
+                && TaskDef.isShop(testEntry.url)
+                && testEntry.createTime < currentEntry.createTime
+                && Duration.between(testEntry.lastActiveTime, now).seconds < 30
+
+        return may
+    }
+
+    private suspend fun delay(timeMillis: Long, delta: Int) {
+        delay(timeMillis + Random.nextInt(delta))
     }
 }
 
@@ -279,7 +338,7 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 org.springframework.boot.loader.PropertiesLauncher
  * */
 fun main() {
-    val url = "https://www.dianping.com/shop/Enk0gTkqu0Cyj7Ch"
+    val url = "https://www.dianping.com/shop/G3ZxMJTDLITGsxLX"
     val args = "-i 1s -ignoreFailure -parse"
 
 //    BrowserSettings.headless()
@@ -287,6 +346,8 @@ fun main() {
     val crawler = RestaurantCrawler()
 
     val fieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
-    val fields = crawler.session.scrape(url, crawler.options(args), fieldSelectors)
+    val options = crawler.options(args)
+    options.referrer = "https://www.dianping.com/beijing/ch10/r2596"
+    val fields = crawler.session.scrape(url, options, fieldSelectors)
     println(GsonBuilder().setPrettyPrinting().create().toJson(fields))
 }

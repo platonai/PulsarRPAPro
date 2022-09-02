@@ -27,7 +27,7 @@ class AmazonHtmlIntegrityChecker(
 
     private val enableAmazonDistrictCheck = immutableConfig.getBoolean(AMAZON_ENABLE_DISTRICT_CHECK, false);
 
-    fun isRelevant(url: String) = url.contains("amazon.com")
+    override fun isRelevant(url: String) = url.contains("amazon.com")
 
     fun isRelevant(page: WebPage) = isRelevant(page.url)
 

@@ -11,6 +11,10 @@ class CombinedHtmlIntegrityChecker(
     private val amazonChecker = AmazonHtmlIntegrityChecker(immutableConfig)
     private val jdChecker = JdHtmlIntegrityChecker(immutableConfig)
 
+    override fun isRelevant(url: String): Boolean {
+        return amazonChecker.isRelevant(url) || jdChecker.isRelevant(url)
+    }
+
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
         return when {
             amazonChecker.isRelevant(pageDatum.url) -> amazonChecker.invoke(pageSource, pageDatum)

@@ -28,7 +28,7 @@ class JdHtmlIntegrityChecker(
         "/item.jd" to OpenPageCategory(PageCategory.DETAIL)
     )
 
-    fun isRelevant(url: String) = url.contains("jd.com")
+    override fun isRelevant(url: String) = url.contains("jd.com")
 
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
         return checkHtmlIntegrity(pageSource, pageDatum)

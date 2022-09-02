@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.10.1-SNAPSHOT</version>
+        <version>1.10.2-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-OCR-examples</artifactId>
@@ -51,6 +51,11 @@ org.springframework.boot.loader.PropertiesLauncher
             <version>${pulsar.version}</version>
         </dependency>
 
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-resources</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
         <dependency>
             <groupId>ai.platon.scent</groupId>
             <artifactId>scent-engine</artifactId>
