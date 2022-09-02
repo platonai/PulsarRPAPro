@@ -5,6 +5,7 @@ import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.CoreMetrics
+import ai.platon.pulsar.crawl.fetch.driver.NavigateEntry
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.PageDatum
@@ -24,13 +25,11 @@ import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import java.nio.file.Files
 import java.text.NumberFormat
-import java.time.Instant.MAX
+import java.time.Duration
+import java.time.Instant
 import java.time.temporal.ChronoUnit
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random
-import java.awt.Robot
-import java.awt.event.InputEvent
-
 
 class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
     override fun isRelevant(url: String): Boolean {
@@ -43,7 +42,7 @@ class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
         val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
-            "verify" in url -> HtmlIntegrity.FORBIDDEN
+            "verify" in url -> HtmlIntegrity.ROBOT_CHECK_3
             "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
             else -> HtmlIntegrity.OK
         }
@@ -53,9 +52,16 @@ class DianPingHtmlIntegrityChecker: HtmlIntegrityChecker {
 class RestaurantCrawler(
     val session: PulsarSession = ScentContexts.createSession()
 ) {
+    companion object {
+        const val PREV_PAGE_WILL_READY = 0
+        const val PREV_PAGE_READY = 1
+        const val PREV_PAGE_NEVER_READY = 3
+    }
+
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
+
     private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
     private val messageWriter = context.getBean(MiscMessageWriter::class)
     private val coreMetrics = context.getBean<CoreMetrics>()
@@ -87,61 +93,70 @@ class RestaurantCrawler(
     private fun registerItemEventHandlers(options: LoadOptions) {
         val eh = options.ensureItemEventHandler()
 
-        eh.loadEventHandler.onBeforeLoad.addLast {
+        eh.loadEventHandler.onWillLoad.addLast {
+
         }
 
-        eh.loadEventHandler.onBeforeFetch.addLast { page ->
+        eh.loadEventHandler.onWillFetch.addLast { page ->
+            page.maxRetries = 6
             page.pageModel.clear()
         }
 
-        eh.loadEventHandler.onAfterLoad.addLast { page ->
+        eh.loadEventHandler.onLoaded.addLast { page ->
             dumpPageModel(page)
         }
 
-        eh.simulateEventHandler.onBeforeFetch.addLast { page, driver ->
+        eh.simulateEventHandler.onWillFetch.addLast { page, driver ->
             waitForReferrer(page, driver)
             waitForPreviousPage(page, driver)
         }
 
         // Warp up the browser to avoid being blocked by the server.
-        eh.loadEventHandler.onAfterBrowserLaunch.addLast { page, driver ->
+        eh.loadEventHandler.onBrowserLaunched.addLast { page, driver ->
             warnUpBrowser(page, driver)
         }
 
         val seh = eh.simulateEventHandler
-        seh.onAfterCheckDOMState.addLast { page, driver ->
+        seh.onWillCheckDOMState.addLast { page, driver ->
             // driver.waitForSelector("#reviewlist-wrapper li.comment-item")
         }
 
-        seh.onBeforeComputeFeature.addLast { page, driver ->
-            TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }
+        seh.onWillComputeFeature.addLast { page, driver ->
+            driver.bringToFront()
+            TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }.shuffled()
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
                         driver.click(selector)
-                        delay(500)
+                        delay(500L, 2_000)
                     }
                 }
         }
 
-        seh.onAfterComputeFeature.addLast { page, driver ->
-            TaskDef.fieldSelectors.entries.asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
+        seh.onFeatureComputed.addLast { page, driver ->
+            driver.bringToFront()
+            TaskDef.fieldSelectors.entries.shuffled().asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
                 val point = driver.clickablePoint(selector)
                 if (point != null) {
-//                    robot?.mouseMove(point.x.toInt(), point.y.toInt())
                     driver.moveMouseTo(point.x, point.y)
-
-                    Screenshot(page, driver).runCatching { doOCR(name, selector) }
-                        .onFailure { logger.warn("Unexpected exception", it) }.getOrNull()
-
-                    delay(500)
+                    Screenshot(page, driver).doOCR(name, selector)
+                    delay(1000, 3000)
                 }
             }
         }
 
-        eh.loadEventHandler.onAfterHtmlParse.addLast { page, document ->
+        seh.onWillStopTab.addLast { page, driver ->
+            val currentUrl = driver.currentUrl()
+            if (TaskDef.isShop(currentUrl)) {
+                if (Random.nextInt(2) == 0) {
+                    // humanize(page, driver)
+                }
+            }
+        }
+
+        eh.loadEventHandler.onHTMLDocumentParsed.addLast { page, document ->
             val fields = page.variables.variables
                 .filterKeys { it.startsWith(Screenshot.OCR) }
-                .mapValues { it.toString() }
+                .mapValues { it.value.toString() }
             if (fields.isEmpty()) {
                 return@addLast
             }
@@ -172,26 +187,49 @@ class RestaurantCrawler(
     }
 
     private suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
+//        visit(TaskDef.homePage, driver)
         page.referrer?.let { visit(it, driver) }
+
+        val pattern = page.url.substringAfterLast("/")
+        // driver.clickMatches("ul li a[onclick]", "href", pattern)
+        // TODO: create a new driver with the opened tab
     }
 
     private suspend fun visit(url: String, driver: WebDriver) {
-        val display = driver.browserInstance.id.display
+        val display = driver.browser.id.display
         logger.info("Visiting with browser #{} | {}", display, url)
 
-        try {
-            driver.navigateTo(url)
-            driver.waitForSelector("body")
-            var n = 5 + Random.nextInt(5)
-            while (isActive && n-- > 0) {
-                driver.scrollDown()
-                val delayMillis = 500L + Random.nextInt(500)
-                delay(delayMillis)
-            }
+        driver.navigateTo(url)
+        driver.waitForSelector("body")
+        var n = 2 + Random.nextInt(5)
+        while (n-- > 0 && isActive) {
+            val deltaY = 100.0 + 20 * Random.nextInt(10)
+            driver.mouseWheelDown(deltaY = deltaY)
+            delay(500, 500)
+        }
 
-            logger.debug("Visited | {}", url)
-        } catch (e: Exception) {
-            logger.warn("Can not visit $url", e)
+        logger.debug("Visited | {}", url)
+    }
+
+    private suspend fun humanize(page: WebPage, driver: WebDriver) {
+        val i = Random.nextInt(1, 20)
+        val selector = listOf("#around-info", ".main").shuffled().first()
+        val n = Random.nextInt(1, 5)
+        repeat(n) {
+//            driver.moveMouseTo(500.0 + 1.4372 * i * n, 300.0 + 1.2732 * i * n)
+//            delay(500, 500)
+        }
+
+        val href = driver.clickNthAnchor(i, selector)
+        if (page.id < 1000) {
+            logger.info("Random click and navigate to $href")
+        }
+
+        if (href != null) {
+            driver.waitForNavigation()
+            driver.waitForSelector("body")
+            delay(15_000, 10_000)
+            driver.scrollToMiddle(0.25f)
         }
     }
 
@@ -219,7 +257,7 @@ class RestaurantCrawler(
             Files.createDirectories(path.parent)
             Files.writeString(path, json)
         } catch (e: JsonProcessingException) {
-            logger.warn(e.simplify("dumpPageModel | ", " | " + page.url))
+            logger.warn(e.brief("dumpPageModel | ", " | " + page.url))
         } catch (e: IOException) {
             logger.warn(e.stringify("dumpPageModel | "))
         }
@@ -227,7 +265,7 @@ class RestaurantCrawler(
 
     private suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
         val referrer = page.referrer ?: return
-        val referrerVisited = driver.browserInstance.navigateHistory.any { it.url == referrer }
+        val referrerVisited = driver.browser.navigateHistory.any { it.url == referrer }
         if (!referrerVisited) {
             logger.debug("Visiting the referrer | {}", referrer)
             visit(referrer, driver)
@@ -235,11 +273,18 @@ class RestaurantCrawler(
     }
 
     private suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
-        var tick = 60
+        var tick = 0
         var checkState = checkPreviousPage(driver)
-        while (isActive && tick-- > 0 && checkState.code != 0) {
+        while (tick++ <= 180 && checkState.code == PREV_PAGE_WILL_READY) {
+            if (checkState.message.isBlank()) {
+                // The browser has just started, don't crowd into.
+                delay(1_000, 10_000)
+                break
+            }
+
             // The last page does not load completely, wait for it.
-            if (tick % 10 == 0) {
+            val shouldReport = (tick > 150 && tick % 10 == 0)
+            if (shouldReport) {
                 val urlToWait = checkState.message
                 logger.info("Waiting for page | {} | {} <- {}", tick, urlToWait, page.url)
             }
@@ -250,15 +295,38 @@ class RestaurantCrawler(
     }
 
     private fun checkPreviousPage(driver: WebDriver): CheckState {
-        val navigateHistory = driver.browserInstance.navigateHistory
+        val navigateHistory = driver.browser.navigateHistory
+        val now = Instant.now()
 
-        val lastNav = navigateHistory.lastOrNull {
-            it.pageId > 0 && !it.stopped && TaskDef.isShop(it.url)
-                    && it.createTime < driver.navigateEntry.createTime
-        } ?: return CheckState(0, "No previous page")
+        val testNav = navigateHistory.lastOrNull { mayWaitFor(it, driver.navigateEntry) }
 
-        val code = if (lastNav.documentReadyTime == MAX) 1 else 0
-        return CheckState(code, lastNav.url)
+        val code = when {
+            testNav == null -> PREV_PAGE_WILL_READY
+            testNav.documentReadyTime > now -> PREV_PAGE_WILL_READY
+            Duration.between(testNav.documentReadyTime, now).seconds > 10 -> PREV_PAGE_READY
+            Duration.between(testNav.lastActiveTime, now).seconds > 60 -> PREV_PAGE_NEVER_READY
+            !isActive -> PREV_PAGE_NEVER_READY
+            !driver.isWorking -> PREV_PAGE_NEVER_READY
+            else -> PREV_PAGE_WILL_READY
+        }
+
+        return CheckState(code, testNav?.url ?: "")
+    }
+
+    private fun mayWaitFor(currentEntry: NavigateEntry, testEntry: NavigateEntry): Boolean {
+        val now = Instant.now()
+
+        val may = testEntry.pageId > 0
+                && !testEntry.stopped
+                && TaskDef.isShop(testEntry.url)
+                && testEntry.createTime < currentEntry.createTime
+                && Duration.between(testEntry.lastActiveTime, now).seconds < 30
+
+        return may
+    }
+
+    private suspend fun delay(timeMillis: Long, delta: Int) {
+        delay(timeMillis + Random.nextInt(delta))
     }
 }
 
@@ -270,7 +338,7 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 org.springframework.boot.loader.PropertiesLauncher
  * */
 fun main() {
-    val url = "https://www.dianping.com/shop/Enk0gTkqu0Cyj7Ch"
+    val url = "https://www.dianping.com/shop/G3ZxMJTDLITGsxLX"
     val args = "-i 1s -ignoreFailure -parse"
 
 //    BrowserSettings.headless()
@@ -278,6 +346,8 @@ fun main() {
     val crawler = RestaurantCrawler()
 
     val fieldSelectors = TaskDef.fieldSelectors.mapValues { (_, selector) -> "$selector .ocr" }
-    val fields = crawler.session.scrape(url, crawler.options(args), fieldSelectors)
+    val options = crawler.options(args)
+    options.referrer = "https://www.dianping.com/beijing/ch10/r2596"
+    val fields = crawler.session.scrape(url, options, fieldSelectors)
     println(GsonBuilder().setPrettyPrinting().create().toJson(fields))
 }

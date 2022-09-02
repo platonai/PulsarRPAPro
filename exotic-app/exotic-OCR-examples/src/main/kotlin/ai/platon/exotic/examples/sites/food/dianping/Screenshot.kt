@@ -2,6 +2,7 @@ package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.common.*
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.crawl.fetch.driver.WebDriverCancellationException
 import ai.platon.pulsar.crawl.fetch.driver.WebDriverException
 import ai.platon.pulsar.persist.WebPage
 import net.sourceforge.tess4j.Tesseract
@@ -47,12 +48,16 @@ class Screenshot(
     suspend fun doOCR(name: String, selector: String): String? {
         try {
             return doOCR0(name, selector)
+        } catch (e: WebDriverCancellationException) {
+            logger.warn(e.message)
         } catch (e: WebDriverException) {
             logger.warn(e.message)
         } catch (e: TesseractException) {
             logger.warn(e.stringify())
         } catch (e: IOException) {
             logger.warn(e.stringify())
+        } catch (e: Exception) {
+            logger.warn(e.stringify("[Unexpected]"))
         }
 
         return null
@@ -60,7 +65,6 @@ class Screenshot(
 
     @Throws(WebDriverException::class, IOException::class, TesseractException::class)
     private suspend fun doOCR0(name: String, selector: String): String? {
-        driver.stopLoading()
         val screenshot = driver.captureScreenshot(selector)
         if (screenshot == null) {
             if (driver.exists(selector)) {

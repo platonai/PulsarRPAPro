@@ -1,6 +1,7 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.browser.common.BrowserSettings
+import ai.platon.pulsar.browser.common.DisplayMode
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.urls.UrlAware
@@ -14,8 +15,6 @@ import ai.platon.scent.ScentEnvironment
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import java.time.Duration
-import java.util.concurrent.Executors
-import java.util.concurrent.TimeUnit
 
 class DianpingCrawler(private val session: PulsarSession) {
     private val context = session.context as AbstractPulsarContext
@@ -26,7 +25,8 @@ class DianpingCrawler(private val session: PulsarSession) {
         if (nextRetryNumber <= 2) {
             Duration.ofSeconds(10)
         } else {
-            Duration.ofMinutes(1)
+            val minutes = nextRetryNumber.coerceAtMost(3).toLong()
+            Duration.ofMinutes(minutes)
         }
     }
 
@@ -51,7 +51,7 @@ class DianpingCrawler(private val session: PulsarSession) {
         val links = document.document.selectHyperlinks(options.outLinkSelector)
             .asSequence()
             .take(10000)
-            .map { ParsableHyperlink("$it -ignoreFailure", parseHandler) }
+            .map { ParsableHyperlink("$it -i 10s -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)
@@ -76,11 +76,11 @@ fun main() {
 
     System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "3")
     System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "3")
-    System.setProperty(CapabilityTypes.BROWSER_HEAVY_RENDERING, "true")
     System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
+    System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
 
 //    BrowserSettings.headless()
-//    ScentEnvironment().checkEnvironment()
+//    BrowserSettings.supervised()
 
     val context = ScentContexts.create()
     val session = context.createSession()

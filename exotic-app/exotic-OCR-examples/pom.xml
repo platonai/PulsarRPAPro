@@ -53,6 +53,11 @@ org.springframework.boot.loader.PropertiesLauncher
 
         <dependency>
             <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-resources</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
             <artifactId>scent-engine</artifactId>
             <version>${scent.version}</version>
         </dependency>
