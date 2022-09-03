@@ -36,7 +36,7 @@ org.springframework.boot.loader.PropertiesLauncher
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ai.platon.exotic.examples.sites.food.dianping.RestaurantCrawlerKt</mainClass>
+                    <mainClass>ai.platon.exotic.examples.sites.food.dianping.RestaurantRPAKt</mainClass>
                     <addResources>true</addResources>
                     <executable>true</executable>
                 </configuration>

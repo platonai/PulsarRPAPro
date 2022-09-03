@@ -1,7 +1,5 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.browser.common.BrowserSettings
-import ai.platon.pulsar.browser.common.DisplayMode
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.urls.UrlAware
@@ -11,7 +9,6 @@ import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.session.PulsarSession
-import ai.platon.scent.ScentEnvironment
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import java.time.Duration
@@ -19,7 +16,7 @@ import java.time.Duration
 class DianpingCrawler(private val session: PulsarSession) {
     private val context = session.context as AbstractPulsarContext
 
-    private val crawler = RestaurantCrawler(session)
+    private val rpa = RestaurantRPA(session)
 
     private val retryDelayPolicy = { nextRetryNumber: Int, _: UrlAware? ->
         if (nextRetryNumber <= 2) {
@@ -44,7 +41,7 @@ class DianpingCrawler(private val session: PulsarSession) {
     }
 
     fun scrapeOutPages(portalUrl: String, args: String) {
-        val options = crawler.options(args)
+        val options = rpa.options(args)
 
         val document = session.loadDocument(portalUrl, options)
 
