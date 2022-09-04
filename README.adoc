@@ -8,14 +8,27 @@ Exotic (stand for exotic star) is the professional edition of Pulsar with advanc
 . STEP2: test the SQLs and improve them to match frontend business requirements if necessary
 . STEP3: create crawl rules in the web console to run extract SQLs continuously and download all the web data to drive your business forward
 
-Check out https://github.com/platonai/pulsar[Pulsar] to learn about the challenges of scraping web data at scale and how Pulsar solves them.
-
 Exotic also demonstrates:
 
 * How to use Pulsar as a library
-* How to use Pulsar driver to access the Pulsar REST service
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
+
+== Features
+
+* Web spider: browser rendering, ajax data crawling
+* High performance: highly optimized, rendering hundreds of pages in parallel on a single machine without be blocked
+* Low cost: scraping 100,000 browser rendered e-comm webpages, or n * 10,000,000 data point each day, only 8 core CPU/32G memory are required
+* Web UI: a very simple yet powerful web UI to manage spiders and download data
+* Machine learning: automatically extract every field in webpages using unsupervised machine learning and generate extract rules and SQLs
+* Data quantity assurance: smart retry, accurate scheduling, web data lifecycle management
+* Large scale: fully distributed, designed for large scale crawling
+* Simple API: single line of code to scrape, or single SQL to turn a website into a table
+* X-SQL: extended SQL to manage web data: Web crawling, scraping, Web content mining, Web BI
+* Bot stealth: IP rotation, web driver stealth, never get banned
+* RPA: simulating human behaviors, SPA crawling, or do something else awesome
+* Big data: various backend storage support: MongoDB/HBase/Gora
+* Logs &amp; metrics: monitored closely and every event is recorded
 
 == Requirements
 
@@ -43,13 +56,11 @@ cd exotic-standalone/target/
 == Run the standalone server and open web console
 [source,bash]
 ----
-java -jar exotic-standalone*.jar serve
+java -jar exotic-standalone.jar serve
 ----
 If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
 
 http://localhost:2718/exotic/crawl/
-
-Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*`.
 
 == Run Auto Extract
 
@@ -57,7 +68,7 @@ We can use the `harvest` command to leans from a set of item pages using unsuper
 
 [source,bash]
 ----
-java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
+java -jar exotic-standalone.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
 ----
 
 The url in the command above should be a portal url, for example, the url of a product list page.
@@ -116,11 +127,11 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 Run the executable jar directly for help to explore more power provided:
 [source,bash]
 ----
-java -jar exotic-standalone*.jar
+java -jar exotic-standalone.jar
 ----
 This command will print the help message and most useful examples.
 
 == Q & A
 Q: How to use proxies?
 
-A: Check out link:bin/tools/proxy/README.adoc[here].
+A: Follow link:bin/tools/proxy/README.adoc[this] guide for proxy rotation.
