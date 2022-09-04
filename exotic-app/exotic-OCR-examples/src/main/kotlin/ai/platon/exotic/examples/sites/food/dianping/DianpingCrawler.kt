@@ -1,5 +1,6 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.urls.UrlAware
@@ -77,7 +78,7 @@ fun main() {
     System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
 
 //    BrowserSettings.headless()
-//    BrowserSettings.supervised()
+    BrowserSettings.supervised()
 
     val context = ScentContexts.create()
     val session = context.createSession()

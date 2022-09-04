@@ -11,6 +11,7 @@ import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
@@ -40,6 +41,13 @@ class WalmartRPA(
 ): CommonRPA() {
 
     private val logger = getLogger(this)
+
+    val context = session.context
+    private val htmlChecker get() = context.getBean(BrowserResponseHandler::class).htmlIntegrityChecker
+
+    init {
+        htmlChecker.addFirst(WalmartHtmlChecker())
+    }
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)

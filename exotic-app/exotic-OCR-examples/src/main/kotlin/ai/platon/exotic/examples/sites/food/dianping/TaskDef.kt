@@ -54,7 +54,7 @@ object TaskDef {
     fun cs(i: Int) = buildCommentSelector(i)
 
     fun buildCommentSelector(i: Int): String {
-        return "#reviewlist-wrapper li.comment-item:nth-child($i)"
+        return "ul.comment-list li.comment-item:nth-child($i)"
     }
 
     fun isShop(url: String): Boolean {

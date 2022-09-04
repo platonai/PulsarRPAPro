@@ -58,7 +58,7 @@ class RestaurantRPA(
 
     private val context = session.context as AbstractPulsarContext
 
-    private val htmlIntegrityChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
+    private val htmlChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
     private val messageWriter = context.getBean(MiscMessageWriter::class)
     private val coreMetrics = context.getBean<CoreMetrics>()
 
@@ -69,7 +69,7 @@ class RestaurantRPA(
     private val isActive get() = AppContext.isActive
 
     init {
-        htmlIntegrityChecker.addLast(DianPingHtmlChecker())
+        htmlChecker.addFirst(DianPingHtmlChecker())
     }
 
     fun options(args: String): LoadOptions {
@@ -82,7 +82,7 @@ class RestaurantRPA(
     }
 
     private fun registerEventHandlers(options: LoadOptions) {
-        options.ensureEventHandler().loadEventHandler.onAfterHtmlParse.addLast { _, document: FeaturedDocument ->
+        options.ensureEventHandler().loadEventHandler.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
             collectPortalUrls(document) }
     }
 
@@ -114,7 +114,11 @@ class RestaurantRPA(
 
         val seh = eh.simulateEventHandler
         seh.onWillCheckDOMState.addLast { page, driver ->
-            // driver.waitForSelector("#reviewlist-wrapper li.comment-item")
+        }
+
+        seh.onDOMStateChecked.addLast { page, driver ->
+            driver.scrollTo("#comment")
+            driver.waitForSelector("ul.comment-list li.comment-item")
         }
 
         seh.onWillComputeFeature.addLast { page, driver ->
