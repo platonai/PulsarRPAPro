@@ -11,7 +11,7 @@
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
-	<version>1.10.2-SNAPSHOT</version>
+	<version>1.10.3-SNAPSHOT</version>
 
 	<packaging>pom</packaging>
 
@@ -29,7 +29,7 @@
 		<connection>scm:git:https://github.com/platonai/exotic.git</connection>
 		<developerConnection>scm:git:https://github.com/platonai/exotic.git</developerConnection>
 		<url>https://github.com/platonai/exotic</url>
-		<tag>v1.10.2-SNAPSHOT</tag>
+		<tag>v1.10.3-SNAPSHOT</tag>
 	</scm>
 
 	<developers>
@@ -300,7 +300,7 @@
 		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.9.13</pulsar.version>
+		<pulsar.version>1.9.14</pulsar.version>
 		<scent.version>1.9.9</scent.version>
 	</properties>
 </project>
