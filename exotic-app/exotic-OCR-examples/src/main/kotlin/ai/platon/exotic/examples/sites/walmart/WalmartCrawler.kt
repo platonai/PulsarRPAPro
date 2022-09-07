@@ -1,6 +1,7 @@
 package ai.platon.exotic.examples.sites.walmart
 
 import ai.platon.exotic.examples.sites.CommonRPA
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
@@ -11,6 +12,7 @@ import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.protocol.browser.driver.cdt.ChromeDevtoolsDriver
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
@@ -29,7 +31,7 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
         val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
-            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK
+            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3
             "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
             else -> HtmlIntegrity.OK
         }
@@ -56,6 +58,13 @@ class WalmartRPA(
         val seh = eh.simulateEventHandler
         // Warp up the browser to avoid being blocked by the server.
         leh.onBrowserLaunched.addLast { page, driver ->
+            if (driver is ChromeDevtoolsDriver) {
+                println("userAgent: " + driver.userAgent)
+                val devTools = driver.implementation
+                devTools.network.clearBrowserCache()
+                devTools.network.clearBrowserCookies()
+            }
+            page.fetchRetries = 3
             warnUpBrowser(page, driver)
         }
         seh.onWillFetch.addLast { page, driver ->
@@ -121,11 +130,15 @@ class WalmartCrawler(private val session: PulsarSession) {
 }
 
 fun main() {
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "3")
+    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "5")
     System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "3")
 
 //    BrowserSettings.headless()
 //    BrowserSettings.supervised()
+
+    // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
+    // TODO: This is a fix to disable user agents, will correct in further versions
+    BrowserSettings.userAgents.add("")
 
     val portalUrls = """
 https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
@@ -134,4 +147,6 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
 
     val session = ScentContexts.createSession()
     WalmartCrawler(session).crawl(portalUrls, args)
+
+    println("All done.")
 }
