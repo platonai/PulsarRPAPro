@@ -49,7 +49,8 @@ class DianpingCrawler(private val session: PulsarSession) {
         val links = document.document.selectHyperlinks(options.outLinkSelector)
             .asSequence()
             .take(10000)
-            .map { ParsableHyperlink("$it -i 10s -ignoreFailure", parseHandler) }
+            .distinct()
+            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)
@@ -69,16 +70,17 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
   org.springframework.boot.loader.PropertiesLauncher
  * */
 fun main() {
-//    val args = "-i 1s -ii 5s -ol \"#shop-all-list .tit a[href~=shop]\" -ignoreFailure"
-    val args = "-i 1s -ii 10s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
+    val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
 
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "3")
+    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "5")
     System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "3")
     System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
     System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
 
-//    BrowserSettings.headless()
-    BrowserSettings.supervised()
+//     BrowserSettings.headless()
+//    BrowserSettings.supervised()
+    // TODO: This is a fix to disable user agents, will correct in further versions
+    BrowserSettings.userAgents.add("")
 
     val context = ScentContexts.create()
     val session = context.createSession()

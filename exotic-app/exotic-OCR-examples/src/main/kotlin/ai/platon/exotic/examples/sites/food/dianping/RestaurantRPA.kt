@@ -94,7 +94,8 @@ class RestaurantRPA(
         }
 
         eh.loadEventHandler.onWillFetch.addLast { page ->
-            page.maxRetries = 6
+            page.fetchRetries = 0
+//            page.maxRetries = 6
             page.pageModel.clear()
         }
 

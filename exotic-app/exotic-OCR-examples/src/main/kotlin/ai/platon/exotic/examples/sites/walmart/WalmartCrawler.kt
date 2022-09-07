@@ -113,7 +113,8 @@ class WalmartCrawler(private val session: PulsarSession) {
         val links = document.document.selectHyperlinks(options.outLinkSelector)
             .asSequence()
             .take(10000)
-            .map { ParsableHyperlink("$it -i 10s -ignoreFailure", parseHandler) }
+            .distinct()
+            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)

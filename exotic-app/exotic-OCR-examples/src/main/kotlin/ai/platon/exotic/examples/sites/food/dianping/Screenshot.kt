@@ -53,9 +53,9 @@ class Screenshot(
         } catch (e: WebDriverException) {
             logger.warn(e.message)
         } catch (e: TesseractException) {
-            logger.warn(e.stringify())
+            logger.warn(e.message)
         } catch (e: IOException) {
-            logger.warn(e.stringify())
+            logger.warn(e.message)
         } catch (e: Exception) {
             logger.warn(e.stringify("[Unexpected]"))
         }
