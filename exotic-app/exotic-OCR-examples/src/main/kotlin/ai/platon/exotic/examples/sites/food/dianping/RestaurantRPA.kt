@@ -48,12 +48,6 @@ class DianPingHtmlChecker: HtmlIntegrityChecker {
 class RestaurantRPA(
     val session: PulsarSession = ScentContexts.createSession()
 ): CommonRPA() {
-    companion object {
-        const val PREV_PAGE_WILL_READY = 0
-        const val PREV_PAGE_READY = 1
-        const val PREV_PAGE_NEVER_READY = 3
-    }
-
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
@@ -128,7 +122,7 @@ class RestaurantRPA(
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
                         driver.click(selector)
-                        delay(500L, 2_000)
+                        rdelay(500L, 2_000)
                     }
                 }
         }
@@ -140,7 +134,7 @@ class RestaurantRPA(
                 if (point != null) {
                     driver.moveMouseTo(point.x, point.y)
                     Screenshot(page, driver).doOCR(name, selector)
-                    delay(1000, 3000)
+                    rdelay(1000, 3000)
                 }
             }
         }

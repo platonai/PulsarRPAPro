@@ -77,7 +77,7 @@ fun main() {
     System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
     System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
 
-//     BrowserSettings.headless()
+    BrowserSettings.headless()
 //    BrowserSettings.supervised()
     // TODO: This is a fix to disable user agents, will correct in further versions
     BrowserSettings.userAgents.add("")
