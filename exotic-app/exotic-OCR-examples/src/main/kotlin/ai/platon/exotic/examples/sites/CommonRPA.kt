@@ -38,7 +38,7 @@ open class CommonRPA {
         while (tick++ <= 180 && checkState.code == PREV_PAGE_WILL_READY) {
             if (checkState.message.isBlank()) {
                 // The browser has just started, don't crowd into.
-                rdelay(1_000, 10_000)
+                randomDelay(1_000, 10_000)
                 break
             }
 
@@ -104,7 +104,7 @@ open class CommonRPA {
         while (n-- > 0 && isActive) {
             val deltaY = 100.0 + 20 * Random.nextInt(10)
             driver.mouseWheelDown(deltaY = deltaY)
-            rdelay(500, 500)
+            randomDelay(500, 500)
         }
 
         logger.debug("Visited | {}", url)
@@ -127,12 +127,12 @@ open class CommonRPA {
         if (href != null) {
             driver.waitForNavigation()
             driver.waitForSelector("body")
-            rdelay(15_000, 10_000)
+            randomDelay(15_000, 10_000)
             driver.scrollToMiddle(0.25f)
         }
     }
 
-    suspend fun rdelay(timeMillis: Long, delta: Int) {
-        kotlinx.coroutines.delay(timeMillis + Random.nextInt(delta))
+    suspend fun randomDelay(timeMillis: Long, delta: Int) {
+        delay(timeMillis + Random.nextInt(delta))
     }
 }

@@ -122,7 +122,7 @@ class RestaurantRPA(
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
                         driver.click(selector)
-                        rdelay(500L, 2_000)
+                        randomDelay(500L, 2_000)
                     }
                 }
         }
@@ -134,7 +134,7 @@ class RestaurantRPA(
                 if (point != null) {
                     driver.moveMouseTo(point.x, point.y)
                     Screenshot(page, driver).doOCR(name, selector)
-                    rdelay(1000, 3000)
+                    randomDelay(1000, 3000)
                 }
             }
         }
