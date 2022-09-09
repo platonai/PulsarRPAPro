@@ -42,6 +42,7 @@ class JdRPA(
 
     val context = session.context
     private val htmlChecker get() = context.getBean(BrowserResponseHandler::class).htmlIntegrityChecker
+    private val blockedUrls = listOf("*.jpg", "*.png", "*.gif", "*.avif")
 
     init {
         htmlChecker.addFirst(JdHtmlChecker())
@@ -59,6 +60,7 @@ class JdRPA(
         val seh = eh.simulateEventHandler
         // Warp up the browser to avoid being blocked by the server.
         leh.onBrowserLaunched.addLast { page, driver ->
+            driver.addBlockedURLs(blockedUrls)
             warnUpBrowser(page, driver)
         }
         seh.onWillFetch.addLast { page, driver ->
@@ -91,7 +93,7 @@ class JdCrawler(private val session: PulsarSession) {
             .asSequence()
             .take(10000)
             .distinct()
-            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
+            .map { ParsableHyperlink("$it -i 10s -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)
@@ -104,7 +106,6 @@ class JdCrawler(private val session: PulsarSession) {
 }
 
 /**
- *
 java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 -D"loader.main=ai.platon.exotic.examples.sites.jd.JdCrawlerKt" \
 org.springframework.boot.loader.PropertiesLauncher
@@ -113,7 +114,7 @@ fun main() {
     System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "8")
     System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "8")
 
-    BrowserSettings.headless()
+//    BrowserSettings.headless()
 //    BrowserSettings.supervised()
 
     // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
