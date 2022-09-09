@@ -3,6 +3,7 @@ package ai.platon.exotic.examples.sites.jd
 import ai.platon.exotic.examples.sites.CommonRPA
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.HtmlIntegrity
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.options.LoadOptions
@@ -14,7 +15,12 @@ import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
+import kotlinx.coroutines.flow.asFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.onEach
 import org.jsoup.nodes.Document
+import kotlin.streams.toList
 
 class JdHtmlChecker: HtmlIntegrityChecker {
     override fun isRelevant(url: String): Boolean {
@@ -103,6 +109,34 @@ class JdCrawler(private val session: PulsarSession) {
 
         context.submitAll(links)
     }
+
+    fun extractPortalUrls() {
+        val seedUrls = """
+        https://list.jd.com/list.html?cat=670,677,11762
+        https://list.jd.com/list.html?cat=670,677,688
+        https://list.jd.com/list.html?cat=670,671,1105
+        https://list.jd.com/list.html?cat=670,671,672
+        https://list.jd.com/list.html?cat=1318,1463,1484
+        https://list.jd.com/list.html?cat=1318,1463,1483
+        https://list.jd.com/list.html?cat=1318,1463,14666
+        https://list.jd.com/list.html?cat=1318,12115,12117
+        https://list.jd.com/list.html?cat=1318,1466,1694
+        https://list.jd.com/list.html?cat=1318,2628,12136
+    """.trimIndent().split("\n")
+        val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
+
+        val session = ScentContexts.createSession()
+        session.normalize(seedUrls)
+            .parallelStream()
+            .map { session.loadDocument(it) }
+            .map { it.select("a[href~=/list]").map { it.attr("abs:href") } }
+            .toList()
+            .flatten()
+            .filter { it.contains("?cat=") }
+            .sorted()
+            .distinct()
+            .forEach { println(it) }
+    }
 }
 
 /**
@@ -138,21 +172,9 @@ fun main(args: Array<String>) {
     // TODO: This is a fix to disable user agents, will correct in further versions
     BrowserSettings.userAgents.add("")
 
-    val portalUrls = """
-        https://list.jd.com/list.html?cat=670,677,11762
-        https://list.jd.com/list.html?cat=670,677,688
-        https://list.jd.com/list.html?cat=670,671,1105
-        https://list.jd.com/list.html?cat=670,671,672
-        https://list.jd.com/list.html?cat=1318,1463,1484
-        https://list.jd.com/list.html?cat=1318,1463,1483
-        https://list.jd.com/list.html?cat=1318,1463,14666
-        https://list.jd.com/list.html?cat=1318,12115,12117
-        https://list.jd.com/list.html?cat=1318,1466,1694
-        https://list.jd.com/list.html?cat=1318,2628,12136
-    """.trimIndent().split("\n")
-    val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
-
     val session = ScentContexts.createSession()
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
+    val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
     JdCrawler(session).crawl(portalUrls, args)
 
     println("All done.")
