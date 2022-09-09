@@ -1,9 +1,7 @@
 package ai.platon.exotic.examples.sites.walmart
 
 import ai.platon.exotic.examples.sites.CommonRPA
-import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.HtmlIntegrity
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlAware
@@ -78,7 +76,7 @@ class WalmartRPA(
     }
 }
 
-class WalmartCrawler(private val session: PulsarSession) {
+class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSession()) {
     private val context = session.context as AbstractPulsarContext
 
     private val rpa = WalmartRPA(session)
@@ -98,6 +96,14 @@ class WalmartCrawler(private val session: PulsarSession) {
         context.crawlLoops.loops.forEach {
             it.crawler.retryDelayPolicy = retryDelayPolicy
         }
+    }
+
+    fun runDefault() {
+        val portalUrls = """
+https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
+    """.trimIndent().split("\n")
+        val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
+        crawl(portalUrls, args)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
@@ -131,36 +137,6 @@ class WalmartCrawler(private val session: PulsarSession) {
 }
 
 fun main(args: Array<String>) {
-    var maxPrivacyContextCount = 3
-    var maxActiveTabCount = 5
-    var headless = false
-    var supervised = false
-
-    var i = 0
-    while (i < args.size) {
-        if (args[i++] == "-pc") maxPrivacyContextCount = args[i].toInt()
-        if (args[i++] == "-tab") maxActiveTabCount = args[i].toInt()
-        if (args[i++] == "-supervised") supervised = true
-        if (args[i++] == "-headless") headless = true
-    }
-
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, maxPrivacyContextCount.toString())
-    System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, maxActiveTabCount.toString())
-    System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
-
-    if (supervised) {
-        BrowserSettings.supervised()
-    } else if (headless) {
-        BrowserSettings.headless()
-    }
-
-//    BrowserSettings.headless()
-//    BrowserSettings.supervised()
-
-    // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
-    // TODO: This is a fix to disable user agents, will correct in further versions
-    BrowserSettings.userAgents.add("")
-
     val portalUrls = """
 https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
     """.trimIndent().split("\n")
@@ -168,6 +144,4 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
 
     val session = ScentContexts.createSession()
     WalmartCrawler(session).crawl(portalUrls, args)
-
-    println("All done.")
 }

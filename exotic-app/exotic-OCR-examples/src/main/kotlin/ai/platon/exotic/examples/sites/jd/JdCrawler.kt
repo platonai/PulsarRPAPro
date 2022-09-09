@@ -78,12 +78,18 @@ class JdRPA(
     }
 }
 
-class JdCrawler(private val session: PulsarSession) {
+class JdCrawler(private val session: PulsarSession = ScentContexts.createSession()) {
     private val context = session.context
 
     private val rpa = JdRPA(session)
 
     private val parseHandler = { _: WebPage, document: Document -> }
+
+    fun runDefault() {
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
+        val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
+        crawl(portalUrls, args)
+    }
 
     fun crawl(portalUrls: List<String>, args: String) {
         portalUrls.forEach { portalUrl -> scrapeOutPages(portalUrl, args) }
@@ -145,37 +151,8 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 org.springframework.boot.loader.PropertiesLauncher
  * */
 fun main(args: Array<String>) {
-    var maxPrivacyContextCount = 3
-    var maxActiveTabCount = 5
-    var headless = false
-    var supervised = false
-
-    var i = 0
-    while (i < args.size) {
-        if (args[i++] == "-pc") maxPrivacyContextCount = args[i].toInt()
-        if (args[i++] == "-tab") maxActiveTabCount = args[i].toInt()
-        if (args[i++] == "-supervised") supervised = true
-        if (args[i++] == "-headless") headless = true
-    }
-
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, maxPrivacyContextCount.toString())
-    System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, maxActiveTabCount.toString())
-    System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
-
-    if (supervised) {
-        BrowserSettings.supervised()
-    } else if (headless) {
-        BrowserSettings.headless()
-    }
-
-    // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
-    // TODO: This is a fix to disable user agents, will correct in further versions
-    BrowserSettings.userAgents.add("")
-
     val session = ScentContexts.createSession()
     val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
     val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
     JdCrawler(session).crawl(portalUrls, args)
-
-    println("All done.")
 }

@@ -1,8 +1,6 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
@@ -14,7 +12,7 @@ import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import java.time.Duration
 
-class DianpingCrawler(private val session: PulsarSession) {
+class DianpingCrawler(private val session: PulsarSession = ScentContexts.createSession()) {
     private val context = session.context as AbstractPulsarContext
 
     private val rpa = RestaurantRPA(session)
@@ -34,6 +32,14 @@ class DianpingCrawler(private val session: PulsarSession) {
         context.crawlLoops.loops.forEach {
             it.crawler.retryDelayPolicy = retryDelayPolicy
         }
+    }
+
+    fun runDefault() {
+        val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
+            .filter { UrlUtils.isValidUrl(it) }
+            .shuffled()
+        crawl(portalUrls, args)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
@@ -71,36 +77,6 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
  * */
 
 fun main(args: Array<String>) {
-    var maxPrivacyContextCount = 3
-    var maxActiveTabCount = 5
-    var headless = false
-    var supervised = false
-
-    var i = 0
-    while (i < args.size) {
-        if (args[i++] == "-pc") maxPrivacyContextCount = args[i].toInt()
-        if (args[i++] == "-tab") maxActiveTabCount = args[i].toInt()
-        if (args[i++] == "-supervised") supervised = true
-        if (args[i++] == "-headless") headless = true
-    }
-
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, maxPrivacyContextCount.toString())
-    System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, maxActiveTabCount.toString())
-
-    if (supervised) {
-        BrowserSettings.supervised()
-    } else if (headless) {
-        BrowserSettings.headless()
-    }
-
-    System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
-    System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
-
-    BrowserSettings.headless()
-//    BrowserSettings.supervised()
-    // TODO: This is a fix to disable user agents, will correct in further versions
-    BrowserSettings.userAgents.add("")
-
     val context = ScentContexts.create()
     val session = context.createSession()
 
