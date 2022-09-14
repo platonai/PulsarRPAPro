@@ -58,11 +58,12 @@ cd exotic-standalone/target/
 ----
 java -jar exotic-standalone*.jar serve
 ----
+
+Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*` and use the full name of the jar.
+
 If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
 
 http://localhost:2718/exotic/crawl/
-
-Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*` and use the full name of the jar.
 
 == Run Auto Extract
 
