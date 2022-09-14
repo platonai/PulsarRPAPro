@@ -5,10 +5,6 @@ import ai.platon.exotic.examples.sites.jd.JdCrawler
 import ai.platon.exotic.examples.sites.walmart.WalmartCrawler
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.scent.context.ScentContexts
-
-class CrawlStarter {
-}
 
 /**
 java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \

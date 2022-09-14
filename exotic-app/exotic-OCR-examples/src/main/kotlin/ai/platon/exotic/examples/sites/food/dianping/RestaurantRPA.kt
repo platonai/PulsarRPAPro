@@ -212,17 +212,9 @@ class RestaurantRPA(
     }
 }
 
-/**
- * If running the program directly in the IDE may crash the system, use command line instead:
- *
-java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
--D"loader.main=ai.platon.exotic.examples.sites.food.dianping.RestaurantCrawlerKt" \
-org.springframework.boot.loader.PropertiesLauncher
- * */
 fun main() {
     val url = "https://www.dianping.com/shop/G3ZxMJTDLITGsxLX"
     val args = "-i 1s -ignoreFailure -parse"
-
 //    BrowserSettings.headless()
 
     val rpa = RestaurantRPA()

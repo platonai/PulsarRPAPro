@@ -1,5 +1,6 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
@@ -68,15 +69,9 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
     }
 }
 
-/**
- * If running the program directly in the IDE may crash the system, use command line instead:
- *
-java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
-  -D"loader.main=ai.platon.exotic.examples.sites.food.dianping.DianpingCrawlerKt" \
-  org.springframework.boot.loader.PropertiesLauncher
- * */
-
 fun main(args: Array<String>) {
+//    BrowserSettings.headless()
+
     val context = ScentContexts.create()
     val session = context.createSession()
 

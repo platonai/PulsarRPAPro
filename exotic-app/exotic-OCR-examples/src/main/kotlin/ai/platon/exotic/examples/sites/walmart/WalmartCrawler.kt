@@ -136,7 +136,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
     }
 }
 
-fun main(args: Array<String>) {
+fun main(argv: Array<String>) {
     val portalUrls = """
 https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
     """.trimIndent().split("\n")
