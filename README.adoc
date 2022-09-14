@@ -74,9 +74,9 @@ We can use the `harvest` command to leans from a set of item pages using unsuper
 java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh
 ----
 
-The url in the command above should be a portal url, for example, the url of a product list page.
+The URL in the command above should be an portal URL, such as the URL of the product listing page.
 
-Exotic visits the portal url, finds out the best out link set of item pages, fetches the item pages and then learn from them.
+Exotic visits the portal URL, finds out the best link set for item pages, fetches item pages and then learn from them.
 
 Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
 
