@@ -48,12 +48,6 @@ class DianPingHtmlChecker: HtmlIntegrityChecker {
 class RestaurantRPA(
     val session: PulsarSession = ScentContexts.createSession()
 ): CommonRPA() {
-    companion object {
-        const val PREV_PAGE_WILL_READY = 0
-        const val PREV_PAGE_READY = 1
-        const val PREV_PAGE_NEVER_READY = 3
-    }
-
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
@@ -94,7 +88,8 @@ class RestaurantRPA(
         }
 
         eh.loadEventHandler.onWillFetch.addLast { page ->
-            page.maxRetries = 6
+            page.fetchRetries = 0
+//            page.maxRetries = 6
             page.pageModel.clear()
         }
 
@@ -127,7 +122,7 @@ class RestaurantRPA(
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
                     if (driver.exists(selector)) {
                         driver.click(selector)
-                        delay(500L, 2_000)
+                        randomDelay(500L, 2_000)
                     }
                 }
         }
@@ -139,7 +134,7 @@ class RestaurantRPA(
                 if (point != null) {
                     driver.moveMouseTo(point.x, point.y)
                     Screenshot(page, driver).doOCR(name, selector)
-                    delay(1000, 3000)
+                    randomDelay(1000, 3000)
                 }
             }
         }
@@ -217,17 +212,9 @@ class RestaurantRPA(
     }
 }
 
-/**
- * If running the program directly in the IDE may crash the system, use command line instead:
- *
-java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
--D"loader.main=ai.platon.exotic.examples.sites.food.dianping.RestaurantCrawlerKt" \
-org.springframework.boot.loader.PropertiesLauncher
- * */
 fun main() {
     val url = "https://www.dianping.com/shop/G3ZxMJTDLITGsxLX"
     val args = "-i 1s -ignoreFailure -parse"
-
 //    BrowserSettings.headless()
 
     val rpa = RestaurantRPA()

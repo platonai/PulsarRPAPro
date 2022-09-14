@@ -8,6 +8,7 @@ import ai.platon.pulsar.persist.WebPage
 import net.sourceforge.tess4j.Tesseract
 import net.sourceforge.tess4j.TesseractException
 import org.apache.commons.lang3.StringUtils
+import org.apache.commons.lang3.SystemUtils
 import java.io.ByteArrayInputStream
 import java.io.IOException
 import java.nio.file.Path
@@ -37,7 +38,11 @@ class Screenshot(
 
     private val tesseract
         get() = Tesseract().apply {
-            setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/")
+            if (SystemUtils.IS_OS_LINUX) {
+                setDatapath("/usr/share/tesseract-ocr/4.00/tessdata/")
+            } else if (SystemUtils.IS_OS_WINDOWS) {
+                setDatapath("D:\\Users\\Administrator\\AppData\\Local\\Tesseract-OCR\\tessdata")
+            }
             setLanguage("chi_sim")
             // setConfigs(listOf("--dpi 70"))
             setTessVariable("user_defined_dpi", "70")
@@ -53,9 +58,9 @@ class Screenshot(
         } catch (e: WebDriverException) {
             logger.warn(e.message)
         } catch (e: TesseractException) {
-            logger.warn(e.stringify())
+            logger.warn(e.message)
         } catch (e: IOException) {
-            logger.warn(e.stringify())
+            logger.warn(e.message)
         } catch (e: Exception) {
             logger.warn(e.stringify("[Unexpected]"))
         }

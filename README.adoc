@@ -56,8 +56,11 @@ cd exotic-standalone/target/
 == Run the standalone server and open web console
 [source,bash]
 ----
-java -jar exotic-standalone.jar serve
+java -jar exotic-standalone*.jar serve
 ----
+
+Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*` and use the full name of the jar.
+
 If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
 
 http://localhost:2718/exotic/crawl/
@@ -68,12 +71,12 @@ We can use the `harvest` command to leans from a set of item pages using unsuper
 
 [source,bash]
 ----
-java -jar exotic-standalone.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh -topLinks 40
+java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh
 ----
 
-The url in the command above should be a portal url, for example, the url of a product list page.
+The URL in the command above should be an portal URL, such as the URL of the product listing page.
 
-Exotic visits the portal url, finds out the best out link set of item pages, fetches the item pages and then learn from them.
+Exotic visits the portal URL, finds out the best link set for item pages, fetches item pages and then learn from them.
 
 Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
 
@@ -95,6 +98,7 @@ The complete code can be found link:exotic-app/exotic-ML-examples/src/main/kotli
 The `harvest` command extracts fields automatically using unsupervised machine learning, and also generates the best css selectors for all possible fields and the extract SQLs. We can execute the SQLs using `sql` command.
 [source,bash,sql]
 ----
+# Note: remove the wildcard `*` and use the full name of the jar on Windows
 java -jar exotic-standalone*.jar sql "
 select
     dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.flex-column.imEX5V span') as T1C2,
@@ -127,7 +131,8 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 Run the executable jar directly for help to explore more power provided:
 [source,bash]
 ----
-java -jar exotic-standalone.jar
+# Note: remove the wildcard `*` and use the full name of the jar on Windows
+java -jar exotic-standalone*.jar
 ----
 This command will print the help message and most useful examples.
 

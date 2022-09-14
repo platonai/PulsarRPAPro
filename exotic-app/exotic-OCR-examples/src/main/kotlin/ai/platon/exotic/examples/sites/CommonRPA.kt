@@ -1,6 +1,5 @@
 package ai.platon.exotic.examples.sites
 
-import ai.platon.exotic.examples.sites.food.dianping.RestaurantRPA
 import ai.platon.exotic.examples.sites.food.dianping.TaskDef
 import ai.platon.pulsar.common.AppContext
 import ai.platon.pulsar.common.CheckState
@@ -8,11 +7,18 @@ import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.crawl.fetch.driver.NavigateEntry
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.persist.WebPage
+import kotlinx.coroutines.delay
 import java.time.Duration
 import java.time.Instant
 import kotlin.random.Random
 
 open class CommonRPA {
+    companion object {
+        const val PREV_PAGE_WILL_READY = 0
+        const val PREV_PAGE_READY = 1
+        const val PREV_PAGE_NEVER_READY = 3
+    }
+
     private val isActive get() = AppContext.isActive
 
     private val logger = getLogger(this)
@@ -29,10 +35,10 @@ open class CommonRPA {
     suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
         var tick = 0
         var checkState = checkPreviousPage(driver)
-        while (tick++ <= 180 && checkState.code == RestaurantRPA.PREV_PAGE_WILL_READY) {
+        while (tick++ <= 180 && checkState.code == PREV_PAGE_WILL_READY) {
             if (checkState.message.isBlank()) {
                 // The browser has just started, don't crowd into.
-                delay(1_000, 10_000)
+                randomDelay(1_000, 10_000)
                 break
             }
 
@@ -43,7 +49,7 @@ open class CommonRPA {
                 logger.info("Waiting for page | {} | {} <- {}", tick, urlToWait, page.url)
             }
 
-            kotlinx.coroutines.delay(1000L)
+            delay(1000L)
             checkState = checkPreviousPage(driver)
         }
     }
@@ -55,13 +61,13 @@ open class CommonRPA {
         val testNav = navigateHistory.lastOrNull { mayWaitFor(it, driver.navigateEntry) }
 
         val code = when {
-            testNav == null -> RestaurantRPA.PREV_PAGE_WILL_READY
-            testNav.documentReadyTime > now -> RestaurantRPA.PREV_PAGE_WILL_READY
-            Duration.between(testNav.documentReadyTime, now).seconds > 10 -> RestaurantRPA.PREV_PAGE_READY
-            Duration.between(testNav.lastActiveTime, now).seconds > 60 -> RestaurantRPA.PREV_PAGE_NEVER_READY
-            !isActive -> RestaurantRPA.PREV_PAGE_NEVER_READY
-            !driver.isWorking -> RestaurantRPA.PREV_PAGE_NEVER_READY
-            else -> RestaurantRPA.PREV_PAGE_WILL_READY
+            !isActive -> PREV_PAGE_NEVER_READY
+            !driver.isWorking -> PREV_PAGE_NEVER_READY
+            testNav == null -> PREV_PAGE_WILL_READY
+            testNav.documentReadyTime > now -> PREV_PAGE_WILL_READY
+            Duration.between(testNav.documentReadyTime, now).seconds > 10 -> PREV_PAGE_READY
+            Duration.between(testNav.lastActiveTime, now).seconds > 60 -> PREV_PAGE_NEVER_READY
+            else -> PREV_PAGE_WILL_READY
         }
 
         return CheckState(code, testNav?.url ?: "")
@@ -98,7 +104,7 @@ open class CommonRPA {
         while (n-- > 0 && isActive) {
             val deltaY = 100.0 + 20 * Random.nextInt(10)
             driver.mouseWheelDown(deltaY = deltaY)
-            delay(500, 500)
+            randomDelay(500, 500)
         }
 
         logger.debug("Visited | {}", url)
@@ -121,12 +127,12 @@ open class CommonRPA {
         if (href != null) {
             driver.waitForNavigation()
             driver.waitForSelector("body")
-            delay(15_000, 10_000)
+            randomDelay(15_000, 10_000)
             driver.scrollToMiddle(0.25f)
         }
     }
 
-    suspend fun delay(timeMillis: Long, delta: Int) {
-        kotlinx.coroutines.delay(timeMillis + Random.nextInt(delta))
+    suspend fun randomDelay(timeMillis: Long, delta: Int) {
+        delay(timeMillis + Random.nextInt(delta))
     }
 }

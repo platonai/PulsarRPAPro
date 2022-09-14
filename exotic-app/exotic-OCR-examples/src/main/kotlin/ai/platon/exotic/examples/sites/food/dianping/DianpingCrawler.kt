@@ -2,7 +2,6 @@ package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
@@ -14,7 +13,7 @@ import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import java.time.Duration
 
-class DianpingCrawler(private val session: PulsarSession) {
+class DianpingCrawler(private val session: PulsarSession = ScentContexts.createSession()) {
     private val context = session.context as AbstractPulsarContext
 
     private val rpa = RestaurantRPA(session)
@@ -36,6 +35,14 @@ class DianpingCrawler(private val session: PulsarSession) {
         }
     }
 
+    fun runDefault() {
+        val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
+            .filter { UrlUtils.isValidUrl(it) }
+            .shuffled()
+        crawl(portalUrls, args)
+    }
+
     fun crawl(portalUrls: List<String>, args: String) {
         portalUrls.forEach { portalUrl -> scrapeOutPages(portalUrl, args) }
         context.await()
@@ -49,7 +56,8 @@ class DianpingCrawler(private val session: PulsarSession) {
         val links = document.document.selectHyperlinks(options.outLinkSelector)
             .asSequence()
             .take(10000)
-            .map { ParsableHyperlink("$it -i 10s -ignoreFailure", parseHandler) }
+            .distinct()
+            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.eventHandler.combine(options.itemEventHandler!!)
@@ -61,30 +69,15 @@ class DianpingCrawler(private val session: PulsarSession) {
     }
 }
 
-/**
- * If running the program directly in the IDE may crash the system, use command line instead:
- *
-java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
-  -D"loader.main=ai.platon.exotic.examples.sites.food.dianping.DianpingCrawlerKt" \
-  org.springframework.boot.loader.PropertiesLauncher
- * */
-fun main() {
-//    val args = "-i 1s -ii 5s -ol \"#shop-all-list .tit a[href~=shop]\" -ignoreFailure"
-    val args = "-i 1s -ii 10s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
-
-    System.setProperty(CapabilityTypes.PRIVACY_CONTEXT_NUMBER, "3")
-    System.setProperty(CapabilityTypes.BROWSER_MAX_ACTIVE_TABS, "3")
-    System.setProperty(CapabilityTypes.METRICS_ENABLED, "true")
-    System.setProperty(CapabilityTypes.FETCH_TASK_TIMEOUT, Duration.ofMinutes(12).toString())
-
+fun main(args: Array<String>) {
 //    BrowserSettings.headless()
-    BrowserSettings.supervised()
 
     val context = ScentContexts.create()
     val session = context.createSession()
 
+    val loadArgs = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
     val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
         .filter { UrlUtils.isValidUrl(it) }
         .shuffled()
-    DianpingCrawler(session).crawl(portalUrls, args)
+    DianpingCrawler(session).crawl(portalUrls, loadArgs)
 }

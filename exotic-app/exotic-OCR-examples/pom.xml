@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.10.3-SNAPSHOT</version>
+        <version>1.10.4-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-OCR-examples</artifactId>
@@ -25,18 +25,11 @@
         <defaultGoal>package</defaultGoal>
 
         <plugins>
-<!--
-Command line to execute:
-
-java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
--D"loader.main=ai.platon.exotic.examples.sites.food.dianping.RestaurantCrawlerKt" \
-org.springframework.boot.loader.PropertiesLauncher
--->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ai.platon.exotic.examples.sites.food.dianping.RestaurantRPAKt</mainClass>
+                    <mainClass>ai.platon.exotic.examples.sites.CrawlLauncherKt</mainClass>
                     <addResources>true</addResources>
                     <executable>true</executable>
                 </configuration>
