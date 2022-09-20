@@ -26,7 +26,7 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls,
     // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
             "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3
@@ -51,11 +51,9 @@ class WalmartRPA(
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
-        val eh = options.ensureItemEventHandler()
-        val leh = eh.loadEventHandler
-        val seh = eh.simulateEventHandler
+        val be = options.itemEvent.browseEvent
         // Warp up the browser to avoid being blocked by the server.
-        leh.onBrowserLaunched.addLast { page, driver ->
+        be.onBrowserLaunched.addLast { page, driver ->
             if (driver is ChromeDevtoolsDriver) {
                 println("userAgent: " + driver.userAgent)
                 val devTools = driver.implementation
@@ -65,13 +63,14 @@ class WalmartRPA(
             page.fetchRetries = 3
             warnUpBrowser(page, driver)
         }
-        seh.onWillFetch.addLast { page, driver ->
+        be.onWillFetch.addLast { page, driver ->
             waitForReferrer(page, driver)
             waitForPreviousPage(page, driver)
         }
-        seh.onWillCheckDOMState.addLast { page, driver ->
+        be.onWillCheckDocumentState.addLast { page, driver ->
             driver.waitForSelector("body h1[itemprop=name]")
         }
+
         return options
     }
 }
@@ -123,7 +122,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
             .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
-                it.eventHandler.combine(options.itemEventHandler!!)
+                it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()

@@ -60,7 +60,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
             .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
-                it.eventHandler.combine(options.itemEventHandler!!)
+                it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()

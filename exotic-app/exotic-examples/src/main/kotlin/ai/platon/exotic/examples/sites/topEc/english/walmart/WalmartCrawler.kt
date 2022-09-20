@@ -17,7 +17,7 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls,
     // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
             "verify" in url -> HtmlIntegrity.ROBOT_CHECK_3
@@ -48,7 +48,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
         .addLast(WalmartHtmlChecker())
 
     val options = session.options(args)
-    val seh = options.ensureItemEventHandler().simulateEventHandler
+    val seh = options.itemEvent.browseEvent
     seh.onWillFetch.addLast { page, driver ->
         // delay(1_000L + Random.nextInt(20_000))
     }

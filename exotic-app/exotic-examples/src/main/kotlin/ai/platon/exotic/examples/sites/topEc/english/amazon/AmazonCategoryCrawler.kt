@@ -2,11 +2,13 @@ package ai.platon.exotic.examples.sites.topEc.english.amazon
 
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.context.PulsarContext
-import ai.platon.pulsar.context.withContext
+import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.test.VerboseCrawler
 
-class AmazonCategoryCrawler(context: PulsarContext): VerboseCrawler(context) {
+class AmazonCategoryCrawler(
+    context: PulsarContext = PulsarContexts.create()
+): VerboseCrawler(context) {
     private val url = "https://www.amazon.com/"
     private val siteDirectory = "https://www.amazon.com/gp/site-directory?ref_=nav_em_T1_0_2_2_35__fullstore"
     private val loadOptions = session.options("-i 1s")
@@ -42,4 +44,6 @@ class AmazonCategoryCrawler(context: PulsarContext): VerboseCrawler(context) {
     }
 }
 
-fun main() = withContext { AmazonCategoryCrawler(it).collectFromSiteDirectory() }
+fun main() {
+    AmazonCategoryCrawler().collectFromSiteDirectory()
+}

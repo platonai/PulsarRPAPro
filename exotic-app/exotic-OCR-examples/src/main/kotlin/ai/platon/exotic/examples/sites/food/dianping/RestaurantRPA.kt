@@ -35,7 +35,7 @@ class DianPingHtmlChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls,
     // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
             "verify" in url -> HtmlIntegrity.ROBOT_CHECK_3
@@ -76,47 +76,47 @@ class RestaurantRPA(
     }
 
     private fun registerEventHandlers(options: LoadOptions) {
-        options.ensureEventHandler().loadEventHandler.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+        options.event.loadEvent.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
             collectPortalUrls(document) }
     }
 
     private fun registerItemEventHandlers(options: LoadOptions) {
-        val eh = options.ensureItemEventHandler()
+        val ie = options.itemEvent
 
-        eh.loadEventHandler.onWillLoad.addLast {
-
+        ie.loadEvent.onWillLoad.addLast {
+            it
         }
 
-        eh.loadEventHandler.onWillFetch.addLast { page ->
+        ie.loadEvent.onWillFetch.addLast { page ->
             page.fetchRetries = 0
 //            page.maxRetries = 6
-            page.pageModel.clear()
+            page.pageModel?.clear()
         }
 
-        eh.loadEventHandler.onLoaded.addLast { page ->
+        ie.loadEvent.onLoaded.addLast { page ->
             dumpPageModel(page)
         }
 
-        eh.simulateEventHandler.onWillFetch.addLast { page, driver ->
+        val be = ie.browseEvent
+        be.onWillCheckDocumentState.addLast { page, driver ->
+        }
+
+        be.onWillFetch.addLast { page, driver ->
             waitForReferrer(page, driver)
             waitForPreviousPage(page, driver)
         }
 
         // Warp up the browser to avoid being blocked by the server.
-        eh.loadEventHandler.onBrowserLaunched.addLast { page, driver ->
+        be.onBrowserLaunched.addLast { page, driver ->
             warnUpBrowser(page, driver)
         }
 
-        val seh = eh.simulateEventHandler
-        seh.onWillCheckDOMState.addLast { page, driver ->
-        }
-
-        seh.onDOMStateChecked.addLast { page, driver ->
+        be.onDocumentActuallyReady.addLast { page, driver ->
             driver.scrollTo("#comment")
             driver.waitForSelector("ul.comment-list li.comment-item")
         }
 
-        seh.onWillComputeFeature.addLast { page, driver ->
+        be.onWillComputeFeature.addLast { page, driver ->
             driver.bringToFront()
             TaskDef.commentSelectors.entries.mapIndexed { i, _ -> TaskDef.cs(i) + " .more" }.shuffled()
                 .asFlow().flowOn(Dispatchers.IO).collect { selector ->
@@ -127,7 +127,7 @@ class RestaurantRPA(
                 }
         }
 
-        seh.onFeatureComputed.addLast { page, driver ->
+        be.onFeatureComputed.addLast { page, driver ->
             driver.bringToFront()
             TaskDef.fieldSelectors.entries.shuffled().asFlow().flowOn(Dispatchers.IO).collect { (name, selector) ->
                 val point = driver.clickablePoint(selector)
@@ -139,7 +139,7 @@ class RestaurantRPA(
             }
         }
 
-        seh.onWillStopTab.addLast { page, driver ->
+        be.onWillStopTab.addLast { page, driver ->
             val currentUrl = driver.currentUrl()
             if (TaskDef.isShop(currentUrl)) {
                 if (Random.nextInt(2) == 0) {
@@ -148,15 +148,15 @@ class RestaurantRPA(
             }
         }
 
-        eh.loadEventHandler.onHTMLDocumentParsed.addLast { page, document ->
+        ie.loadEvent.onHTMLDocumentParsed.addLast { page, document ->
             val fields = page.variables.variables
                 .filterKeys { it.startsWith(Screenshot.OCR) }
                 .mapValues { it.value.toString() }
             if (fields.isEmpty()) {
-                return@addLast
+                return@addLast null
             }
 
-            page.pageModel.emplace(0, "OCR", fields)
+            page.ensurePageModel().emplace(0, "OCR", fields)
 
             fields.forEach { (key, text) ->
                 val selector = key.substringAfter(Screenshot.OCR)
@@ -192,7 +192,7 @@ class RestaurantRPA(
             return
         }
 
-        val pageModel = page.pageModel
+        val pageModel = page.pageModel ?: return
         val fieldGroups = pageModel.fieldGroups.map { it.name to it.fields }
         if (fieldGroups.isEmpty()) {
             return

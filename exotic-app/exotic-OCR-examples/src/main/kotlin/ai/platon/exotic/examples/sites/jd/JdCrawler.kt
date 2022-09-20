@@ -1,10 +1,8 @@
 package ai.platon.exotic.examples.sites.jd
 
 import ai.platon.exotic.examples.sites.CommonRPA
-import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
@@ -15,10 +13,6 @@ import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
-import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
-import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onEach
 import org.jsoup.nodes.Document
 import kotlin.streams.toList
 
@@ -30,7 +24,7 @@ class JdHtmlChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls,
     // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
             "login" in url -> HtmlIntegrity.ROBOT_CHECK_3
@@ -61,18 +55,17 @@ class JdRPA(
     }
 
     private fun initItemItemEventHandler(options: LoadOptions) {
-        val eh = options.ensureItemEventHandler()
-        val leh = eh.loadEventHandler
-        val seh = eh.simulateEventHandler
+        val eh = options.itemEvent
+        val be = eh.browseEvent
         // Warp up the browser to avoid being blocked by the server.
-        leh.onBrowserLaunched.addLast { page, driver ->
+        be.onBrowserLaunched.addLast { page, driver ->
             driver.addBlockedURLs(blockedUrls)
             warnUpBrowser(page, driver)
         }
-        seh.onWillFetch.addLast { page, driver ->
+        be.onWillFetch.addLast { page, driver ->
             waitForReferrer(page, driver)
         }
-        seh.onWillCheckDOMState.addLast { page, driver ->
+        be.onWillCheckDocumentState.addLast { page, driver ->
             driver.waitForSelector("body .sku-name")
         }
     }
@@ -108,7 +101,7 @@ class JdCrawler(private val session: PulsarSession = ScentContexts.createSession
             .map { ParsableHyperlink("$it -i 10s -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
-                it.eventHandler.combine(options.itemEventHandler!!)
+                it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()
@@ -150,7 +143,7 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 -D"loader.main=ai.platon.exotic.examples.sites.jd.JdCrawlerKt" \
 org.springframework.boot.loader.PropertiesLauncher
  * */
-fun main(args: Array<String>) {
+fun main(argv: Array<String>) {
     val session = ScentContexts.createSession()
     val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
     val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
