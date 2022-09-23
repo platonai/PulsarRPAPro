@@ -38,7 +38,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
     fun runDefault() {
         val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
         val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
-            .filter { UrlUtils.isValidUrl(it) }
+            .filter { UrlUtils.isStandard(it) }
             .shuffled()
         crawl(portalUrls, args)
     }
