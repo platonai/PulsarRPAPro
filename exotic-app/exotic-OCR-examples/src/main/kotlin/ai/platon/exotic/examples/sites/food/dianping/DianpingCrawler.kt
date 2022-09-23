@@ -76,7 +76,7 @@ fun main(argv: Array<String>) {
     val session = context.createSession()
 
     val loadArgs = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
-    val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.dianping.txt")
         .filter { UrlUtils.isStandard(it) }
         .shuffled()
     DianpingCrawler(session).crawl(portalUrls, loadArgs)

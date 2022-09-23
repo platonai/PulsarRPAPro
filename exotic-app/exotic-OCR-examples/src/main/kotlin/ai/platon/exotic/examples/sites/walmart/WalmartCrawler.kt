@@ -2,11 +2,16 @@ package ai.platon.exotic.examples.sites.walmart
 
 import ai.platon.exotic.examples.sites.CommonRPA
 import ai.platon.pulsar.common.HtmlIntegrity
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlAware
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
@@ -42,7 +47,8 @@ class WalmartRPA(
 
     private val logger = getLogger(this)
 
-    val context get() = session.context
+    private val context get() = session.context
+    private val messageWriter = context.getBean(MiscMessageWriter::class)
     private val responseHandler get() = context.getBean(BrowserResponseHandler::class)
 
     init {
@@ -51,6 +57,11 @@ class WalmartRPA(
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
+
+        options.event.loadEvent.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+            collectPortalUrls(document)
+        }
+
         val be = options.itemEvent.browseEvent
         // Warp up the browser to avoid being blocked by the server.
         be.onBrowserLaunched.addLast { page, driver ->
@@ -71,6 +82,19 @@ class WalmartRPA(
         }
 
         return options
+    }
+
+    override suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
+        visit("https://www.walmart.com/", driver)
+        super.warnUpBrowser(page, driver)
+    }
+
+    private fun collectPortalUrls(document: FeaturedDocument) {
+        listOf("a[href~=/brands/]", "a[href~=/browse/]").forEach {
+            document.select(it).forEach {
+                messageWriter.write(it.attr("abs:href"), "walmart.portal.urls.txt")
+            }
+        }
     }
 }
 
@@ -98,7 +122,7 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
 
     fun runDefault() {
         val portalUrls = """
-https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
+https://www.walmart.com/cp/cell-phones/1105910
     """.trimIndent().split("\n")
         val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
         crawl(portalUrls, args)
@@ -135,9 +159,9 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
 }
 
 fun main(argv: Array<String>) {
-    val portalUrls = """
-https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
-    """.trimIndent().split("\n")
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
+        .filter { UrlUtils.isStandard(it) }
+        .shuffled()
     val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
 
     val session = ScentContexts.createSession()

@@ -62,7 +62,6 @@ class RestaurantRPA(
     private val numberFormat = NumberFormat.getInstance().apply { maximumFractionDigits = 2 }
 
     init {
-        // responseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker, DianPingHtmlChecker())
         responseHandler.htmlIntegrityChecker.addLast(DianPingHtmlChecker())
     }
 

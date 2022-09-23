@@ -13,6 +13,14 @@ java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 org.springframework.boot.loader.PropertiesLauncher
  * */
 fun main(args: Array<String>) {
+    if (args.isEmpty()) {
+        val usage = """
+usage: java -jar exotic-OCR*.jar [-pc 5] [-tab 10] [-supervised|-headless] -site [jd|walmart|dianping]
+        """.trimIndent()
+        println(usage)
+        return
+    }
+
     var maxPrivacyContextCount = 0
     var maxActiveTabCount = 0
     var headless = false
