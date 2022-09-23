@@ -3,7 +3,7 @@ package ai.platon.exotic.handlers
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.persist.PageDatum
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 
 class CombinedHtmlIntegrityChecker(
     immutableConfig: ImmutableConfig

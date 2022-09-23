@@ -45,10 +45,6 @@ fun main(args: Array<String>) {
         BrowserSettings.headless()
     }
 
-    // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
-    // TODO: This is a fix to disable user agents, will correct in further versions
-    BrowserSettings.userAgents.add("")
-
     when (site) {
         "jd" -> JdCrawler().runDefault()
         "walmart" -> WalmartCrawler().runDefault()

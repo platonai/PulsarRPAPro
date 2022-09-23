@@ -9,8 +9,9 @@ import ai.platon.pulsar.crawl.CoreMetrics
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.jackson.prettyScentObjectWritter
@@ -52,7 +53,7 @@ class RestaurantRPA(
 
     private val context = session.context as AbstractPulsarContext
 
-    private val htmlChecker get() = context.getBean<BrowserResponseHandler>().htmlIntegrityChecker
+    private val responseHandler get() = context.getBean<BrowserResponseHandler>()
     private val messageWriter = context.getBean(MiscMessageWriter::class)
     private val coreMetrics = context.getBean<CoreMetrics>()
 
@@ -60,10 +61,9 @@ class RestaurantRPA(
     private val totalFields = AtomicInteger()
     private val numberFormat = NumberFormat.getInstance().apply { maximumFractionDigits = 2 }
 
-    private val isActive get() = AppContext.isActive
-
     init {
-        htmlChecker.addFirst(DianPingHtmlChecker())
+        // responseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker, DianPingHtmlChecker())
+        responseHandler.htmlIntegrityChecker.addLast(DianPingHtmlChecker())
     }
 
     fun options(args: String): LoadOptions {

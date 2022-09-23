@@ -10,7 +10,7 @@ import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document

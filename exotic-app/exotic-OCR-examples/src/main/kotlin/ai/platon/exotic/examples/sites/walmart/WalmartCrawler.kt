@@ -12,7 +12,7 @@ import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.driver.cdt.ChromeDevtoolsDriver
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
@@ -42,11 +42,11 @@ class WalmartRPA(
 
     private val logger = getLogger(this)
 
-    val context = session.context
-    private val htmlChecker get() = context.getBean(BrowserResponseHandler::class).htmlIntegrityChecker
+    val context get() = session.context
+    private val responseHandler get() = context.getBean(BrowserResponseHandler::class)
 
     init {
-        htmlChecker.addFirst(WalmartHtmlChecker())
+        responseHandler.htmlIntegrityChecker.addFirst(WalmartHtmlChecker())
     }
 
     fun options(args: String): LoadOptions {
@@ -55,7 +55,6 @@ class WalmartRPA(
         // Warp up the browser to avoid being blocked by the server.
         be.onBrowserLaunched.addLast { page, driver ->
             if (driver is ChromeDevtoolsDriver) {
-                println("userAgent: " + driver.userAgent)
                 val devTools = driver.implementation
                 devTools.network.clearBrowserCache()
                 devTools.network.clearBrowserCookies()

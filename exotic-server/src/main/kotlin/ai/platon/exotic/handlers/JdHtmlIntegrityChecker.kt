@@ -2,19 +2,12 @@ package ai.platon.exotic.handlers
 
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.HtmlUtils
-import ai.platon.pulsar.common.Strings
 import ai.platon.pulsar.common.config.ImmutableConfig
-import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.common.urls.sites.amazon.AmazonUrls
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.ProtocolStatus
-import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.metadata.OpenPageCategory
 import ai.platon.pulsar.persist.metadata.PageCategory
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
-import ai.platon.pulsar.protocol.browser.emulator.NavigateTask
-import ai.platon.scent.common.AMAZON_ENABLE_DISTRICT_CHECK
-import kotlin.math.roundToLong
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 
 class JdHtmlIntegrityChecker(
     immutableConfig: ImmutableConfig
