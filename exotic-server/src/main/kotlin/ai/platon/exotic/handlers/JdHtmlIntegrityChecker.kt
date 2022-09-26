@@ -8,6 +8,7 @@ import ai.platon.pulsar.persist.ProtocolStatus
 import ai.platon.pulsar.persist.metadata.OpenPageCategory
 import ai.platon.pulsar.persist.metadata.PageCategory
 import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
+import java.util.*
 
 class JdHtmlIntegrityChecker(
     immutableConfig: ImmutableConfig
@@ -80,7 +81,7 @@ class JdHtmlIntegrityChecker(
             val protocolStatus = pageDatum.protocolStatus
             return when {
                 protocolStatus.isTimeout -> true
-                protocolStatus.getArgOrDefault(ProtocolStatus.ARG_RETRY_REASON, "") == "ERR_TIMED_OUT" -> true
+                protocolStatus.getArgOrElse(ProtocolStatus.ARG_RETRY_REASON, "") == "ERR_TIMED_OUT" -> true
                 pageSource.contains("<title>京东-欢迎登录</title>") -> true
                 location.contains("login.aspx") -> true
                 else -> false

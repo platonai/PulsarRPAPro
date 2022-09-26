@@ -78,10 +78,10 @@ class JdCrawler(private val session: PulsarSession = ScentContexts.createSession
 
     private val parseHandler = { _: WebPage, document: Document -> }
 
-    fun runDefault() {
+    fun runDefault(args: String) {
         val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
-        val args = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure"
-        crawl(portalUrls, args)
+        val args1 = "-i 1s -requireSize 250000 -ol a[href~=/item] -ignoreFailure $args"
+        crawl(portalUrls, args1)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {

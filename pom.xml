@@ -278,7 +278,6 @@
 	</dependencyManagement>
 
 	<dependencies>
-
 		<dependency>
 			<groupId>org.jetbrains.kotlin</groupId>
 			<artifactId>kotlin-stdlib</artifactId>
@@ -300,7 +299,7 @@
 		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.10.1-SNAPSHOT</pulsar.version>
+		<pulsar.version>1.10.1</pulsar.version>
 		<scent.version>1.10.0</scent.version>
 	</properties>
 </project>

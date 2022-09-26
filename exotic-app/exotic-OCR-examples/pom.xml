@@ -25,6 +25,7 @@
         <defaultGoal>package</defaultGoal>
 
         <plugins>
+            <!-- java -jar exotic-OCR-examples*.jar -pc 8 -tab 10 -supervised -site walmart -->
             <plugin>
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>

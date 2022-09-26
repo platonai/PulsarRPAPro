@@ -28,13 +28,12 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
         return true
     }
 
-    // Since we need to check the html integrity of the page, we need active dom urls,
-    // which is calculated in javascript.
+    // Urls in ActiveDOMUrls are calculated in javascript, which are the actual urls of the page
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: return HtmlIntegrity.OK
         // Authorization verification
         return when {
-            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3
+            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3.also { println("blocked") }
             "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
             else -> HtmlIntegrity.OK
         }
@@ -58,16 +57,17 @@ class WalmartRPA(
     fun options(args: String): LoadOptions {
         val options = session.options(args)
 
-        options.event.loadEvent.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+        val le = options.event.loadEvent
+        le.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
             collectPortalUrls(document)
         }
 
         val be = options.itemEvent.browseEvent
-        // Warp up the browser to avoid being blocked by the server.
         be.onBrowserLaunched.addLast { page, driver ->
+            // Warp up the browser to avoid being blocked by the website
             if (driver is ChromeDevtoolsDriver) {
                 val devTools = driver.implementation
-                devTools.network.clearBrowserCache()
+//                devTools.network.clearBrowserCache()
                 devTools.network.clearBrowserCookies()
             }
             page.fetchRetries = 3
@@ -78,7 +78,7 @@ class WalmartRPA(
             waitForPreviousPage(page, driver)
         }
         be.onWillCheckDocumentState.addLast { page, driver ->
-            driver.waitForSelector("body h1[itemprop=name]")
+            // driver.waitForSelector("body h1[itemprop=name]")
         }
 
         return options
@@ -120,12 +120,12 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
         }
     }
 
-    fun runDefault() {
-        val portalUrls = """
-https://www.walmart.com/cp/cell-phones/1105910
-    """.trimIndent().split("\n")
-        val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
-        crawl(portalUrls, args)
+    fun runDefault(args: String) {
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
+            .filter { UrlUtils.isStandard(it) }
+            .shuffled()
+        val args1 = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure $args"
+        crawl(portalUrls, args1)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
@@ -135,6 +135,7 @@ https://www.walmart.com/cp/cell-phones/1105910
 
     fun scrapeOutPages(portalUrl: String, args: String) {
         val options = rpa.options(args)
+        val itemOptions = options.createItemOptions()
 
         val document = session.loadDocument(portalUrl, options)
 
@@ -142,17 +143,13 @@ https://www.walmart.com/cp/cell-phones/1105910
             .asSequence()
             .take(10000)
             .distinct()
-            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
+            .map { ParsableHyperlink("$it $itemOptions -i 1d -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
                 it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()
-
-//        links.forEach {
-//            println(it)
-//        }
 
         context.submitAll(links)
     }
@@ -162,8 +159,8 @@ fun main(argv: Array<String>) {
     val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
         .filter { UrlUtils.isStandard(it) }
         .shuffled()
-    val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
-
+    val args0 = LoadOptions.normalize(argv.joinToString(" "))
+    val args = "-i 1s -requireSize 250000 -ignoreFailure $args0"
     val session = ScentContexts.createSession()
     WalmartCrawler(session).crawl(portalUrls, args)
 }
