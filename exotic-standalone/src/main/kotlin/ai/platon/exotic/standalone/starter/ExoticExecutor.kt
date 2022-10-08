@@ -13,6 +13,7 @@ import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
+import org.apache.commons.lang3.SystemUtils
 import org.springframework.boot.builder.SpringApplicationBuilder
 import java.sql.ResultSet
 import kotlin.system.exitProcess
@@ -66,7 +67,7 @@ class ExoticExecutor(val argv: Array<String>) {
         parseCmdLine()
 
         if (criticalHelp) {
-            System.err.println(MAIN_HELP)
+            System.err.println(mainHelp())
             return
         }
 
@@ -98,7 +99,7 @@ class ExoticExecutor(val argv: Array<String>) {
         if (args != null) {
             dispatchHelp(args)
         } else {
-            lastHelpMessage = MAIN_HELP
+            lastHelpMessage = mainHelp()
         }
 
         if (!mute) {
@@ -107,8 +108,17 @@ class ExoticExecutor(val argv: Array<String>) {
     }
 
     private fun printMainHelpAndExit() {
-        System.err.println(MAIN_HELP)
+        System.err.println(mainHelp())
         exitProcess(0)
+    }
+
+    /**
+     * TODO: use the real executable name for `exotic-standalone*.jar`
+     * */
+    private fun mainHelp(): String {
+        return if (SystemUtils.IS_OS_WINDOWS) {
+            MAIN_HELP.replace("*.jar", ".jar")
+        } else MAIN_HELP
     }
 
     private fun dispatchHelp(argv0: Array<String>) {
@@ -144,7 +154,7 @@ class ExoticExecutor(val argv: Array<String>) {
                 lastHelpMessage = formatXSQLHelp(xsqlHelp())
             }
             server -> lastHelpMessage = "Run the Exotic server and web console"
-            else -> lastHelpMessage = MAIN_HELP
+            else -> lastHelpMessage = mainHelp()
         }
     }
 
@@ -183,7 +193,7 @@ class ExoticExecutor(val argv: Array<String>) {
     }
 
     internal fun arrange() {
-        val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
+        val (portalUrl, _) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isValidUrl(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
