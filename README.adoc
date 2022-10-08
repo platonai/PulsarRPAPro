@@ -45,6 +45,21 @@ wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
 ----
 
 == Build from source
+
+Add the following lines to your .m2/settings.xml.
+
+[source,xml]
+----
+<mirrors>
+    <mirror>
+        <id>maven-default-http-blocker</id>
+        <mirrorOf>dummy</mirrorOf>
+        <name>Dummy mirror to override default blocking mirror that blocks http</name>
+        <url>http://0.0.0.0/</url>
+    </mirror>
+</mirrors>
+----
+
 [source,bash]
 ----
 git clone https://github.com/platonai/exotic.git
