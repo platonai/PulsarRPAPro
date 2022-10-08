@@ -60,6 +60,10 @@ Add the following lines to your .m2/settings.xml.
 </mirrors>
 ----
 
+If ~/.m2/settings.xml does not exist, copy link:docs/settings.xml[settings.xml] to the fold.
+
+Now you can build Exotic from source:
+
 [source,bash]
 ----
 git clone https://github.com/platonai/exotic.git
