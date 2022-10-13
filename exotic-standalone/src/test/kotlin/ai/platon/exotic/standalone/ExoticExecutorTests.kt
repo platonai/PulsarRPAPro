@@ -11,15 +11,6 @@ class ExoticExecutorTests {
     val session = ScentContexts.createSession()
 
     @Test
-    fun testComponentOptions() {
-        val args1 = "-componentSelectors #abc -componentSelectors #def"
-        val args2 = "-component #abc -component #def"
-        val options = session.options(args2)
-//        println(options)
-        assertEquals(args1, options.toString())
-    }
-
-    @Test
     fun testParseHarvestCmdLine() {
         val cmdLine = "-headless harvest https://www.amazon.com/Best-Sellers/zgbs"
         val executor = ExoticExecutor(cmdLine)

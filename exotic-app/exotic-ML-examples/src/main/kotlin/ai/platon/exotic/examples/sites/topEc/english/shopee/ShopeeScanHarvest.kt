@@ -3,8 +3,8 @@ package ai.platon.exotic.examples.sites.topEc.english.shopee
 import ai.platon.exotic.examples.common.VerboseHarvester
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.persist.gora.FileBackendPageStore
 import ai.platon.scent.context.ScentContexts
-import ai.platon.scent.persist.SimpleAvroStore
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import kotlin.streams.toList
@@ -24,7 +24,7 @@ import kotlin.streams.toList
  * */
 object ShopeeScanHarvest {
     val session = ScentContexts.createSession()
-    val store = SimpleAvroStore()
+    val store = FileBackendPageStore()
 
     fun run(limit: Int) {
         println("Limit: $limit")

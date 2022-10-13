@@ -2,6 +2,7 @@ package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
+import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
@@ -35,12 +36,12 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
         }
     }
 
-    fun runDefault() {
-        val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
-        val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
-            .filter { UrlUtils.isValidUrl(it) }
+    fun runDefault(args: String) {
+        val args1 = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure $args"
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.dianping.txt")
+            .filter { UrlUtils.isStandard(it) }
             .shuffled()
-        crawl(portalUrls, args)
+        crawl(portalUrls, args1)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
@@ -50,6 +51,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
 
     fun scrapeOutPages(portalUrl: String, args: String) {
         val options = rpa.options(args)
+        val itemOptions = options.createItemOptions()
 
         val document = session.loadDocument(portalUrl, options)
 
@@ -57,10 +59,10 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
             .asSequence()
             .take(10000)
             .distinct()
-            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
+            .map { ParsableHyperlink("$it $itemOptions -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
-                it.eventHandler.combine(options.itemEventHandler!!)
+                it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()
@@ -69,15 +71,16 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
     }
 }
 
-fun main(args: Array<String>) {
-//    BrowserSettings.headless()
+fun main(argv: Array<String>) {
+    BrowserSettings.headless()
 
     val context = ScentContexts.create()
     val session = context.createSession()
 
-    val loadArgs = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure"
-    val portalUrls = ResourceLoader.readAllLines("portal.urls.txt")
-        .filter { UrlUtils.isValidUrl(it) }
+    val args0 = LoadOptions.normalize(argv.joinToString(" "))
+    val args = "-i 1s -ol \"#shop-all-list .tit a[href~=shop]\" -parse -ignoreFailure $args0"
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.dianping.txt")
+        .filter { UrlUtils.isStandard(it) }
         .shuffled()
-    DianpingCrawler(session).crawl(portalUrls, loadArgs)
+    DianpingCrawler(session).crawl(portalUrls, args)
 }

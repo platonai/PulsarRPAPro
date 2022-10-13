@@ -4,8 +4,9 @@ import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.persist.PageDatum
+import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 import kotlinx.coroutines.delay
 import kotlin.random.Random
 
@@ -17,7 +18,7 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
     // Since we need to check the html integrity of the page, we need active dom urls,
     // which is calculated in javascript.
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: pageDatum.url
         // Authorization verification
         return when {
             "verify" in url -> HtmlIntegrity.ROBOT_CHECK_3
@@ -41,18 +42,15 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
 
     val contextLocation = "classpath:pulsar-beans/app-context.xml"
     val session = PulsarContexts.create(contextLocation).createSession()
-    // TODO: session is a static session, no xml config is loaded, no such bean,
-    //  will fix this in the further pulsar versions.
-    session.context.getBean(BrowserResponseHandler::class)
-        .htmlIntegrityChecker
-        .addLast(WalmartHtmlChecker())
+    val responseHandler = session.context.getBean(BrowserResponseHandler::class)
+    responseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker, WalmartHtmlChecker())
 
     val options = session.options(args)
-    val seh = options.ensureItemEventHandler().simulateEventHandler
+    val seh = options.itemEvent.browseEvent
     seh.onWillFetch.addLast { page, driver ->
         // delay(1_000L + Random.nextInt(20_000))
     }
-    seh.onWillCheckDOMState.addLast { page, driver ->
+    seh.onWillCheckDocumentState.addLast { page, driver ->
         delay(10_000L + Random.nextInt(20_000))
     }
 

@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.10.4-SNAPSHOT</version>
+        <version>1.11.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-ML-examples</artifactId>
@@ -25,7 +25,7 @@
         <dependency>
             <groupId>ai.platon.exotic</groupId>
             <artifactId>exotic-examples</artifactId>
-            <version>1.10.4-SNAPSHOT</version>
+            <version>1.11.0-SNAPSHOT</version>
         </dependency>
 
         <!-- Internal dependency -->
@@ -49,7 +49,13 @@
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
             <artifactId>pulsar-site-amazon</artifactId>
-            <version>${pulsar.version}</version>
+            <version>1.9.15</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
 
         <!-- for scent-beans/app-context.xml -->

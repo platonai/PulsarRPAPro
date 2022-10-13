@@ -2,17 +2,22 @@ package ai.platon.exotic.examples.sites.walmart
 
 import ai.platon.exotic.examples.sites.CommonRPA
 import ai.platon.pulsar.common.HtmlIntegrity
+import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.common.message.MiscMessageWriter
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlAware
+import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.driver.cdt.ChromeDevtoolsDriver
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
@@ -23,13 +28,12 @@ class WalmartHtmlChecker: HtmlIntegrityChecker {
         return true
     }
 
-    // Since we need to check the html integrity of the page, we need active dom urls,
-    // which is calculated in javascript.
+    // Urls in ActiveDOMUrls are calculated in javascript, which are the actual urls of the page
     override fun invoke(pageSource: String, pageDatum: PageDatum): HtmlIntegrity {
-        val url = pageDatum.activeDomUrls?.location ?: pageDatum.url
+        val url = pageDatum.activeDOMUrls?.location ?: return HtmlIntegrity.OK
         // Authorization verification
         return when {
-            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3
+            "blocked" in url -> HtmlIntegrity.ROBOT_CHECK_3.also { println("blocked") }
             "403 Forbidden" in pageSource -> HtmlIntegrity.FORBIDDEN
             else -> HtmlIntegrity.OK
         }
@@ -42,37 +46,55 @@ class WalmartRPA(
 
     private val logger = getLogger(this)
 
-    val context = session.context
-    private val htmlChecker get() = context.getBean(BrowserResponseHandler::class).htmlIntegrityChecker
+    private val context get() = session.context
+    private val messageWriter = context.getBean(MiscMessageWriter::class)
+    private val responseHandler get() = context.getBean(BrowserResponseHandler::class)
 
     init {
-        htmlChecker.addFirst(WalmartHtmlChecker())
+        responseHandler.htmlIntegrityChecker.addFirst(WalmartHtmlChecker())
     }
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
-        val eh = options.ensureItemEventHandler()
-        val leh = eh.loadEventHandler
-        val seh = eh.simulateEventHandler
-        // Warp up the browser to avoid being blocked by the server.
-        leh.onBrowserLaunched.addLast { page, driver ->
+
+        val le = options.event.loadEvent
+        le.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+            collectPortalUrls(document)
+        }
+
+        val be = options.itemEvent.browseEvent
+        be.onBrowserLaunched.addLast { page, driver ->
+            // Warp up the browser to avoid being blocked by the website
             if (driver is ChromeDevtoolsDriver) {
-                println("userAgent: " + driver.userAgent)
                 val devTools = driver.implementation
-                devTools.network.clearBrowserCache()
+//                devTools.network.clearBrowserCache()
                 devTools.network.clearBrowserCookies()
             }
             page.fetchRetries = 3
             warnUpBrowser(page, driver)
         }
-        seh.onWillFetch.addLast { page, driver ->
+        be.onWillFetch.addLast { page, driver ->
             waitForReferrer(page, driver)
             waitForPreviousPage(page, driver)
         }
-        seh.onWillCheckDOMState.addLast { page, driver ->
-            driver.waitForSelector("body h1[itemprop=name]")
+        be.onWillCheckDocumentState.addLast { page, driver ->
+            // driver.waitForSelector("body h1[itemprop=name]")
         }
+
         return options
+    }
+
+    override suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
+        visit("https://www.walmart.com/", driver)
+        super.warnUpBrowser(page, driver)
+    }
+
+    private fun collectPortalUrls(document: FeaturedDocument) {
+        listOf("a[href~=/brands/]", "a[href~=/browse/]").forEach {
+            document.select(it).forEach {
+                messageWriter.write(it.attr("abs:href"), "walmart.portal.urls.txt")
+            }
+        }
     }
 }
 
@@ -98,12 +120,12 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
         }
     }
 
-    fun runDefault() {
-        val portalUrls = """
-https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
-    """.trimIndent().split("\n")
-        val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
-        crawl(portalUrls, args)
+    fun runDefault(args: String) {
+        val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
+            .filter { UrlUtils.isStandard(it) }
+            .shuffled()
+        val args1 = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure $args"
+        crawl(portalUrls, args1)
     }
 
     fun crawl(portalUrls: List<String>, args: String) {
@@ -113,6 +135,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
 
     fun scrapeOutPages(portalUrl: String, args: String) {
         val options = rpa.options(args)
+        val itemOptions = options.createItemOptions()
 
         val document = session.loadDocument(portalUrl, options)
 
@@ -120,28 +143,24 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
             .asSequence()
             .take(10000)
             .distinct()
-            .map { ParsableHyperlink("$it -requireSize 300000 -ignoreFailure", parseHandler) }
+            .map { ParsableHyperlink("$it $itemOptions -i 1d -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
                 it.referer = portalUrl
-                it.eventHandler.combine(options.itemEventHandler!!)
+                it.event.chain(options.itemEvent)
             }
             .toList()
             .shuffled()
-
-//        links.forEach {
-//            println(it)
-//        }
 
         context.submitAll(links)
     }
 }
 
 fun main(argv: Array<String>) {
-    val portalUrls = """
-https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?povid=web_globalnav_cellphones_iphone
-    """.trimIndent().split("\n")
-    val args = "-i 1s -requireSize 250000 -ol a[href~=/ip/] -ignoreFailure"
-
+    val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
+        .filter { UrlUtils.isStandard(it) }
+        .shuffled()
+    val args0 = LoadOptions.normalize(argv.joinToString(" "))
+    val args = "-i 1s -requireSize 250000 -ignoreFailure $args0"
     val session = ScentContexts.createSession()
     WalmartCrawler(session).crawl(portalUrls, args)
 }

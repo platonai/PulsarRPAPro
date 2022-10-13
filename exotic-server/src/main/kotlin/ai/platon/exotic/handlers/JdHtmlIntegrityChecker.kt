@@ -2,19 +2,13 @@ package ai.platon.exotic.handlers
 
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.HtmlUtils
-import ai.platon.pulsar.common.Strings
 import ai.platon.pulsar.common.config.ImmutableConfig
-import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.common.urls.sites.amazon.AmazonUrls
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.ProtocolStatus
-import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.metadata.OpenPageCategory
 import ai.platon.pulsar.persist.metadata.PageCategory
-import ai.platon.pulsar.protocol.browser.emulator.HtmlIntegrityChecker
-import ai.platon.pulsar.protocol.browser.emulator.NavigateTask
-import ai.platon.scent.common.AMAZON_ENABLE_DISTRICT_CHECK
-import kotlin.math.roundToLong
+import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
+import java.util.*
 
 class JdHtmlIntegrityChecker(
     immutableConfig: ImmutableConfig
@@ -87,7 +81,7 @@ class JdHtmlIntegrityChecker(
             val protocolStatus = pageDatum.protocolStatus
             return when {
                 protocolStatus.isTimeout -> true
-                protocolStatus.getArgOrDefault(ProtocolStatus.ARG_RETRY_REASON, "") == "ERR_TIMED_OUT" -> true
+                protocolStatus.getArgOrElse(ProtocolStatus.ARG_RETRY_REASON, "") == "ERR_TIMED_OUT" -> true
                 pageSource.contains("<title>京东-欢迎登录</title>") -> true
                 location.contains("login.aspx") -> true
                 else -> false

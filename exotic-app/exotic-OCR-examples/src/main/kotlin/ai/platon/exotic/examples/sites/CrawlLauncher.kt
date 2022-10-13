@@ -5,14 +5,27 @@ import ai.platon.exotic.examples.sites.jd.JdCrawler
 import ai.platon.exotic.examples.sites.walmart.WalmartCrawler
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.common.options.LoadOptions
 
 /**
+ * java -jar exotic-OCR-examples*.jar -pc 8 -tab 10 -supervised -site walmart
+ *
+ * Or
+ *
 java -Xmx10g -Xms2G -cp exotic-OCR-examples*.jar \
 -D"loader.main=ai.platon.exotic.examples.sites.CrawlLauncherKt" \
 -D"loader.args=\"-site jd\"" \
 org.springframework.boot.loader.PropertiesLauncher
  * */
-fun main(args: Array<String>) {
+fun main(argv: Array<String>) {
+    if (argv.isEmpty()) {
+        val usage = """
+usage: java -jar exotic-OCR*.jar [-pc 5] [-tab 10] [-supervised|-headless] -site [jd|walmart|dianping]
+        """.trimIndent()
+        println(usage)
+        return
+    }
+
     var maxPrivacyContextCount = 0
     var maxActiveTabCount = 0
     var headless = false
@@ -20,12 +33,12 @@ fun main(args: Array<String>) {
     var site = ""
 
     var i = 0
-    while (i < args.size) {
-        if (args[i] == "-pc") maxPrivacyContextCount = args[++i].toInt()
-        if (args[i] == "-tab") maxActiveTabCount = args[++i].toInt()
-        if (args[i] == "-supervised") supervised = true
-        if (args[i] == "-headless") headless = true
-        if (args[i] == "-site") site = args[++i]
+    while (i < argv.size) {
+        if (argv[i] == "-pc") maxPrivacyContextCount = argv[++i].toInt()
+        if (argv[i] == "-tab") maxActiveTabCount = argv[++i].toInt()
+        if (argv[i] == "-supervised") supervised = true
+        if (argv[i] == "-headless") headless = true
+        if (argv[i] == "-site") site = argv[++i]
 
         ++i
     }
@@ -45,16 +58,11 @@ fun main(args: Array<String>) {
         BrowserSettings.headless()
     }
 
-    // Some websites will detect the user agent, if it's override, the visit is marked as suspicious
-    // TODO: This is a fix to disable user agents, will correct in further versions
-    BrowserSettings.userAgents.add("")
-
+    val args = LoadOptions.normalize(argv.joinToString())
     when (site) {
-        "jd" -> JdCrawler().runDefault()
-        "walmart" -> WalmartCrawler().runDefault()
-        "dianping" -> DianpingCrawler().runDefault()
+        "jd" -> JdCrawler().runDefault(args)
+        "walmart" -> WalmartCrawler().runDefault(args)
+        "dianping" -> DianpingCrawler().runDefault(args)
         else -> println("No site chose")
     }
-
-    println("All done.")
 }

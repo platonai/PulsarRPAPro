@@ -23,8 +23,9 @@ open class CommonRPA {
 
     private val logger = getLogger(this)
 
-    suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
+    open suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
         val referrer = page.referrer ?: return
+
         val referrerVisited = driver.browser.navigateHistory.any { it.url == referrer }
         if (!referrerVisited) {
             logger.debug("Visiting the referrer | {}", referrer)
@@ -32,7 +33,7 @@ open class CommonRPA {
         }
     }
 
-    suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
+    open suspend fun waitForPreviousPage(page: WebPage, driver: WebDriver) {
         var tick = 0
         var checkState = checkPreviousPage(driver)
         while (tick++ <= 180 && checkState.code == PREV_PAGE_WILL_READY) {
@@ -54,7 +55,7 @@ open class CommonRPA {
         }
     }
 
-    fun checkPreviousPage(driver: WebDriver): CheckState {
+    open fun checkPreviousPage(driver: WebDriver): CheckState {
         val navigateHistory = driver.browser.navigateHistory
         val now = Instant.now()
 
@@ -73,7 +74,7 @@ open class CommonRPA {
         return CheckState(code, testNav?.url ?: "")
     }
 
-    fun mayWaitFor(currentEntry: NavigateEntry, testEntry: NavigateEntry): Boolean {
+    open fun mayWaitFor(currentEntry: NavigateEntry, testEntry: NavigateEntry): Boolean {
         val now = Instant.now()
 
         val may = testEntry.pageId > 0
@@ -85,7 +86,7 @@ open class CommonRPA {
         return may
     }
 
-    suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
+    open suspend fun warnUpBrowser(page: WebPage, driver: WebDriver) {
 //        visit(TaskDef.homePage, driver)
         page.referrer?.let { visit(it, driver) }
 
@@ -94,7 +95,7 @@ open class CommonRPA {
         // TODO: create a new driver with the opened tab
     }
 
-    suspend fun visit(url: String, driver: WebDriver) {
+    open suspend fun visit(url: String, driver: WebDriver) {
         val display = driver.browser.id.display
         logger.info("Visiting with browser #{} | {}", display, url)
 
@@ -110,7 +111,7 @@ open class CommonRPA {
         logger.debug("Visited | {}", url)
     }
 
-    suspend fun humanize(page: WebPage, driver: WebDriver) {
+    open suspend fun humanize(page: WebPage, driver: WebDriver) {
         val i = Random.nextInt(1, 20)
         val selector = listOf("#around-info", ".main").shuffled().first()
         val n = Random.nextInt(1, 5)

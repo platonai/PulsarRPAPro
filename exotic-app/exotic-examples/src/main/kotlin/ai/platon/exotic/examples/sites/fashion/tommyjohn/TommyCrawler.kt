@@ -3,7 +3,7 @@ package ai.platon.exotic.examples.sites.fashion.tommyjohn
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.sql.SQLTemplate
-import ai.platon.pulsar.ql.context.withSQLContext
+import ai.platon.pulsar.ql.context.SQLContexts
 import ai.platon.pulsar.test.ProductExtractor
 
 fun main() {
@@ -69,19 +69,19 @@ fun main() {
            )
         """
 
-    withSQLContext { ctx ->
-        val now = DateTimes.formatNow("HH")
-        val path = AppPaths.getTmp("rs").resolve(now).resolve("tommy")
-        val executor = ProductExtractor(path, ctx)
-        val itemUrls = arrayOf(
-            "https://tommyjohn.com/collections/loungewear-mens?sort-by=relevance&sort-order=descending",
-            "https://tommyjohn.com/collections/mens-socks?sort-by=relevance&sort-order=descending",
-            "https://tommyjohn.com/collections/mens-undershirts?sort-by=relevance&sort-order=descending",
-            "https://tommyjohn.com/collections/mens-underwear-all-styles",
-        )
-        itemUrls.take(1).forEach { url ->
-            val itemsSQL = SQLTemplate(itemsSQLTemplate).createInstance(url).sql
-            executor.extract(itemsSQL, reviewsSQLTemplate)
-        }
+    val context = SQLContexts.create()
+
+    val now = DateTimes.formatNow("HH")
+    val path = AppPaths.getTmp("rs").resolve(now).resolve("tommy")
+    val executor = ProductExtractor(path, context)
+    val itemUrls = arrayOf(
+        "https://tommyjohn.com/collections/loungewear-mens?sort-by=relevance&sort-order=descending",
+        "https://tommyjohn.com/collections/mens-socks?sort-by=relevance&sort-order=descending",
+        "https://tommyjohn.com/collections/mens-undershirts?sort-by=relevance&sort-order=descending",
+        "https://tommyjohn.com/collections/mens-underwear-all-styles",
+    )
+    itemUrls.take(1).forEach { url ->
+        val itemsSQL = SQLTemplate(itemsSQLTemplate).createInstance(url).sql
+        executor.extract(itemsSQL, reviewsSQLTemplate)
     }
 }
