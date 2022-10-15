@@ -304,6 +304,7 @@
 		<kotlin.version>1.5.32</kotlin.version>
 
 		<mysql.connector.version>5.1.34</mysql.connector.version>
+		<cron-utils.version>9.1.5</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 		<pulsar.version>1.10.3</pulsar.version>
