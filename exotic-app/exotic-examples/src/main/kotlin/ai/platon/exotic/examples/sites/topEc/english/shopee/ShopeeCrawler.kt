@@ -3,9 +3,8 @@ package ai.platon.exotic.examples.sites.topEc.english.shopee
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
-import ai.platon.pulsar.dom.select.selectHyperlinks
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.WebPage
-import org.jsoup.nodes.Document
 
 fun main() {
     BrowserSettings.headless()
@@ -25,7 +24,7 @@ fun main() {
 
     val context = PulsarContexts.create()
 
-    val parseHandler = { _: WebPage, document: Document ->
+    val parseHandler = { _: WebPage, document: FeaturedDocument ->
         context.submitAll(document.selectHyperlinks("a[href~=sp_atk]"))
     }
 

@@ -7,11 +7,11 @@ import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.support.AbstractPulsarContext
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
-import org.jsoup.nodes.Document
 import java.time.Duration
 
 class DianpingCrawler(private val session: PulsarSession = ScentContexts.createSession()) {
@@ -28,7 +28,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
         }
     }
 
-    private val parseHandler = { _: WebPage, document: Document -> }
+    private val parseHandler = { _: WebPage, document: FeaturedDocument -> }
 
     init {
         context.crawlLoops.loops.forEach {
@@ -61,7 +61,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
             .distinct()
             .map { ParsableHyperlink("$it $itemOptions -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
-                it.referer = portalUrl
+                it.referrer = portalUrl
                 it.event.chain(options.itemEvent)
             }
             .toList()
@@ -72,7 +72,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
 }
 
 fun main(argv: Array<String>) {
-    BrowserSettings.headless()
+    BrowserSettings.privacyContext(2).maxTabs(8).headless()
 
     val context = ScentContexts.create()
     val session = context.createSession()

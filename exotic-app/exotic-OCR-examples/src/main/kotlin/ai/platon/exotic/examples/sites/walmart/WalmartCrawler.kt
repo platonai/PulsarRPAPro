@@ -1,6 +1,7 @@
 package ai.platon.exotic.examples.sites.walmart
 
 import ai.platon.exotic.examples.sites.CommonRPA
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
@@ -112,7 +113,7 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
         }
     }
 
-    private val parseHandler = { _: WebPage, document: Document -> }
+    private val parseHandler = { _: WebPage, document: FeaturedDocument -> }
 
     init {
         context.crawlLoops.loops.forEach {
@@ -145,7 +146,7 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
             .distinct()
             .map { ParsableHyperlink("$it $itemOptions -i 1d -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
-                it.referer = portalUrl
+                it.referrer = portalUrl
                 it.event.chain(options.itemEvent)
             }
             .toList()
@@ -156,6 +157,8 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
 }
 
 fun main(argv: Array<String>) {
+    BrowserSettings.privacyContext(2).maxTabs(8).headless()
+
     val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")
         .filter { UrlUtils.isStandard(it) }
         .shuffled()

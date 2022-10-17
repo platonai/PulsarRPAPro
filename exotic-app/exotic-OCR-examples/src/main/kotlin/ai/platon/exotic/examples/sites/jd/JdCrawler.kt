@@ -6,6 +6,7 @@ import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
@@ -76,7 +77,7 @@ class JdCrawler(private val session: PulsarSession = ScentContexts.createSession
 
     private val rpa = JdRPA(session)
 
-    private val parseHandler = { _: WebPage, document: Document -> }
+    private val parseHandler = { _: WebPage, document: FeaturedDocument -> }
 
     fun runDefault(args: String) {
         val portalUrls = ResourceLoader.readAllLines("portal.urls.jd.txt")
@@ -100,7 +101,7 @@ class JdCrawler(private val session: PulsarSession = ScentContexts.createSession
             .distinct()
             .map { ParsableHyperlink("$it -i 10s -requireSize 300000 -ignoreFailure", parseHandler) }
             .onEach {
-                it.referer = portalUrl
+                it.referrer = portalUrl
                 it.event.chain(options.itemEvent)
             }
             .toList()

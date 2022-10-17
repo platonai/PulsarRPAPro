@@ -50,7 +50,7 @@ class ExoticPageTableViewBuilder(
         val domain = URLUtil.getDomainName(sampleDocument.location)
         val documentSize = sampleTable.data.documentSize
 
-        output.title = "PLATON AI - Auto Extract - $domain"
+        output.document.title("PLATON AI - Auto Extract - $domain")
         val caption = String.format("Total %d pages, generated %d tables", documentSize, tables.size)
         messageView.appendElement("div").text(caption)
         messageView.appendElement("div").text(LocalDateTime.now().toString())
