@@ -1,5 +1,27 @@
 #bin
 
+function remove_local_platon_jars() {
+  echo "Ready to remove local platon jars (~/.m2/repository/ai/platon/*)"
+  read -p "Are you sure to continue? [Y/n]" -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    rm -r ~/.m2/repository/ai/platon/*
+  else
+    echo "Local platon jars are kept."
+  fi
+}
+
+function remove_local_storage() {
+  echo "Ready to remove local storage"
+  read -p "Are you sure to continue? [Y/n]" -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    rm -r ~/.pulsar/data/store/*
+  else
+    echo "Local platon jars are kept."
+  fi
+}
+
 bin=$(dirname "$0")/..
 bin=$(cd "$bin">/dev/null || exit; pwd)
 APP_HOME=$(cd "$bin"/..>/dev/null || exit; pwd)
@@ -29,6 +51,8 @@ fi
 
 # use the product version of logback
 cat "$APP_HOME"/exotic-standalone/src/main/resources/logback-prod.xml > "$APP_HOME"/exotic-standalone/src/main/resources/logback.xml
+
+remove_local_platon_jars
 
 mvn clean
 mvn
