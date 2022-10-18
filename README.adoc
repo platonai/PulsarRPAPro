@@ -71,7 +71,11 @@ cd exotic-standalone/target/
 == Run the standalone server and open web console
 [source,bash]
 ----
+# Linux:
 java -jar exotic-standalone*.jar serve
+
+# Windows:
+java -jar exotic-standalone[-the-actual-version].jar serve
 ----
 
 Note: if you are using CMD or PowerShell on Windows, you may need to remove the wildcard `*` and use the full name of the jar.
