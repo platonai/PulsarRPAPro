@@ -6,14 +6,13 @@
 	<parent>
 		<groupId>ai.platon.exotic</groupId>
 		<artifactId>exotic</artifactId>
-		<version>1.11.2-SNAPSHOT</version>
+		<version>1.12.0-SNAPSHOT</version>
 	</parent>
 
 	<artifactId>exotic-server</artifactId>
 	<packaging>jar</packaging>
 	<name>Exotic Server</name>
 	<description>The exotic server</description>
-
 
 	<dependencies>
 		<dependency>
