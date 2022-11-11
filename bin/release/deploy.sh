@@ -56,12 +56,14 @@ remove_local_platon_jars
 
 mvn clean
 mvn
-cd "$APP_HOME"/exotic-services || exit
-mvn -PREST-war war:war
-cd "$APP_HOME" || exit
 
 exitCode=$?
 [ $exitCode -eq 0 ] && echo "Build successfully" || exit 1
+
+cd "$APP_HOME"/exotic-services || exit
+mvn -PREST-war war:war
+
+cd "$APP_HOME" || exit
 
 REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic
 ssh "$HOST" mkdir -p "$REMOTE_BASE_DIR"
