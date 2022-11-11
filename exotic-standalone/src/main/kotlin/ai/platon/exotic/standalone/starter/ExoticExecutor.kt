@@ -150,7 +150,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
     internal fun scrape(): List<Map<String, String?>> {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return listOf()
         }
@@ -184,7 +184,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
     internal fun arrange() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
@@ -198,7 +198,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
     internal fun harvest() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }

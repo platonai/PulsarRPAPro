@@ -37,7 +37,7 @@
         <dependency>
             <groupId>ai.platon.scent</groupId>
             <artifactId>scent-site-amazon</artifactId>
-            <version>${scent.version}</version>
+            <version>1.10.1</version>
             <exclusions>
                 <exclusion>
                     <groupId>ai.platon.pulsar</groupId>
