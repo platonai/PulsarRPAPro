@@ -26,13 +26,16 @@ find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$NEXT_SNAPSHO
 # The following files contains the version number to upgrade
 VERSION_AWARE_FILES=(
   "$APP_HOME/README.adoc"
+  "$APP_HOME/README-CN.adoc"
 )
 # replace version numbers to be the next numbers in files
 for F in "${VERSION_AWARE_FILES[@]}"; do
-  # 1.9.11 -> 1.9.12
-  sed -i "s/\b$PREFIX.[0-9]\{1,\}\b/$NEXT_VERSION/g" "$F";
-  # v1.9.11 -> v1.9.12
-  sed -i "s/\bv$PREFIX.[0-9]\{1,\}\b/v$NEXT_VERSION/g" "$F";
+  if [ -e "$F" ]; then
+    # 1.9.11 -> 1.9.12
+    sed -i "s/\b$PREFIX.[0-9]\{1,\}\b/$NEXT_VERSION/g" "$F";
+    # v1.9.11 -> v1.9.12
+    sed -i "s/\bv$PREFIX.[0-9]\{1,\}\b/v$NEXT_VERSION/g" "$F";
+  fi
 done
 
 F="$APP_HOME/exotic-services/src/main/resources/templates/fragments/nav.html"
