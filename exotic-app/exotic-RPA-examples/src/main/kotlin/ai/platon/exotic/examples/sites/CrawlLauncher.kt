@@ -1,6 +1,7 @@
 package ai.platon.exotic.examples.sites
 
-import ai.platon.exotic.examples.sites.food.dianping.DianpingCrawler
+import ai.platon.exotic.examples.sites.jd.JdCrawler
+import ai.platon.exotic.examples.sites.walmart.WalmartCrawler
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.options.LoadOptions
@@ -58,7 +59,8 @@ usage: java -jar exotic-OCR*.jar [-pc 5] [-tab 10] [-supervised|-headless] -site
 
     val args = LoadOptions.normalize(argv.joinToString())
     when (site) {
-        "dianping" -> DianpingCrawler().runDefault(args)
+        "jd" -> JdCrawler().runDefault(args)
+        "walmart" -> WalmartCrawler().runDefault(args)
         else -> println("No site chose")
     }
 }

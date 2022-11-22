@@ -101,12 +101,15 @@ class RestaurantRPA(
         }
 
         be.onWillFetch.addLast { page, driver ->
+            // TODO: the handler is already added by default
             waitForReferrer(page, driver)
+            // TODO: the handler is already added by default
             waitForPreviousPage(page, driver)
         }
 
         // Warp up the browser to avoid being blocked by the server.
         be.onBrowserLaunched.addLast { page, driver ->
+            // TODO: the handler is already added
             warnUpBrowser(page, driver)
         }
 

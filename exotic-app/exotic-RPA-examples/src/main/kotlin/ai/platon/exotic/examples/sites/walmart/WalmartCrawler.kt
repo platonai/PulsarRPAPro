@@ -157,7 +157,7 @@ class WalmartCrawler(private val session: PulsarSession = ScentContexts.createSe
 }
 
 fun main(argv: Array<String>) {
-    BrowserSettings.privacyContext(2).maxTabs(8)
+    BrowserSettings.privacy(2).maxTabs(8)
         // .headless() // headless mode can be detected by walmart
 
     val portalUrls = ResourceLoader.readAllLines("portal.urls.walmart.txt")

@@ -26,6 +26,7 @@
     <modules>
         <module>exotic-examples</module>
         <module>exotic-ML-examples</module>
+        <module>exotic-RPA-examples</module>
         <module>exotic-OCR-examples</module>
     </modules>
 </project>
