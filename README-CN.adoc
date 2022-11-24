@@ -10,8 +10,7 @@ Exotic (代表奇异之星 - Exotic Star) 是 PulsarR 的专业版，包含升�
 . 步骤2：测试 SQL，并在必要时改进它们以匹配前端业务需求
 . 步骤3：在 Web 控制台中创建调度规则，以连续运行 SQL 并下载所有 Web 数据，从而推动您的业务向前发展
 
-最受欢迎的网站已经有几十个 link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[抓取案例]，我们正在不断增加更多的案例。
-
+最受欢迎的网站已经有几十个 link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[采集案例]，我们正在不断增加更多的案例。
 
 == 主要特性
 
