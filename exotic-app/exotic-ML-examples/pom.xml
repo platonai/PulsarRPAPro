@@ -34,17 +34,17 @@
             <artifactId>scent-resources</artifactId>
             <version>${scent.version}</version>
         </dependency>
-        <dependency>
-            <groupId>ai.platon.scent</groupId>
-            <artifactId>scent-site-amazon</artifactId>
-            <version>1.10.1</version>
-            <exclusions>
-                <exclusion>
-                    <groupId>ai.platon.pulsar</groupId>
-                    <artifactId>pulsar-site-amazon</artifactId>
-                </exclusion>
-            </exclusions>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>ai.platon.scent</groupId>-->
+<!--            <artifactId>scent-site-amazon</artifactId>-->
+<!--            <version>1.9.10</version>-->
+<!--            <exclusions>-->
+<!--                <exclusion>-->
+<!--                    <groupId>ai.platon.pulsar</groupId>-->
+<!--                    <artifactId>pulsar-site-amazon</artifactId>-->
+<!--                </exclusion>-->
+<!--            </exclusions>-->
+<!--        </dependency>-->
 
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
