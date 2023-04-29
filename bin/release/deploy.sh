@@ -5,7 +5,7 @@ function remove_local_platon_jars() {
   read -p "Are you sure to continue? [Y/n]" -n 1 -r
   echo
   if [[ $REPLY =~ ^[Yy]$ ]]; then
-    rm -r ~/.m2/repository/ai/platon/*
+    mv ~/.m2/repository/ai/platon ~/.m2/repository/ai/platon_bak
   else
     echo "Local platon jars are kept."
   fi
