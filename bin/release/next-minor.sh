@@ -22,6 +22,8 @@ sed -i "s/\b$PREFIX.[0-9]\{1,\}\b/$NEXT_VERSION/g" "$APP_HOME/README.adoc";
 sed -i -e "s/<tag>v$VERSION<\/tag>/<tag>v$NEXT_VERSION<\/tag>/g" "$APP_HOME/pom.xml";
 # pom.xml files
 find "$APP_HOME" -name 'pom.xml' -exec sed -i "s/$SNAPSHOT_VERSION/$NEXT_SNAPSHOT_VERSION/" {} \;
+# nav.html files
+find "$APP_HOME" -name 'nav.html' -exec sed -i "s/$SNAPSHOT_VERSION/$NEXT_SNAPSHOT_VERSION/" {} \;
 
 # The following files contains the version number to upgrade
 VERSION_AWARE_FILES=(

@@ -78,7 +78,7 @@ class CrawlTaskRunner(
             val now = Instant.now()
 
             rule.status = RuleStatus.Running.toString()
-            rule.crawlCount = rule.crawlCount?.inc()
+            rule.crawlCount = rule.crawlCount?.inc() ?: 1
             rule.lastCrawlTime = now
             crawlRuleRepository.save(rule)
             crawlRuleRepository.flush()
