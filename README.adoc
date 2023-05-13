@@ -65,6 +65,7 @@ cd exotic
 mvn clean && mvn
 cd exotic-standalone/target/
 ----
+For Chinese developers, we strongly suggest that you follow link:https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[this] instruction to accelerate the building.
 
 == Run the standalone server and open web console
 [source,bash]

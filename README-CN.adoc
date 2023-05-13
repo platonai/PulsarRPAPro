@@ -67,6 +67,7 @@ cd exotic
 mvn clean && mvn
 cd exotic-standalone/target/
 ----
+对于国内开发者，我们强烈建议您按照 link:https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[这个] 指导来加速构建。
 
 == 运行独立服务器并打开 Web 控制台
 [source,bash]
