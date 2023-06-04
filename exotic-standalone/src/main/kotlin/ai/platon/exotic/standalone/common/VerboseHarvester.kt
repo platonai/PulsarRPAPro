@@ -2,11 +2,12 @@ package ai.platon.exotic.standalone.common
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.common.Systems
+import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.nodes.node.ext.canonicalName
-import ai.platon.pulsar.ql.ResultSets
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
 import ai.platon.scent.context.ScentContexts
@@ -17,9 +18,6 @@ import ai.platon.scent.dom.nodes.annotateNodes
 import ai.platon.scent.entities.HarvestResult
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
-import org.h2.tools.SimpleResultSet
-import org.h2.value.DataType
-import org.h2.value.Value
 import org.nield.kotlinstatistics.standardDeviation
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
@@ -28,9 +26,15 @@ import java.util.*
 open class VerboseHarvester(
     context: ScentContext = ScentContexts.create()
 ) {
+
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
 
-    val session: ScentSession = context.createSession()
+    private val session: ScentSession = context.createSession()
+
+    init {
+        System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
+        Systems.setProperty(CapabilityTypes.FETCH_SCROLL_DOWN_COUNT, 0)
+    }
 
     val defaultArgs = "" +
 //            " -expires 1d" +
@@ -110,22 +114,9 @@ open class VerboseHarvester(
     private fun report(result: HarvestResult, options: HarvestOptions) {
         val exports = session.buildAll(result.tableGroup, options)
 
-        // table view
-        val builder = ExoticPageTableViewBuilder(result.tableGroup, devMode = options.diagnose)
-        val doc = builder.build()
-
-        var path = result.tableGroup.tableViewPath
-        doc.document.setBaseUri(path.toString())
-        Files.createDirectories(path.parent)
-        session.exportTo(doc, path)
-
-        path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.htm")
-        doc.document.setBaseUri(path.toString())
-        session.exportTo(doc, path)
-
-        // json view
         val json = session.buildJson(result.tableGroup)
-        path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        Files.createDirectories(path.parent)
         Files.writeString(path, json)
 
         logger.info("Harvest reports: {}", path.parent)

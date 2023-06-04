@@ -162,7 +162,8 @@ class ExoticExecutor(val argv: Array<String>) {
         val results = if (hasOutLinkSelector) {
             session.scrapeOutPages(portalUrl, args, scrapeFields)
         } else {
-            listOf(session.scrape(portalUrl, args, scrapeFields))
+            // session.scrape has a bug (<= 1.10.12)
+            listOf(scrape(portalUrl, args, scrapeFields))
         }
 
         if (results.size == 1) {
@@ -180,6 +181,11 @@ class ExoticExecutor(val argv: Array<String>) {
         if (!mute) {
             println(lastOutput)
         }
+    }
+
+    private fun scrape(portalUrl: String, args: String, fieldSelectors: List<String>): Map<String, String?> {
+        val document = session.loadDocument(portalUrl, args)
+        return fieldSelectors.associateWith { document.selectFirstOrNull(it)?.text() }
     }
 
     internal fun arrange() {
