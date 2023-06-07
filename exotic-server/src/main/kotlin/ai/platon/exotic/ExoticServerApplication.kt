@@ -5,6 +5,7 @@ import ai.platon.exotic.handlers.JdHtmlIntegrityChecker
 import ai.platon.pulsar.common.AppFiles
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.ImmutableConfig
+import ai.platon.pulsar.crawl.fetch.privacy.PrivacyContextMonitor
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
@@ -34,6 +35,21 @@ import java.sql.SQLException
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
 class ExoticServerApplication(
     private val browserResponseHandler: BrowserResponseHandler,
+    /**
+     * Activate WebDriverPoolMonitor
+     * */
+    private val privacyContextMonitor: PrivacyContextMonitor,
+    /**
+     * Activate WebDriverPoolMonitor
+     * */
+//    private val driverPoolMonitor: WebDriverPoolMonitor,
+    /**
+     * Activate BrowserMonitor
+     * */
+//    private val browserMonitor: BrowserMonitor,
+    /**
+     * The unmodified config
+     * */
     private val immutableConfig: ImmutableConfig
 ) {
     @Bean
