@@ -3,7 +3,13 @@
 bin=$(dirname "$0")
 bin=$(cd "$bin">/dev/null || exit; pwd)
 
-HOST="master"
+if [ $# -lt 1 ]; then
+  echo "usage: sync-server.sh HOST"
+  exit 1
+fi
+
+HOST=$1
+shift
 
 # script config
 VERSION_FILE=$(find . -name "VERSION")
