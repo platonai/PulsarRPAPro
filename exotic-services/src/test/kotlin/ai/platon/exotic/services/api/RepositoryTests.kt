@@ -14,6 +14,7 @@ import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.data.repository.findByIdOrNull
 import java.util.*
 import kotlin.test.assertEquals
+import kotlin.test.assertNotNull
 
 @SpringBootTest
 class RepositoryTests @Autowired constructor(
@@ -46,8 +47,10 @@ class RepositoryTests @Autowired constructor(
         )
 
         val rule = CrawlRule()
+        rule.portalUrls = pagedPortalUrls.joinToString("\n")
+        assertEquals(pagedPortalUrls.size, rule.portalUrlList.size)
 
-        val portalTasks = pagedPortalUrls.map {
+        val portalTasks = rule.portalUrlList.map {
             PortalTask(it, "-refresh", 3).also {
                 it.rule = rule
                 it.status = TaskStatus.CREATED
@@ -55,7 +58,22 @@ class RepositoryTests @Autowired constructor(
         }
 
         crawlRuleRepository.save(rule)
+        val ruleId = rule.id
+        assertNotNull(ruleId)
         portalTaskRepository.saveAll(portalTasks)
+        portalTasks.forEach {
+            assertNotNull(it.id) { "PortalTask.id should be non-null" }
+        }
+
+        val rule2 = crawlRuleRepository.findById(ruleId).get()
+        assertEquals(pagedPortalUrls.size, rule2.portalUrlList.size)
+        assertEquals(pagedPortalUrls.size, rule2.portalTasks.size)
+
+        val portalTasks2 = portalTaskRepository.findAllByRuleId(ruleId)
+        assertEquals(pagedPortalUrls.size, portalTasks2.size)
+        portalTasks2.forEach {
+            assertNotNull(it.rule) { "PortalTask.rule should be non-null" }
+        }
     }
 
     @Test

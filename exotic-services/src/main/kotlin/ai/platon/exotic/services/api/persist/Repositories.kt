@@ -27,6 +27,8 @@ interface PortalTaskRepository : JpaRepository<PortalTask, Serializable> {
     ): List<PortalTask>
 
     fun findAllByStatus(status: TaskStatus, pageable: Pageable): Page<PortalTask>
+
+    fun findAllByRuleId(ruleId: Long): List<PortalTask>
 }
 
 @Repository
