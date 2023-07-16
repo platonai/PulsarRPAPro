@@ -1,4 +1,4 @@
-FILE_COUNT=$(find "exotic-standalone/target/" -wholename "exotic-standalone*.jar" | wc -l)
+FILE_COUNT=$(find . -wholename "exotic-standalone*.jar" | wc -l)
 
 if (( FILE_COUNT == 0 )); then
   mvn -DskipTests=true
