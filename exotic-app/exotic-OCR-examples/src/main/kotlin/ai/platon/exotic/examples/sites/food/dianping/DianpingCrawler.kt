@@ -72,7 +72,7 @@ class DianpingCrawler(private val session: PulsarSession = ScentContexts.createS
 }
 
 fun main(argv: Array<String>) {
-    BrowserSettings.privacyContext(2).maxTabs(8).headless()
+    BrowserSettings.privacy(2).maxTabs(8).headless()
 
     val context = ScentContexts.create()
     val session = context.createSession()

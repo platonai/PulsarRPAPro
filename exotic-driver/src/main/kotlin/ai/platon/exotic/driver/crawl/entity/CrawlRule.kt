@@ -112,7 +112,7 @@ class CrawlRule {
 
     val portalUrlList get() = portalUrls.split("\n")
         .filter { it.isNotBlank() }
-        .filter { UrlUtils.isValidUrl(it) }
+        .filter { UrlUtils.isStandard(it) }
 
     val descriptivePeriod: String
         get() {

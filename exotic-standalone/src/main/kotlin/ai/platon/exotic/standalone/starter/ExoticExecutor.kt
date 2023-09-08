@@ -150,7 +150,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
     internal fun scrape(): List<Map<String, String?>> {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return listOf()
         }
@@ -162,7 +162,8 @@ class ExoticExecutor(val argv: Array<String>) {
         val results = if (hasOutLinkSelector) {
             session.scrapeOutPages(portalUrl, args, scrapeFields)
         } else {
-            listOf(session.scrape(portalUrl, args, scrapeFields))
+            // session.scrape has a bug (<= 1.10.12)
+            listOf(scrape(portalUrl, args, scrapeFields))
         }
 
         if (results.size == 1) {
@@ -182,9 +183,14 @@ class ExoticExecutor(val argv: Array<String>) {
         }
     }
 
+    private fun scrape(portalUrl: String, args: String, fieldSelectors: List<String>): Map<String, String?> {
+        val document = session.loadDocument(portalUrl, args)
+        return fieldSelectors.associateWith { document.selectFirstOrNull(it)?.text() }
+    }
+
     internal fun arrange() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
@@ -198,7 +204,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
     internal fun harvest() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
-        if (!UrlUtils.isValidUrl(portalUrl)) {
+        if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }

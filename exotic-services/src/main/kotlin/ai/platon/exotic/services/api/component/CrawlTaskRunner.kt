@@ -78,7 +78,7 @@ class CrawlTaskRunner(
             val now = Instant.now()
 
             rule.status = RuleStatus.Running.toString()
-            rule.crawlCount = rule.crawlCount?.inc()
+            rule.crawlCount = rule.crawlCount?.inc() ?: 1
             rule.lastCrawlTime = now
             crawlRuleRepository.save(rule)
             crawlRuleRepository.flush()
@@ -94,7 +94,7 @@ class CrawlTaskRunner(
             val maxPages = if (IS_DEVELOPMENT) 2 else rule.maxPages
             val pagedPortalUrls = portalUrls.split("\n")
                 .map { it.trim() }
-                .filter { UrlUtils.isValidUrl(it) }
+                .filter { UrlUtils.isStandard(it) }
                 .distinct()
                 .flatMap { url -> createPagedUrls(url, maxPages) }
             if (pagedPortalUrls.isEmpty()) {

@@ -2,8 +2,10 @@ package ai.platon.exotic.services.api.controller.web
 
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
+import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
+import ai.platon.exotic.services.api.persist.PortalTaskRepository
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.ResourceLoader
@@ -22,6 +24,7 @@ import kotlin.random.Random
 @RequestMapping("crawl/rules")
 class CrawlRuleWebController(
     private val repository: CrawlRuleRepository,
+    private val portalTaskRepository: PortalTaskRepository,
     private val crawlTaskRunner: CrawlTaskRunner,
 ) {
     private val amazonSeeds = LinkExtractors.fromResource("sites/amazon/best-sellers.txt")
@@ -124,6 +127,11 @@ class CrawlRuleWebController(
 
         rule.status = RuleStatus.Paused.toString()
         repository.save(rule)
+        val portalTasks = portalTaskRepository.findAllByRuleId(rule.id!!).toList()
+        portalTasks
+            .filter { it.status.value < TaskStatus.PAUSED.value }
+            .forEach { it.status = TaskStatus.PAUSED }
+        portalTaskRepository.saveAll(portalTasks)
 
         return "redirect:/crawl/rules/"
     }
@@ -135,6 +143,12 @@ class CrawlRuleWebController(
         rule.status = RuleStatus.Created.toString()
 //        rule.adjustFields()
         repository.save(rule)
+
+        var portalTasks = portalTaskRepository.findAllByRuleId(rule.id!!).toList()
+        portalTasks = portalTasks
+            .filter { it.status == TaskStatus.PAUSED }
+            .onEach { it.status = TaskStatus.CREATED }
+        portalTaskRepository.saveAll(portalTasks)
 
         crawlTaskRunner.startCrawl(rule)
 
@@ -162,6 +176,11 @@ class CrawlRuleWebController(
         rule.status = RuleStatus.Archived.toString()
 //        rule.adjustFields()
         repository.save(rule)
+        val portalTasks = portalTaskRepository.findAllByRuleId(rule.id!!)
+        portalTasks
+            .filter { it.status.value < TaskStatus.CANCELED.value }
+            .forEach { it.status = TaskStatus.CANCELED }
+        portalTaskRepository.saveAll(portalTasks)
 
         return "redirect:/crawl/rules/admin/"
     }

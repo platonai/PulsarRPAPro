@@ -2,6 +2,7 @@ package ai.platon.exotic.examples.common
 
 import ai.platon.exotic.driver.common.ExoticUtils
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.common.Systems
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
@@ -34,6 +35,7 @@ open class VerboseHarvester(
 
     init {
         System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
+        Systems.setProperty(CapabilityTypes.FETCH_SCROLL_DOWN_COUNT, 0)
     }
 
     val defaultArgs = "" +
