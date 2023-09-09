@@ -1,5 +1,6 @@
 package ai.platon.exotic.examples.supervised
 
+import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.getLogger
@@ -102,7 +103,7 @@ class DOMEvaluator(
         for (x in df.points) {
             val x1 = IntRange(0, columns.size - 1).associate { i -> columns[i].name to x[i] }
             val r = predict(x1)
-            println(r)
+            // println(r)
             val p = r["probability($titleLabel)"]
             if (p == 1.0) {
                 r.entries.associateTo(result) { it.key to it.value.toString() }
@@ -168,6 +169,8 @@ class DOMEvaluator(
 }
 
 fun main() {
+    BrowserSettings.disableProxy()
+
     val modelPath = AppPaths.TMP_DIR.resolve("dom_decision_tree.pmml")
     if (!Files.exists(modelPath)) {
         val modelURL = URL("http://platonic.fun/s/model/dom_decision_tree_bidding.0.0.1.pmml")
