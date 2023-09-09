@@ -245,6 +245,45 @@
 				<artifactId>pulsar-ql-common</artifactId>
 				<version>${pulsar.version}</version>
 			</dependency>
+
+
+
+			<!-- Java Predictive Model Markup Language -->
+			<dependency>
+				<groupId>org.jpmml</groupId>
+				<artifactId>pmml-agent</artifactId>
+				<version>${pmml.version}</version>
+			</dependency>
+
+			<!-- Java Predictive Model Markup Language -->
+			<dependency>
+				<groupId>org.jpmml</groupId>
+				<artifactId>pmml-model-jackson</artifactId>
+				<version>${pmml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jpmml</groupId>
+				<artifactId>pmml-evaluator-metro</artifactId>
+				<version>${pmml.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>org.jpmml</groupId>
+				<artifactId>pmml-evaluator-testing</artifactId>
+				<version>${pmml.version}</version>
+			</dependency>
+			<!-- Required by pmml -->
+			<dependency>
+				<groupId>jakarta.xml.bind</groupId>
+				<artifactId>jakarta.xml.bind-api</artifactId>
+				<version>${jakarta-xml-bind.version}</version>
+			</dependency>
+			<!-- Required by pmml -->
+			<dependency>
+				<groupId>jakarta.activation</groupId>
+				<artifactId>jakarta.activation-api</artifactId>
+				<version>${jakarta-activation-1.version}</version>
+			</dependency>
+
 			<dependency>
 				<groupId>javax.servlet</groupId>
 				<artifactId>javax.servlet-api</artifactId>
@@ -309,5 +348,11 @@
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 		<pulsar.version>1.10.20.1</pulsar.version>
 		<scent.version>1.10.7</scent.version>
+
+		<pmml.version>1.6.4</pmml.version>
+		<!-- Required by pmml -->
+		<jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
+		<!-- Required by pmml -->
+		<jakarta-activation-1.version>2.1.2</jakarta-activation-1.version>
 	</properties>
 </project>
