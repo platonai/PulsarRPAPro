@@ -30,7 +30,7 @@
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
             <artifactId>pulsar-tests</artifactId>
-            <version>${pulsar.version}</version>
+            <version>1.10.15</version>
         </dependency>
     </dependencies>
 </project>

@@ -26,7 +26,7 @@ open class CommonRPA {
     open suspend fun waitForReferrer(page: WebPage, driver: WebDriver) {
         val referrer = page.referrer ?: return
 
-        val referrerVisited = driver.browser.navigateHistory.any { it.url == referrer }
+        val referrerVisited = driver.browser.navigateHistory.contains(referrer)
         if (!referrerVisited) {
             logger.debug("Visiting the referrer | {}", referrer)
             visit(referrer, driver)
@@ -59,7 +59,7 @@ open class CommonRPA {
         val navigateHistory = driver.browser.navigateHistory
         val now = Instant.now()
 
-        val testNav = navigateHistory.lastOrNull { mayWaitFor(it, driver.navigateEntry) }
+        val testNav = navigateHistory.history.lastOrNull { mayWaitFor(it, driver.navigateEntry) }
 
         val code = when {
             !isActive -> PREV_PAGE_NEVER_READY

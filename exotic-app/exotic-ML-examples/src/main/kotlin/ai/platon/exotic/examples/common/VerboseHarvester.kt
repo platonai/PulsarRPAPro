@@ -84,8 +84,8 @@ open class VerboseHarvester(
     fun arrangeDocument(portalUrl: String) {
         val taskName = AppPaths.fromUri(portalUrl)
 
-        val normUrl = session.normalize(portalUrl, session.options(defaultArgs))
-        val options = normUrl.hOptions
+        val options = session.options(defaultArgs) as HarvestOptions
+        val normUrl = session.normalize(portalUrl, options)
         val portalPage = session.load(normUrl)
         val portalDocument = session.parse(portalPage)
         val anchorGroups = session.arrangeLinks(normUrl, portalDocument)
@@ -103,7 +103,7 @@ open class VerboseHarvester(
 
     fun harvest(url: String) = harvest(url, defaultArgs)
 
-    fun harvest(url: String, args: String) = harvest(url, session.options(args))
+    fun harvest(url: String, args: String) = harvest(url, session.options(args) as HarvestOptions)
 
     fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
 
@@ -115,7 +115,7 @@ open class VerboseHarvester(
 
     fun harvest(session: ScentSession, url: String, options: HarvestOptions) {
         val (url0, args0) = UrlUtils.splitUrlArgs(url)
-        val result = runBlocking { session.harvest(url0, session.options("$options $args0")) }
+        val result = runBlocking { session.harvest(url0, session.options("$options $args0") as HarvestOptions) }
         report(result, options)
     }
 
