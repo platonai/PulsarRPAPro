@@ -1,5 +1,15 @@
 #!/bin/bash
 
+bin=$(dirname "$0")
+bin=$(cd "$bin">/dev/null || exit; pwd)
+
+PROC_NAME="EXOTICS"
+COUNT=$(pgrep -cf "$PROC_NAME")
+if (( COUNT > 0 )); then
+  echo "$PROC_NAME is already running."
+  exit 0
+fi
+
 DAEMON=false
 DISPLAY_MODE="GUI"
 PRIVACY_CONTEXT=2
@@ -57,15 +67,14 @@ if [[ -e $JAVA ]]; then
 fi
 JAVA="$JAVA_HOME/bin/java"
 
-JAR=$(find . -name "exotic-server*.jar")
+JAR=$(find "$bin" -name "exotic-server*.jar")
 
-PROC_NAME="EXOTICS"
 EXEC_CALL=(java
 -Dproc_"$PROC_NAME"
 "-Xms2G" "-Xmx10g" "-XX:+HeapDumpOnOutOfMemoryError"
 "-XX:-OmitStackTraceInFastThrow"
-"-XX:ErrorFile=$USER_HOME/java_error_in_exotics_%p.log"
-"-XX:HeapDumpPath=$USER_HOME/java_error_in_exotics.hprof"
+"-XX:ErrorFile=$HOME/java_error_in_exotics_%p.log"
+"-XX:HeapDumpPath=$HOME/java_error_in_exotics.hprof"
 -D"java.awt.headless=true"
 -D"logging.dir=$LOG_DIR"
 -D"privacy.context.number=$PRIVACY_CONTEXT"
@@ -74,12 +83,6 @@ EXEC_CALL=(java
 -D"loader.main=ai.platon.exotic.ExoticServerApplicationKt"
 -cp "$JAR" org.springframework.boot.loader.PropertiesLauncher
 )
-
-COUNT=$(pgrep -cf "$PROC_NAME")
-if (( COUNT > 0 )); then
-  echo "$PROC_NAME is already running."
-  exit 0
-fi
 
 LOGOUT=/dev/null
 PID="$LOG_DIR/exotics.pid"
