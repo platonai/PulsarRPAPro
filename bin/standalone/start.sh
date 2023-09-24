@@ -57,11 +57,10 @@ if [[ -e $JAVA ]]; then
 fi
 JAVA="$JAVA_HOME/bin/java"
 
-JAR=$(find . -name "exotic-server*.jar")
+JAR=$(find . -name "exotic-standalone*.jar")
 
-PROC_NAME="EXOTICS"
 EXEC_CALL=(java
--Dproc_"$PROC_NAME"
+-Dproc_EXOTICS
 "-Xms2G" "-Xmx10g" "-XX:+HeapDumpOnOutOfMemoryError"
 "-XX:-OmitStackTraceInFastThrow"
 "-XX:ErrorFile=$USER_HOME/java_error_in_exotics_%p.log"
@@ -71,15 +70,8 @@ EXEC_CALL=(java
 -D"privacy.context.number=$PRIVACY_CONTEXT"
 -D"browser.max.active.tabs=$MAX_TABS"
 -D"browser.display.mode=$DISPLAY_MODE"
--D"loader.main=ai.platon.exotic.ExoticServerApplicationKt"
--cp "$JAR" org.springframework.boot.loader.PropertiesLauncher
+-jar "$JAR" serve
 )
-
-COUNT=$(pgrep -cf "$PROC_NAME")
-if (( COUNT > 0 )); then
-  echo "$PROC_NAME is already running."
-  exit 0
-fi
 
 LOGOUT=/dev/null
 PID="$LOG_DIR/exotics.pid"

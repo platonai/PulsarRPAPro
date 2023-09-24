@@ -14,19 +14,23 @@ enum class RuleStatus {
 }
 
 enum class TaskStatus(
-    private val value: Int,
-    private val series: Series,
+    val value: Int,
+    val series: Series,
     val reasonPhrase: String
 ) {
+    OK(200, Series.FINISHED, "OK"),
     CREATED(201, Series.CREATED, "Created"),
     LOADED(202, Series.SUCCESSFUL, "Loaded"),
     SUBMITTED(203, Series.SUCCESSFUL, "Submitted"),
-    ACCEPTED(203, Series.SUCCESSFUL, "Accepted"),
-    OK(200, Series.FINISHED, "OK"),
+    ACCEPTED(204, Series.SUCCESSFUL, "Accepted"),
+    PAUSED(205, Series.SUCCESSFUL, "Paused"),
+    CANCELED(206, Series.SUCCESSFUL, "Canceled"),
 
     PROCESSING(301, Series.INFORMATIONAL, "Processing"),
-    RETRYING(301, Series.INFORMATIONAL, "Retrying"),
-    FAILED(501, Series.FINISHED, "Server Failed");
+    RETRYING(302, Series.INFORMATIONAL, "Retrying"),
+
+    FAILED(501, Series.FINISHED, "Server Failed"),
+    ABORTED(502, Series.FINISHED, "Aborted");
 
     enum class Series(private val value: Int) {
         CREATED(1), SUCCESSFUL(2), INFORMATIONAL(3), FINISHED(100)

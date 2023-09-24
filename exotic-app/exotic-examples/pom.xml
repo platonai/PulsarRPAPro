@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.11.5-SNAPSHOT</version>
+        <version>1.11.6-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-examples</artifactId>
@@ -29,8 +29,19 @@
         </dependency>
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-tests</artifactId>
+            <artifactId>pulsar-protocol</artifactId>
             <version>${pulsar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-tests</artifactId>
+            <version>1.10.15</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
     </dependencies>
 </project>
