@@ -1,13 +1,17 @@
 #!/bin/bash
 
 bin=$(dirname "$0")
-bin=$(cd "$bin">/dev/null || exit; pwd)
+APP_HOME=$(realpath "$bin/..")
 
 PROC_NAME="EXOTICS"
 COUNT=$(pgrep -cf "$PROC_NAME")
 if (( COUNT > 0 )); then
   echo "$PROC_NAME is already running."
   exit 0
+fi
+
+if [[ -e "$APP_HOME"/logback.xml ]]; then
+  export LOGBACK_CONFIG_FILE_LOCATION="$APP_HOME"/logback.xml
 fi
 
 DAEMON=false
@@ -67,7 +71,18 @@ if [[ -e $JAVA ]]; then
 fi
 JAVA="$JAVA_HOME/bin/java"
 
-JAR=$(find "$bin" -name "exotic-server*.jar")
+JAR=$(find "$APP_HOME" -name "exotic-server*.jar")
+
+APP_OPTS=(
+-D"java.awt.headless=true"
+-D"logging.dir=$LOG_DIR"
+-D"privacy.context.number=$PRIVACY_CONTEXT"
+-D"browser.max.active.tabs=$MAX_TABS"
+-D"browser.display.mode=$DISPLAY_MODE"
+)
+if [[ -e "$LOGBACK_CONFIG_FILE_LOCATION" ]]; then
+  APP_OPTS=("${APP_OPTS[@]}" -D"logging.config=$LOGBACK_CONFIG_FILE_LOCATION")
+fi
 
 EXEC_CALL=(java
 -Dproc_"$PROC_NAME"
@@ -75,11 +90,7 @@ EXEC_CALL=(java
 "-XX:-OmitStackTraceInFastThrow"
 "-XX:ErrorFile=$HOME/java_error_in_exotics_%p.log"
 "-XX:HeapDumpPath=$HOME/java_error_in_exotics.hprof"
--D"java.awt.headless=true"
--D"logging.dir=$LOG_DIR"
--D"privacy.context.number=$PRIVACY_CONTEXT"
--D"browser.max.active.tabs=$MAX_TABS"
--D"browser.display.mode=$DISPLAY_MODE"
+"${APP_OPTS[@]}"
 -D"loader.main=ai.platon.exotic.ExoticServerApplicationKt"
 -cp "$JAR" org.springframework.boot.loader.PropertiesLauncher
 )

@@ -23,7 +23,8 @@ DESTINATION="$HOST:~/exotic-$VERSION"
 
 if [ -e "$SOURCE" ]; then
   rsync --update -raz --progress "$SOURCE" "$DESTINATION/"
-  rsync --update -raz --progress "$APP_HOME/bin/server/" "$DESTINATION/"
+  rsync --update -raz --progress "$VERSION_FILE" "$DESTINATION/"
+  rsync --update -raz --progress "$APP_HOME/bin/server/*" "$DESTINATION/bin/"
 else
   echo "$SOURCE does not exist"
   exit 1
