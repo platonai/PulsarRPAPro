@@ -1,6 +1,6 @@
 #!/bin/bash
 
-bin=$(dirname "$0")
+bin=$(dirname "$0")/..
 APP_HOME=$(realpath "$bin/..")
 
 PROC_NAME="EXOTICS"
@@ -10,6 +10,7 @@ if (( COUNT > 0 )); then
   exit 0
 fi
 
+# TODO: use for $file in "$APP_HOME"/logback*.xml
 if [[ -e "$APP_HOME"/logback.xml ]]; then
   export LOGBACK_CONFIG_FILE_LOCATION="$APP_HOME"/logback.xml
 fi
