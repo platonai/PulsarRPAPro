@@ -340,14 +340,14 @@
 	<properties>
 		<javac.src.version>11</javac.src.version>
 		<javac.target.version>11</javac.target.version>
-		<kotlin.version>1.7.20</kotlin.version>
+		<kotlin.version>1.8.22</kotlin.version>
 
 		<mysql.connector.version>5.1.34</mysql.connector.version>
 		<cron-utils.version>9.1.6</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.10.20.1</pulsar.version>
-		<scent.version>1.10.7</scent.version>
+		<pulsar.version>1.10.21</pulsar.version>
+		<scent.version>1.11.0</scent.version>
 
 		<pmml.version>1.6.4</pmml.version>
 		<!-- Required by pmml -->

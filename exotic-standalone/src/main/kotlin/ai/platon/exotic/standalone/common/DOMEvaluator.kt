@@ -1,12 +1,12 @@
-package ai.platon.exotic.examples.supervised
+package ai.platon.exotic.standalone.common
 
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.math.vectors.get
-import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.dom.nodes.node.ext.*
+import ai.platon.scent.ScentSession
 import ai.platon.scent.common.message.ScentMiscMessageWriter
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.ml.NodePoint
@@ -81,11 +81,11 @@ class DOMEvaluator(
     }
     
     private fun predict0(url: String): Map<String, *> {
-        val options = session.options()
+        val options = session.options("-ignoreFailure -requireSize 20000")
         
         val page = session.load(url, options)
         if (!page.protocolStatus.isSuccess) {
-            return mapOf("Failure" to "Protocol: " + (page.protocolStatus.reason ?: "unknown"))
+            return mapOf("Failure" to page.protocolStatus.reason)
         }
         val document = session.parse(page, options)
         val iframes = document.body.select("iframe")
@@ -171,17 +171,6 @@ class DOMEvaluator(
 fun main() {
     BrowserSettings.disableProxy()
 
-    val urls = LinkExtractors.fromResource("seeds/bidding-detail.txt")
-        .filterNot { it.contains("index") }
-        .shuffled()
-        .take(10000)
-
-    // Submit all urls to load from local storage or fetch from the Internet.
-    PulsarContexts.createSession().submitAll(urls)
-    // Wait until all tasks are done.
-    PulsarContexts.await()
-    
-    // Download the model if not exists
     val modelPath = AppPaths.TMP_DIR.resolve("dom_decision_tree.pmml")
     if (!Files.exists(modelPath)) {
         val modelURL = URL("http://platonic.fun/s/model/dom_decision_tree_bidding.0.0.1.pmml")
@@ -191,9 +180,13 @@ fun main() {
     val predictResultPath = AppPaths.TMP_DIR.resolve("dom_decision_tree_predict.csv")
     val model = DOMEvaluator(modelPath, predictResultPath)
     
+    val urls = LinkExtractors.fromResource("seeds/bidding-detail.txt")
+        .filterNot { it.contains("index") }
+        .shuffled()
+        .take(10000)
+    
     var predictedCount = 0
     var failureCount = 0
-    var pageFailureCount = 0
     var iframeCount = 0
     urls.forEach { url ->
         if (!model.isActive) {
@@ -205,11 +198,7 @@ fun main() {
             ++failureCount
             println("Failed to predict, [Unknown Reason] | $url")
         } else if (result.containsKey("Failure")) {
-            if (result.containsValue("IFrame")) {
-                ++iframeCount
-            } else if (result.containsValue("Protocol")) {
-                ++pageFailureCount
-            }
+            ++iframeCount
             println("Failed to predict, [" + result["Failure"] + "] | $url")
         } else {
             ++predictedCount
@@ -219,7 +208,7 @@ fun main() {
     }
     
     println("\n=======================")
-    val totalCount = urls.size - iframeCount - pageFailureCount
+    val totalCount = urls.size - iframeCount
     val predicatedRate = predictedCount / totalCount.toFloat()
     println("Predicated: $predictedCount Total: $totalCount Predicated Rate: $predicatedRate")
     println("Full extracted result are exported to $predictResultPath")
