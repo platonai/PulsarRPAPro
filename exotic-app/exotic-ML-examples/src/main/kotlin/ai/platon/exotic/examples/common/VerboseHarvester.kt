@@ -103,7 +103,7 @@ open class VerboseHarvester(
 
     fun harvest(url: String) = harvest(url, defaultArgs)
 
-    fun harvest(url: String, args: String) = harvest(url, session.options(args) as HarvestOptions)
+    fun harvest(url: String, args: String) = harvest(url, session.options(args))
 
     fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
 

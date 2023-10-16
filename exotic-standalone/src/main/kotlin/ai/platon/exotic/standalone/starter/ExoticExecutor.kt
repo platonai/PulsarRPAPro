@@ -108,9 +108,13 @@ class ExoticExecutor(val argv: Array<String>) {
             println(lastHelpMessage)
         }
     }
+    
+    private fun printMainHelp() {
+        System.err.println(MAIN_HELP)
+    }
 
     private fun printMainHelpAndExit() {
-        System.err.println(MAIN_HELP)
+        printMainHelp()
         exitProcess(0)
     }
 

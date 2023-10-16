@@ -4,9 +4,8 @@ import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.context.PulsarContexts
 
 fun main() {
-    BrowserSettings.withPrototypeBrowser()
-    
+    BrowserSettings.disableProxy().privacy(1).withSPA().withPrototypeBrowser()
     val session = PulsarContexts.createSession()
-    session.load("https://www.tmall.com/", "-refresh")
-    readLine()
+    session.load("https://www.amazon.com/", "-refresh")
+    readlnOrNull()
 }
