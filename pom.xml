@@ -346,7 +346,7 @@
 		<cron-utils.version>9.1.6</cron-utils.version>
 
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
-		<pulsar.version>1.10.21</pulsar.version>
+		<pulsar.version>1.10.22-SNAPSHOT</pulsar.version>
 		<scent.version>1.11.1-SNAPSHOT</scent.version>
 
 		<pmml.version>1.6.4</pmml.version>
