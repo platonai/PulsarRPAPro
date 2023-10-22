@@ -58,6 +58,18 @@ fi
 JAVA="$JAVA_HOME/bin/java"
 
 JAR=$(find . -name "exotic-server*.jar")
+LOGBACK_CONFIG_FILE_LOCATION=$(find . -name "logback*.xml")
+
+APP_OPTS=(
+-D"logging.dir=$LOG_DIR"
+-D"privacy.context.number=$PRIVACY_CONTEXT"
+-D"browser.max.active.tabs=$MAX_TABS"
+-D"browser.display.mode=$DISPLAY_MODE"
+)
+
+if [[ -e "$LOGBACK_CONFIG_FILE_LOCATION" ]]; then
+  APP_OPTS=("${APP_OPTS[@]}" -D"logging.config=$LOGBACK_CONFIG_FILE_LOCATION")
+fi
 
 EXEC_CALL=(java
 -Dproc_EXOTICS
@@ -66,10 +78,7 @@ EXEC_CALL=(java
 "-XX:ErrorFile=$USER_HOME/java_error_in_exotics_%p.log"
 "-XX:HeapDumpPath=$USER_HOME/java_error_in_exotics.hprof"
 -D"java.awt.headless=true"
--D"logging.dir=$LOG_DIR"
--D"privacy.context.number=$PRIVACY_CONTEXT"
--D"browser.max.active.tabs=$MAX_TABS"
--D"browser.display.mode=$DISPLAY_MODE"
+"${APP_OPTS[@]}"
 -D"loader.main=ai.platon.exotic.ExoticServerApplicationKt"
 -cp "$JAR" org.springframework.boot.loader.PropertiesLauncher
 )
