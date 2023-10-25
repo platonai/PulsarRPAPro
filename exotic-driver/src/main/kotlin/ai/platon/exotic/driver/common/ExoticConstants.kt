@@ -7,7 +7,7 @@ import java.time.Instant
 import java.time.LocalDateTime
 import java.time.ZoneId
 
-val EPOCH_LDT = LocalDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault())!!
+val EPOCH_LDT = LocalDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault())
 
 const val PROP_DOWNLOAD_LAST_PAGE_NUMBER = "downloadLastPageNumber"
 

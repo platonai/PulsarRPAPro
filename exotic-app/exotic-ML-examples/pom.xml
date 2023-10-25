@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.11.6-SNAPSHOT</version>
+        <version>1.12.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-ML-examples</artifactId>
@@ -23,9 +23,15 @@
 
     <dependencies>
         <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-all</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
+
+        <dependency>
             <groupId>ai.platon.exotic</groupId>
             <artifactId>exotic-examples</artifactId>
-            <version>1.11.6-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
         <!-- Internal dependency -->
@@ -34,17 +40,17 @@
             <artifactId>scent-resources</artifactId>
             <version>${scent.version}</version>
         </dependency>
-<!--        <dependency>-->
-<!--            <groupId>ai.platon.scent</groupId>-->
-<!--            <artifactId>scent-site-amazon</artifactId>-->
-<!--            <version>1.9.10</version>-->
-<!--            <exclusions>-->
-<!--                <exclusion>-->
-<!--                    <groupId>ai.platon.pulsar</groupId>-->
-<!--                    <artifactId>pulsar-site-amazon</artifactId>-->
-<!--                </exclusion>-->
-<!--            </exclusions>-->
-<!--        </dependency>-->
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-site-amazon</artifactId>
+            <version>1.9.10</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>*</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
+        </dependency>
 
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
@@ -59,6 +65,11 @@
         </dependency>
 
         <!-- for scent-beans/app-context.xml -->
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-auto-mining</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
         <dependency>
             <groupId>ai.platon.scent</groupId>
             <artifactId>scent-beans</artifactId>
@@ -88,6 +99,15 @@
         <dependency>
             <groupId>ai.platon.exotic</groupId>
             <artifactId>exotic-driver</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-model-jackson</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.jpmml</groupId>
+            <artifactId>pmml-evaluator-metro</artifactId>
         </dependency>
     </dependencies>
 

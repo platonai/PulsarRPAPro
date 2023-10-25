@@ -27,6 +27,8 @@ class ExoticExecutor(val argv: Array<String>) {
 
     var parsed = false
         private set
+    var predicate = false
+        private set
     var arrange = false
         private set
     var harvest = false
@@ -81,6 +83,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
         when {
             arrange -> arrange()
+            predicate -> predicate()
             harvest -> harvest()
             scrape -> scrape()
             server -> runServer()
@@ -105,9 +108,13 @@ class ExoticExecutor(val argv: Array<String>) {
             println(lastHelpMessage)
         }
     }
+    
+    private fun printMainHelp() {
+        System.err.println(MAIN_HELP)
+    }
 
     private fun printMainHelpAndExit() {
-        System.err.println(MAIN_HELP)
+        printMainHelp()
         exitProcess(0)
     }
 
@@ -199,6 +206,18 @@ class ExoticExecutor(val argv: Array<String>) {
             val harvester = VerboseHarvester()
             val groups = harvester.arrangeLinks(configuredUrl)
             harvester.printAllAnchorGroups(groups)
+        }
+    }
+    
+    internal fun predicate() {
+        val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
+        if (!UrlUtils.isStandard(portalUrl)) {
+            System.err.println("The portal url is invalid")
+            return
+        }
+        
+        runBlocking {
+            VerboseHarvester().harvest(portalUrl, args)
         }
     }
 

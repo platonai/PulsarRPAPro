@@ -5,6 +5,7 @@ import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.gora.FileBackendPageStore
 import ai.platon.scent.context.ScentContexts
+import ai.platon.scent.dom.HarvestOptions
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import kotlin.streams.toList
@@ -49,7 +50,7 @@ object ShopeeScanHarvest {
                 " -component .product-briefing" +
                 " -diagnose -vj -trustSamples"
 
-        val options = session.options(args)
+        val options = session.options(args) as HarvestOptions
 
         val runtimeMxBean = ManagementFactory.getRuntimeMXBean()
         println(runtimeMxBean.inputArguments)
