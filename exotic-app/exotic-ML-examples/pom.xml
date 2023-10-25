@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>1.12.0-SNAPSHOT</version>
+        <version>1.12.1-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-ML-examples</artifactId>
@@ -31,7 +31,7 @@
         <dependency>
             <groupId>ai.platon.exotic</groupId>
             <artifactId>exotic-examples</artifactId>
-            <version>1.12.0-SNAPSHOT</version>
+            <version>1.12.1-SNAPSHOT</version>
         </dependency>
 
         <!-- Internal dependency -->
