@@ -58,6 +58,26 @@ open class VerboseHarvester(
         doc.also { it.annotateNodes(normUrl.hOptions) }.also { session.export(it) }
         return session.arrangeLinks(normUrl, doc)
     }
+    
+    fun arrangeDocument(portalUrl: String) {
+        val taskName = AppPaths.fromUri(portalUrl)
+        
+        val options = session.options(defaultArgs) as HarvestOptions
+        val normUrl = session.normalize(portalUrl, options)
+        val portalPage = session.load(normUrl)
+        val portalDocument = session.parse(portalPage)
+        val anchorGroups = session.arrangeLinks(normUrl, portalDocument)
+        logger.info("------------------------------")
+        anchorGroups.take(1).forEach {
+            it.urlStrings.shuffled().take(10).forEachIndexed { i, url -> println("${1 + i}.\t$url") }
+            it.urlStrings.take(options.topLinks)
+                .map { session.load(it, options) }
+                .map { session.parse(it, options) }
+                .let { session.arrangeDocuments(normUrl, portalPage, it) }
+        }
+        
+        portalDocument.also { it.annotateNodes(options) }.also { session.export(it, type = "portal") }
+    }
 
     fun printAnchorGroups(anchorGroups: Collection<AnchorGroup>, showBestGroups: Boolean = false) {
         if (anchorGroups.isEmpty()) {

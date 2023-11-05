@@ -28,12 +28,6 @@
             <version>${pulsar.version}</version>
         </dependency>
 
-        <dependency>
-            <groupId>ai.platon.exotic</groupId>
-            <artifactId>exotic-examples</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
-        </dependency>
-
         <!-- Internal dependency -->
         <dependency>
             <groupId>ai.platon.scent</groupId>
@@ -80,6 +74,17 @@
             <artifactId>scent-boot</artifactId>
             <version>${scent.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-crawl-common</artifactId>
+        </dependency>
+
+
         <!-- Required by ai.platon.pulsar.browser.driver.chrome.impl.Chrome -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
@@ -94,11 +99,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-test</artifactId>
             <scope>test</scope>
-        </dependency>
-
-        <dependency>
-            <groupId>ai.platon.exotic</groupId>
-            <artifactId>exotic-driver</artifactId>
         </dependency>
 
         <dependency>

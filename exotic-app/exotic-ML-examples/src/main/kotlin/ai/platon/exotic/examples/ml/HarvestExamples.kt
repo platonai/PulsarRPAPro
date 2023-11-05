@@ -1,7 +1,7 @@
 package ai.platon.exotic.examples.ml
 
 import ai.platon.exotic.common.ExoticUtils
-import ai.platon.exotic.examples.ml.common.VerboseHarvester
+import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.scent.ScentContext

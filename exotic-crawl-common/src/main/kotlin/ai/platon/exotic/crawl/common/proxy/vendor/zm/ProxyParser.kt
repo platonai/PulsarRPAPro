@@ -1,6 +1,6 @@
 package ai.platon.exotic.crawl.common.proxy.vendor.zm
 
-import ai.platon.exotic.common.proxy.vendor.ProxyParser
+import ai.platon.exotic.crawl.common.proxy.vendor.ProxyParser
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimeDetector
 import ai.platon.pulsar.common.proxy.ProxyEntry

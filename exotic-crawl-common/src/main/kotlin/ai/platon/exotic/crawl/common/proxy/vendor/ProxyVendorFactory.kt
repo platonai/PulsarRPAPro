@@ -1,4 +1,4 @@
-package ai.platon.exotic.common.proxy.vendor
+package ai.platon.exotic.crawl.common.proxy.vendor
 
 import ai.platon.exotic.crawl.common.proxy.vendor.zm.ZMProxyParser
 import ai.platon.pulsar.common.proxy.ProxyEntry

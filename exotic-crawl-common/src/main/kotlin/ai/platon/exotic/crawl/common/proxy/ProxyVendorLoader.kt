@@ -1,11 +1,11 @@
-package ai.platon.exotic.common.proxy
+package ai.platon.exotic.crawl.common.proxy
 
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.proxy.ProxyEntry
 import ai.platon.pulsar.common.proxy.ProxyException
 import ai.platon.pulsar.common.proxy.ProxyLoader
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.exotic.common.proxy.vendor.ProxyVendorFactory
+import ai.platon.exotic.crawl.common.proxy.vendor.ProxyVendorFactory
 import ai.platon.pulsar.common.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
