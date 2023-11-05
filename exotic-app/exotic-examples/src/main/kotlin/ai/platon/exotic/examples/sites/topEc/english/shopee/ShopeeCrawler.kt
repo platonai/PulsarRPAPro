@@ -1,14 +1,13 @@
 package ai.platon.exotic.examples.sites.topEc.english.shopee
 
-import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.WebPage
 
 fun main() {
-    BrowserSettings.headless()
-    BrowserSettings.withWorseNetwork()
+//    BrowserSettings.headless()
+//    BrowserSettings.withWorseNetwork()
 
     val portalUrls = """
         https://shopee.sg/Mobile-Gadgets-cat.11013350

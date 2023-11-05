@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <parent>
+        <groupId>ai.platon.exotic</groupId>
+        <artifactId>exotic</artifactId>
+        <version>1.12.1-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>exotic-crawl-common</artifactId>
+    <packaging>jar</packaging>
+
+    <name>Exotic Crawl Common</name>
+    <description>The exotic crawl common library</description>
+
+    <dependencies>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-common</artifactId>
+        </dependency>
+
+        <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-common</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-skeleton</artifactId>
+            <version>${pulsar.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-extract</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.scent</groupId>
+            <artifactId>scent-boot</artifactId>
+            <version>${scent.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

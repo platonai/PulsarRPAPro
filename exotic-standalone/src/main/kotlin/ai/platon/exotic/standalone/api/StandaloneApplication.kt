@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone.api
 
-import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.exotic.common.ExoticUtils
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan

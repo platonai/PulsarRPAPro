@@ -75,7 +75,7 @@ class ProxyVendorLoader(conf: ImmutableConfig): ProxyLoader(conf) {
         lastFetchTime = Instant.now()
 
         return kotlin.runCatching { fetchProxiesFromProvider(URL(url), vendor, format) }
-            .onFailure { log.warn(it.simplify()) }
+            .onFailure { log.warn(it.brief()) }
             .getOrNull() ?: listOf()
     }
 

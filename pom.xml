@@ -62,7 +62,9 @@
 	</repositories>
 
 	<modules>
+		<module>exotic-common</module>
 		<module>exotic-driver</module>
+		<module>exotic-crawl-common</module>
 		<module>exotic-services</module>
 		<module>exotic-server</module>
 		<module>exotic-standalone</module>
@@ -210,7 +212,17 @@
 		<dependencies>
 			<dependency>
 				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-common</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.exotic</groupId>
 				<artifactId>exotic-driver</artifactId>
+				<version>${project.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-crawl-common</artifactId>
 				<version>${project.version}</version>
 			</dependency>
 			<dependency>
@@ -245,7 +257,6 @@
 				<artifactId>pulsar-ql-common</artifactId>
 				<version>${pulsar.version}</version>
 			</dependency>
-
 
 
 			<!-- Java Predictive Model Markup Language -->

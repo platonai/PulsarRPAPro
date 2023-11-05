@@ -5,7 +5,7 @@ import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.browser.common.InteractSettings
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.pulsar.common.metrics.AppMetrics
+import ai.platon.pulsar.common.metrics.MetricsSystem
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.crawl.common.url.ListenableHyperlink
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -32,7 +32,7 @@ class HighPerformanceCrawler(
     /**
      * Activate MetricsSystem
      * */
-    private val metricsSystem: AppMetrics
+    private val metricsSystem: MetricsSystem
 ) {
     private val session = PulsarContexts.createSession()
 

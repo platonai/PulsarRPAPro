@@ -1,7 +1,7 @@
 package ai.platon.exotic.standalone.starter
 
 import ai.platon.exotic.standalone.api.StandaloneApplication
-import ai.platon.exotic.standalone.common.VerboseHarvester
+import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.options.LoadOptions

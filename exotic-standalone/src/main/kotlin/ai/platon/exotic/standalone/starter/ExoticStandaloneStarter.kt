@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone.starter
 
-import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.exotic.common.ExoticUtils
 
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()

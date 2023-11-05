@@ -1,7 +1,7 @@
 package ai.platon.exotic.driver.crawl.entity
 
-import ai.platon.exotic.driver.common.ExoticUtils
-import ai.platon.exotic.driver.common.NameGenerator
+import ai.platon.exotic.common.ExoticUtils
+import ai.platon.exotic.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.urls.UrlUtils
