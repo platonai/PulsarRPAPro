@@ -93,7 +93,9 @@ class DOMEvaluator(
             return mapOf("Failure" to "IFrame $message")
         }
         
-        val df = session.encodeNodes(listOf(document), options, biddingNodeFilter)
+        val exportPath = AppPaths.getTmp("features.txt")
+        val labels = listOf<String>()
+        val df = session.encodeNodes(listOf(document).asIterable(), options, exportPath, labels, biddingNodeFilter)
         val columns = df.schema.columns
         
         val titleLabel = "1"

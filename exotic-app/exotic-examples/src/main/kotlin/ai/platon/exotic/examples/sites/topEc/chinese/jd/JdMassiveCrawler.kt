@@ -15,7 +15,7 @@ fun main() {
     val parseHandler = { _: WebPage, document: FeaturedDocument ->
         val urls = document.select("#J_goodsList a[href~=item]")
             .mapTo(mutableSetOf()) { it.attr("abs:href") }
-        println("" + urls.size + "\t|\t" + document.title + "\t|\t" + document.baseUri)
+        println("" + urls.size + "\t|\t" + document.title + "\t|\t" + document.baseURI)
 
         context.submitAll(urls.take(10).map { Hyperlink(it) })
     }

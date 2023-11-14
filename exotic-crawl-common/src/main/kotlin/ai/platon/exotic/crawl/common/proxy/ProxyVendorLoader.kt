@@ -116,7 +116,7 @@ class ProxyVendorLoader(conf: ImmutableConfig): ProxyLoader(conf) {
     fun loadProviders(path: Path): List<String> {
         return Files.readAllLines(path).map { it.trim() }
             .filter { it.isNotBlank() && !it.startsWith("#") }
-            .distinct().shuffled().filter { UrlUtils.isValidUrl(it) }
+            .distinct().shuffled().filter { UrlUtils.isStandard(it) }
     }
 
     fun parseQualifiedProxies(path: Path, vendor: String = "none", format: String = "txt"): List<ProxyEntry> {

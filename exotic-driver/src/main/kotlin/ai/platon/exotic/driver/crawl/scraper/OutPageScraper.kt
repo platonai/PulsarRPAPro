@@ -136,7 +136,7 @@ open class OutPageScraper(
 
         // TODO: normalization
         val urls = hrefs.split(",").asSequence()
-            .filter { UrlUtils.isValidUrl(it) }
+            .filter { UrlUtils.isStandard(it) }
             .map { it.substringBeforeLast("#") }
             .map { it.trim() }
             .take(maxOutPages)

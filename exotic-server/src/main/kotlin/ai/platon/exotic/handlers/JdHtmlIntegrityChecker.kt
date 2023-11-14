@@ -81,7 +81,7 @@ class JdHtmlIntegrityChecker(
             val protocolStatus = pageDatum.protocolStatus
             return when {
                 protocolStatus.isTimeout -> true
-                protocolStatus.getArgOrElse(ProtocolStatus.ARG_RETRY_REASON, "") == "ERR_TIMED_OUT" -> true
+                protocolStatus.getArgOrElse(ProtocolStatus.ARG_REASON, "") == "ERR_TIMED_OUT" -> true
                 pageSource.contains("<title>京东-欢迎登录</title>") -> true
                 location.contains("login.aspx") -> true
                 else -> false

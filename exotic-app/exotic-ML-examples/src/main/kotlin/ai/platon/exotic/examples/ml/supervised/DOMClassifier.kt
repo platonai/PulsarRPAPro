@@ -65,7 +65,6 @@ class DOMClassifier {
     fun encode() {
         labelSet.clear()
 
-        var headerNotWritten = true
         var i = 0
         IntRange(0, numChunks - 1).forEach { ident ->
             prepareAnnotationTasks(ident)
@@ -80,9 +79,8 @@ class DOMClassifier {
                     val nodes = document.document.collectIf(biddingNodeFilter)
                     val points = encoder.encode(nodes)
                     if (points.isNotEmpty()) {
-                        val df = NodeDataFrame(encoder.schema, points)
-                        df.exportTo(exportPath, headerNotWritten)
-                        headerNotWritten = false
+                        val df = NodeDataFrame(points, encoder.schema, path = exportPath)
+                        df.export()
                     }
 
                     if (++i % 1000 == 0) {

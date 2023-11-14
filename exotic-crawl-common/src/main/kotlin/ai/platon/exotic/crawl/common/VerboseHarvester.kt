@@ -73,7 +73,7 @@ open class VerboseHarvester(
             it.urlStrings.take(options.topLinks)
                 .map { session.load(it, options) }
                 .map { session.parse(it, options) }
-                .let { session.arrangeDocuments(normUrl, portalPage, it) }
+                .let { session.arrangeDocuments(normUrl, portalPage, it.asSequence()) }
         }
         
         portalDocument.also { it.annotateNodes(options) }.also { session.export(it, type = "portal") }
@@ -117,7 +117,7 @@ open class VerboseHarvester(
     fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
 
     fun harvest(documents: List<FeaturedDocument>, options: HarvestOptions): HarvestResult {
-        val result = runBlocking { session.harvest(documents, options) }
+        val result = runBlocking { session.harvest(documents.asSequence(), options) }
         report(result, options)
         return result
     }
