@@ -9,7 +9,7 @@ fun main() {
     System.setProperty("scrape.server.port", "2718")
     System.setProperty("scrape.server.servlet.context-path", "/exotic")
 
-    val scraper = ExoticCrawler()
+    val crawler = ExoticCrawler()
 
     val urls = ResourceLoader.readAllLines("sites/amazon/asin/urls.txt").shuffled().take(10)
     val sqlTemplate =
@@ -23,7 +23,7 @@ fun main() {
             |   load_and_select('{{url}} -i 1h', ':root')
             |""".trimMargin()
 
-    scraper.use {
+    crawler.use {
         val driver = it.driver
 
         val ids = mutableSetOf<String>()

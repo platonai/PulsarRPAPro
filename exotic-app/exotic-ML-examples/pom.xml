@@ -119,7 +119,7 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <configuration>
-                    <mainClass>ai.platon.exotic.examples.HarvestExamplesKt</mainClass>
+                    <mainClass>ai.platon.exotic.examples.ml.unsupervised.topEc.english.amazon.AmazonScanHarvestKt</mainClass>
                     <addResources>true</addResources>
                     <executable>true</executable>
                 </configuration>
