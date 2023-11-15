@@ -26,7 +26,6 @@
     <modules>
         <module>exotic-examples</module>
         <module>exotic-ML-examples</module>
-        <module>exotic-Spark-examples</module>
         <module>exotic-OCR-examples</module>
         <module>exotic-PERF-examples</module>
     </modules>

@@ -9,6 +9,12 @@
 		<relativePath/>
 	</parent>
 
+<!--	<parent>-->
+<!--		<groupId>ai.platon</groupId>-->
+<!--		<artifactId>platon</artifactId>-->
+<!--		<version>3.7.0</version>-->
+<!--	</parent>-->
+
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
 	<version>1.12.1-SNAPSHOT</version>
@@ -65,6 +71,7 @@
 		<module>exotic-common</module>
 		<module>exotic-driver</module>
 		<module>exotic-crawl-common</module>
+		<module>exotic-ml</module>
 		<module>exotic-services</module>
 		<module>exotic-server</module>
 		<module>exotic-standalone</module>
@@ -235,17 +242,17 @@
 				<artifactId>exotic-services</artifactId>
 				<version>${project.version}</version>
 			</dependency>
+			<dependency>
+				<groupId>ai.platon.exotic</groupId>
+				<artifactId>exotic-ml</artifactId>
+				<version>${project.version}</version>
+			</dependency>
 
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
 				<artifactId>pulsar-persist</artifactId>
 				<version>${pulsar.version}</version>
-				<exclusions>
-					<exclusion>
-						<groupId>org.mortbay.jetty</groupId>
-						<artifactId>servlet-api</artifactId>
-					</exclusion>
-				</exclusions>
+				<classifier>shaded</classifier>
 			</dependency>
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
@@ -360,6 +367,7 @@
 
 		<mysql.connector.version>5.1.34</mysql.connector.version>
 		<cron-utils.version>9.1.6</cron-utils.version>
+		<netty.version>4.0.56.Final</netty.version>
 
 		<pmml.version>1.6.4</pmml.version>
 		<!-- Required by pmml -->

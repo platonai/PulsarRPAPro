@@ -5,18 +5,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <parent>
-        <groupId>ai.platon.exotic</groupId>
-        <artifactId>exotic-app</artifactId>
-        <version>1.12.1-SNAPSHOT</version>
-    </parent>
-
-    <artifactId>exotic-spark-examples</artifactId>
-    <name>Exotic Spark Examples</name>
+    <groupId>ai.platon.exotic</groupId>
+    <artifactId>exotic-ml</artifactId>
+    <version>1.12.1-SNAPSHOT</version>
+    <name>Exotic ML</name>
 
     <build>
-        <defaultGoal>package</defaultGoal>
-
         <plugins>
             <!--  java  -->
             <plugin>
@@ -62,7 +56,7 @@
     <dependencies>
         <dependency>
             <groupId>org.apache.spark</groupId>
-            <artifactId>spark-mllib_2.11</artifactId>
+            <artifactId>spark-mllib_2.13</artifactId>
             <version>${spark.version}</version>
         </dependency>
 
@@ -78,7 +72,6 @@
         <javac.src.version>11</javac.src.version>
         <javac.target.version>11</javac.target.version>
 
-<!--        <spark.version>3.5.0</spark.version>-->
-        <spark.version>2.2.3</spark.version>
+        <spark.version>3.5.0</spark.version>
     </properties>
 </project>

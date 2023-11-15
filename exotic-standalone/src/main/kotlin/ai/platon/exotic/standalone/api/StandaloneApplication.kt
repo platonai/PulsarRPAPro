@@ -31,7 +31,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @ImportResource("classpath:config/app/app-beans/app-context.xml")
 @EnableJpaRepositories("ai.platon.exotic.services.api.persist")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
-// failed to import Applications
+// should work but failed to import Applications
 //@Import(ExoticApplication::class, ExoticServerApplication::class)
 @EnableScheduling
 @EnableJpaAuditing

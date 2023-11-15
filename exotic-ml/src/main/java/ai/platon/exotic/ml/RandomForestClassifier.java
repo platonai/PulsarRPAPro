@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ai.platon.exotic.examples.spark;
+package ai.platon.exotic.ml;
 
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem;
 import org.apache.commons.io.FileUtils;
@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class DomRandomForestClassification {
+public class RandomForestClassifier {
 
     private final SparkConf sparkConf = new SparkConf()
             .set("spark.master", "local")
@@ -112,7 +112,7 @@ public class DomRandomForestClassification {
     }
 
     public static void main(String[] args) throws IOException {
-        var classifier = new DomRandomForestClassification();
+        var classifier = new RandomForestClassifier();
         classifier.train();
         classifier.predict();
     }
