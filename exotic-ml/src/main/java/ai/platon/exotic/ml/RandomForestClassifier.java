@@ -40,7 +40,7 @@ import java.util.Random;
 
 public class RandomForestClassifier implements AutoCloseable {
 
-    private int numClasses = 7;
+    private int numClasses;
     private Path datasetPath;
     private Path modelPath;
 
