@@ -41,19 +41,13 @@ import java.util.Random;
 public class RandomForestClassifier implements AutoCloseable {
 
     private int numClasses = 7;
-    private Path datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
-    private Path modelPath = Paths.get("target/tmp/DomRandomForestClassificationModel");
+    private Path datasetPath;
+    private Path modelPath;
 
     private RandomForestModel loadedModel = null;
     private SparkConf sparkConf;
     private JavaSparkContext javaSparkContext;
     private SparkContext sparkContext;
-
-    public RandomForestClassifier() {
-        numClasses = 7;
-        datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
-        modelPath = SystemUtils.getJavaIoTmpDir().toPath().resolve("pulsar/ml/RandomForestClassifier");
-    }
 
     public RandomForestClassifier(int numClasses, Path datasetPath) {
         this.numClasses = numClasses;
@@ -165,7 +159,11 @@ public class RandomForestClassifier implements AutoCloseable {
     }
 
     public static void main(String[] args) throws IOException {
-        try (var classifier = new RandomForestClassifier()) {
+        var numClasses = 7;
+        var datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
+        var modelPath = SystemUtils.getJavaIoTmpDir().toPath().resolve("pulsar/ml/RandomForestClassifier");
+
+        try (var classifier = new RandomForestClassifier(numClasses, datasetPath, modelPath)) {
             classifier.train();
             classifier.predict();
         } catch (Exception e) {
