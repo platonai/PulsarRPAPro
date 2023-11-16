@@ -22,12 +22,6 @@
     <name>Exotic ML Examples</name>
 
     <dependencies>
-        <dependency>
-            <groupId>ai.platon.exotic</groupId>
-            <artifactId>exotic-ml</artifactId>
-            <classifier>shaded</classifier>
-        </dependency>
-
         <!-- Internal dependency -->
         <dependency>
             <groupId>ai.platon.scent</groupId>
