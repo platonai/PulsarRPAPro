@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.ml.supervised
+package ai.platon.exotic.crawl.common
 
 import org.springframework.web.client.RestTemplate
 

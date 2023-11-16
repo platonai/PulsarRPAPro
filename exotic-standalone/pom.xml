@@ -25,10 +25,6 @@
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
-			<artifactId>exotic-ml</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-server</artifactId>
 		</dependency>
 		<dependency>

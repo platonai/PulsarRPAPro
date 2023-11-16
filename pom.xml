@@ -245,6 +245,7 @@
 			<dependency>
 				<groupId>ai.platon.exotic</groupId>
 				<artifactId>exotic-ml</artifactId>
+				<classifier>shaded</classifier>
 				<version>${project.version}</version>
 			</dependency>
 
@@ -264,7 +265,6 @@
 				<artifactId>pulsar-ql-common</artifactId>
 				<version>${pulsar.version}</version>
 			</dependency>
-
 
 			<!-- Java Predictive Model Markup Language -->
 			<dependency>

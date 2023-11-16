@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.ml.supervised
+package ai.platon.exotic.crawl.common
 
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
@@ -13,6 +13,7 @@ import ai.platon.scent.common.mlLabels
 import ai.platon.scent.common.normUrl
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.ml.BasicNGramNodeEncoder
+import ai.platon.scent.ml.EncodeOptions
 import ai.platon.scent.ml.NodeDataFrame
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
@@ -64,7 +65,8 @@ class DOMClassifier {
 
     fun encode() {
         labelSet.clear()
-
+        
+        val encodeOptions = EncodeOptions(exportPath = exportPath)
         var i = 0
         IntRange(0, numChunks - 1).forEach { ident ->
             prepareAnnotationTasks(ident)
@@ -79,8 +81,7 @@ class DOMClassifier {
                     val nodes = document.document.collectIf(biddingNodeFilter)
                     val points = encoder.encode(nodes)
                     if (points.isNotEmpty()) {
-                        val df = NodeDataFrame(points, encoder.schema, path = exportPath)
-                        df.export()
+                        val df = NodeDataFrame(points, encoder.schema, encodeOptions)
                     }
 
                     if (++i % 1000 == 0) {
