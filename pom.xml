@@ -242,12 +242,6 @@
 				<artifactId>exotic-services</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-			<dependency>
-				<groupId>ai.platon.exotic</groupId>
-				<artifactId>exotic-ml</artifactId>
-				<classifier>shaded</classifier>
-				<version>${project.version}</version>
-			</dependency>
 
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
@@ -374,5 +368,7 @@
 		<jakarta-xml-bind.version>3.0.1</jakarta-xml-bind.version>
 		<!-- Required by pmml -->
 		<jakarta-activation-1.version>2.1.2</jakarta-activation-1.version>
+
+		<logback.version>1.4.4</logback.version>
 	</properties>
 </project>

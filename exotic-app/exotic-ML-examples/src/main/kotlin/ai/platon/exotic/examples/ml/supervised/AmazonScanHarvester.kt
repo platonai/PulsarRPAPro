@@ -3,13 +3,20 @@ package ai.platon.exotic.examples.ml.supervised
 //import ai.platon.exotic.ml.RandomForestClassifier
 import ai.platon.exotic.crawl.common.AmazonAsinUrlNormalizer
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.dom.nodes.node.ext.isText
 import ai.platon.pulsar.persist.gora.generated.GWebPage
 import ai.platon.scent.common.clearMLLabels
 import ai.platon.scent.common.mlLabels
+import ai.platon.scent.dom.nodes.node.ext.nthScreen
 import ai.platon.scent.ml.EncodeOptions
 import ai.platon.scent.tools.VerboseCrawler
 import java.lang.management.ManagementFactory
+import java.net.URI
+import java.net.http.HttpClient
+import java.net.http.HttpRequest
+import java.net.http.HttpResponse.BodyHandlers
 import java.nio.file.Files
+
 
 /**
  * Scan webpages in a directory and run an un-supervised ML algorithm.
@@ -31,6 +38,7 @@ class AmazonScanHarvester {
     private val crawler = VerboseCrawler()
     private val session = crawler.session
     private val datasetPath = AppPaths.getTmp("amazon.dataset.libsvm.txt")
+    private val client = HttpClient.newHttpClient()
     
     val labels = listOf("stars", "stars_text", "ratings", "qas", "price_text", "brand")
 
@@ -83,23 +91,26 @@ class AmazonScanHarvester {
         
         // labeling & encoding
     }
-    
-//    fun train() {
-//        classifier.train()
-//    }
-//
-//    fun predict(url: String) {
-//        val document = session.loadDocument(url)
-//        val encodeOptions = EncodeOptions(labels = labels)
-//        val df = session.encodeNodes(document, encodeOptions) { it.isText && it.nthScreen <= 2 }
-//        df.points.forEach { point ->
-//            classifier.predict(point.dataRef)
-//        }
-//    }
+
+    fun predict(url: String) {
+        val document = session.loadDocument(url)
+        val encodeOptions = EncodeOptions(labels = labels)
+        val df = session.encodeNodes(document, encodeOptions) { it.isText && it.nthScreen <= 2 }
+        val requestBody = df.points.map { it.dataRef.joinToString(" ") }.joinToString("\n")
+
+        val request = HttpRequest.newBuilder()
+            .uri(URI.create("http://localhost:8185/"))
+            .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
+            .build()
+        client.sendAsync(request, BodyHandlers.ofString())
+            .thenApply { it.body() }
+            .thenAccept { println(it) }
+            .join()
+    }
 }
 
 fun main(args: Array<String>) {
-    var task = "train"
+    var task = "harvest"
     var start = 0
     var limit = 2000
     var url = "https://www.amazon.com/dp/B0C1H26C46"
@@ -122,8 +133,7 @@ fun main(args: Array<String>) {
         "check" -> harvester.check(start, limit)
         "harvest" -> harvester.harvest(start, limit, args2)
         "encode" -> harvester.encode(start, limit, args2)
-//        "train" -> harvester.train()
-//        "predict" -> harvester.predict(url)
+        "predict" -> harvester.predict(url)
         "clearAnnotations" -> harvester.clearAnnotations(start, limit)
     }
 }

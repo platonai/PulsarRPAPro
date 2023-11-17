@@ -24,8 +24,6 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.ml.linalg.Vectors;
-import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.tree.RandomForest;
 import org.apache.spark.mllib.tree.model.RandomForestModel;
 import org.apache.spark.mllib.util.MLUtils;
@@ -126,10 +124,10 @@ public class RandomForestClassifier implements AutoCloseable {
     }
 
     public double predict(double[] features) {
-        return predict((Vector) Vectors.dense(features));
+        return predict(org.apache.spark.mllib.linalg.Vectors.dense(features));
     }
 
-    public double predict(Vector features) {
+    public double predict(org.apache.spark.mllib.linalg.Vector features) {
         initialize();
 
         if (loadedModel == null) {
