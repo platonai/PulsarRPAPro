@@ -14,7 +14,7 @@ public class MLServer {
     public void serve() throws IOException {
         Executor threadPoolExecutor = Executors.newFixedThreadPool(3);
         HttpServer server = HttpServer.create(new InetSocketAddress(ML_SERVER_PORT), 0);
-        server.createContext("/ml/predict", new MLHandler());
+        server.createContext("api/ml/predict", new MLHandler());
         server.setExecutor(threadPoolExecutor);
         server.start();
     }

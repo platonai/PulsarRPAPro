@@ -1,6 +1,6 @@
 package ai.platon.exotic.ml.server;
 
-import ai.platon.exotic.ml.RandomForestClassifier;
+import ai.platon.exotic.ml.RandomForest;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.apache.commons.lang3.math.NumberUtils;
@@ -13,9 +13,9 @@ import java.util.Set;
 
 public class MLHandler implements HttpHandler {
 
-    private RandomForestClassifier classifier;
+    private RandomForest classifier;
 
-    public void setClassifier(RandomForestClassifier classifier) {
+    public void setClassifier(RandomForest classifier) {
         this.classifier = classifier;
     }
 

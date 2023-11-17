@@ -96,8 +96,8 @@ class AmazonScanHarvester {
         val document = session.loadDocument(url)
         val encodeOptions = EncodeOptions(labels = labels)
         val df = session.encodeNodes(document, encodeOptions) { it.isText && it.nthScreen <= 2 }
-        val requestBody = df.points.map { it.dataRef.joinToString(" ") }.joinToString("\n")
-
+        val requestBody = df.points.joinToString("\n") { it.dataRef.joinToString(" ") }
+        
         val request = HttpRequest.newBuilder()
             .uri(URI.create("http://localhost:8185/"))
             .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))

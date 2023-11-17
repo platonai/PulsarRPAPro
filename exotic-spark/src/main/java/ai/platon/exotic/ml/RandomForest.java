@@ -19,24 +19,23 @@ package ai.platon.exotic.ml;
 
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem;
 import org.apache.commons.io.FileUtils;
-import org.apache.commons.lang3.SystemUtils;
 import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
-import org.apache.spark.mllib.tree.RandomForest;
 import org.apache.spark.mllib.tree.model.RandomForestModel;
 import org.apache.spark.mllib.util.MLUtils;
 import scala.Tuple2;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
-public class RandomForestClassifier implements AutoCloseable {
+public class RandomForest implements AutoCloseable {
 
     private int numClasses;
     private Path datasetPath;
@@ -47,13 +46,7 @@ public class RandomForestClassifier implements AutoCloseable {
     private JavaSparkContext javaSparkContext;
     private SparkContext sparkContext;
 
-    public RandomForestClassifier(int numClasses, Path datasetPath) {
-        this.numClasses = numClasses;
-        this.datasetPath = datasetPath;
-        modelPath = SystemUtils.getJavaIoTmpDir().toPath().resolve("pulsar/ml/RandomForestClassifier");
-    }
-
-    public RandomForestClassifier(int numClasses, Path datasetPath, Path modelPath) {
+    public RandomForest(int numClasses, Path datasetPath, Path modelPath) {
         this.numClasses = numClasses;
         this.datasetPath = datasetPath;
         this.modelPath = modelPath;
@@ -107,7 +100,7 @@ public class RandomForestClassifier implements AutoCloseable {
         var maxBins = 32;
         var seed = new Random().nextInt();
 
-        var model = RandomForest.trainClassifier(trainingData, numClasses,
+        var model = org.apache.spark.mllib.tree.RandomForest.trainClassifier(trainingData, numClasses,
                 categoricalFeaturesInfo, numTrees, featureSubsetStrategy, impurity, maxDepth, maxBins,
                 seed);
 
@@ -159,9 +152,10 @@ public class RandomForestClassifier implements AutoCloseable {
     public static void main(String[] args) throws IOException {
         var numClasses = 7;
         var datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
-        var modelPath = SystemUtils.getJavaIoTmpDir().toPath().resolve("pulsar/ml/RandomForestClassifier");
+        var modelPath = Paths.get(System.getProperty("user.home") + "/.pulsar/ml/model/spark/RandomForest");
+        Files.createDirectories(modelPath);
 
-        try (var classifier = new RandomForestClassifier(numClasses, datasetPath, modelPath)) {
+        try (var classifier = new ai.platon.exotic.ml.RandomForest(numClasses, datasetPath, modelPath)) {
             classifier.train();
             classifier.predict();
         } catch (Exception e) {

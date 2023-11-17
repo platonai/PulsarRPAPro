@@ -71,12 +71,20 @@
 		<module>exotic-common</module>
 		<module>exotic-driver</module>
 		<module>exotic-crawl-common</module>
-		<module>exotic-ml</module>
 		<module>exotic-services</module>
 		<module>exotic-server</module>
 		<module>exotic-standalone</module>
 		<module>exotic-app</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>spark</id>
+			<modules>
+				<module>exotic-spark</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
