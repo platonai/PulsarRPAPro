@@ -15,7 +15,7 @@
  * limitations under the License.
  */
 
-package ai.platon.exotic.ml;
+package ai.platon.exotic.ml.spark;
 
 import com.globalmentor.apache.hadoop.fs.BareLocalFileSystem;
 import org.apache.commons.io.FileUtils;
@@ -23,6 +23,7 @@ import org.apache.hadoop.fs.FileSystem;
 import org.apache.spark.SparkConf;
 import org.apache.spark.SparkContext;
 import org.apache.spark.api.java.JavaSparkContext;
+import org.apache.spark.mllib.linalg.Vector;
 import org.apache.spark.mllib.tree.model.RandomForestModel;
 import org.apache.spark.mllib.util.MLUtils;
 import scala.Tuple2;
@@ -31,11 +32,14 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
 
 public class RandomForest implements AutoCloseable {
+
+    public static Path DEFAULT_MODEL_PATH = Paths.get(System.getProperty("user.home") + "/.pulsar/ml/model/spark/RandomForest");
 
     private int numClasses;
     private Path datasetPath;
@@ -45,6 +49,10 @@ public class RandomForest implements AutoCloseable {
     private SparkConf sparkConf;
     private JavaSparkContext javaSparkContext;
     private SparkContext sparkContext;
+
+    public RandomForest(int numClasses, Path datasetPath) {
+        this(numClasses, datasetPath, DEFAULT_MODEL_PATH);
+    }
 
     public RandomForest(int numClasses, Path datasetPath, Path modelPath) {
         this.numClasses = numClasses;
@@ -71,7 +79,7 @@ public class RandomForest implements AutoCloseable {
 
         sparkConf = new SparkConf()
                 .set("spark.master", "local")
-                .setAppName("DomRandomForestClassification");
+                .setAppName("RandomForest");
         javaSparkContext = new JavaSparkContext(sparkConf);
         sparkContext = javaSparkContext.sc();
 
@@ -116,18 +124,24 @@ public class RandomForest implements AutoCloseable {
         model.save(sparkContext, modelPath.toAbsolutePath().toString());
     }
 
-    public double predict(double[] features) {
-        return predict(org.apache.spark.mllib.linalg.Vectors.dense(features));
+    public Map.Entry<Double, Vector> predict(String libsvmRecord, int numFeatures) {
+        var record = ExoticMLUtils.parseLibSVMRecord(libsvmRecord, numFeatures);
+        return predict(record.getValue());
     }
 
-    public double predict(org.apache.spark.mllib.linalg.Vector features) {
+    public Map.Entry<Double, Vector> predict(double[] vector) {
+        return predict(org.apache.spark.mllib.linalg.Vectors.dense(vector));
+    }
+
+    public Map.Entry<Double, Vector> predict(Vector vector) {
         initialize();
 
         if (loadedModel == null) {
             loadedModel = RandomForestModel.load(sparkContext, modelPath.toString());
         }
 
-        return loadedModel.predict(features);
+        var pred = loadedModel.predict(vector);
+        return Map.entry(pred, vector);
     }
 
     public void predict() {
@@ -146,16 +160,22 @@ public class RandomForest implements AutoCloseable {
 
     @Override
     public void close() throws Exception {
-        sparkContext.stop();
+        if (sparkContext != null) {
+            sparkContext.stop();
+        }
     }
 
     public static void main(String[] args) throws IOException {
         var numClasses = 7;
-        var datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
-        var modelPath = Paths.get(System.getProperty("user.home") + "/.pulsar/ml/model/spark/RandomForest");
+//        var datasetPath = Paths.get("data/dom/amazon.dataset.6.labels.txt");
+//        var modelPath = Paths.get(System.getProperty("user.home") + "/.pulsar/ml/model/spark/RandomForest");
+
+        var datasetPath = Paths.get("C:\\Users\\pereg\\AppData\\Local\\Temp\\pulsar\\amazon.dataset.libsvm.20M.txt");
+        var modelPath = Paths.get(System.getProperty("user.home") + "/.pulsar/ml/model/spark/RandomForest.20M/");
+
         Files.createDirectories(modelPath);
 
-        try (var classifier = new ai.platon.exotic.ml.RandomForest(numClasses, datasetPath, modelPath)) {
+        try (var classifier = new RandomForest(numClasses, datasetPath, modelPath)) {
             classifier.train();
             classifier.predict();
         } catch (Exception e) {

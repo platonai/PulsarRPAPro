@@ -67,6 +67,18 @@
             <artifactId>hadoop-bare-naked-local-fs</artifactId>
             <version>0.1.0</version>
         </dependency>
+
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+            <version>${logback.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter</artifactId>
+            <version>RELEASE</version>
+            <scope>test</scope>
+        </dependency>
     </dependencies>
 
     <properties>
@@ -75,5 +87,6 @@
 
         <scala.binary.version>2.13</scala.binary.version>
         <spark.version>3.5.0</spark.version>
+        <logback.version>1.4.4</logback.version>
     </properties>
 </project>

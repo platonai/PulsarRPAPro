@@ -1,15 +1,16 @@
 package ai.platon.exotic.examples.ml.supervised
 
-//import ai.platon.exotic.ml.RandomForestClassifier
+import ai.platon.exotic.common.ExoticUtils
 import ai.platon.exotic.crawl.common.AmazonAsinUrlNormalizer
+import ai.platon.exotic.crawl.common.VerboseCrawler
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.dom.nodes.node.ext.isText
 import ai.platon.pulsar.persist.gora.generated.GWebPage
 import ai.platon.scent.common.clearMLLabels
 import ai.platon.scent.common.mlLabels
 import ai.platon.scent.dom.nodes.node.ext.nthScreen
 import ai.platon.scent.ml.EncodeOptions
-import ai.platon.scent.tools.VerboseCrawler
 import java.lang.management.ManagementFactory
 import java.net.URI
 import java.net.http.HttpClient
@@ -34,10 +35,14 @@ import java.nio.file.Files
  * org.springframework.boot.loader.PropertiesLauncher -task harvest -limit 300
  * */
 class AmazonScanHarvester {
+    private val logger = getLogger(AmazonScanHarvester::class)
     private val urlBase = "https://www.amazon.com/dp/"
     private val crawler = VerboseCrawler()
     private val session = crawler.session
     private val datasetPath = AppPaths.getTmp("amazon.dataset.libsvm.txt")
+    private val ML_SERVER_PORT = 8382
+    private val predictServer = "http://localhost:$ML_SERVER_PORT/api/ml/predict"
+    private val predictAPI = "$predictServer/api/ml/predict"
     private val client = HttpClient.newHttpClient()
     
     val labels = listOf("stars", "stars_text", "ratings", "qas", "price_text", "brand")
@@ -93,24 +98,36 @@ class AmazonScanHarvester {
     }
 
     fun predict(url: String) {
-        val document = session.loadDocument(url)
-        val encodeOptions = EncodeOptions(labels = labels)
-        val df = session.encodeNodes(document, encodeOptions) { it.isText && it.nthScreen <= 2 }
-        val requestBody = df.points.joinToString("\n") { it.dataRef.joinToString(" ") }
+        val page = session.load(url)
+        if (page.isInternal) {
+            logger.warn("Failed to load page | {} | {}", page.protocolStatus, url)
+            return
+        }
+        val document = session.parse(page)
         
+        val encodeOptions = EncodeOptions(labels = labels)
+        val df = session.encodeNodes(document, encodeOptions) {
+            it.isText && it.nthScreen <= 2 && it.extension.immutableText.isNotBlank() }
+        val points = df.points.map { ExoticUtils.encodeToLibSVMRecord(it.dataRef, -1).toString() }
+        val requestBody = points.joinToString("\n")
+//        val requestBody = "1 1:523.7 2:636.7 3:23.6 4:17.3 5:5 11:15 12:4559 33:5 34:5 35:5 64:23.6 65:17.3 70:523.7 71:636.7 72:23.6 73:17.3 74:5 75:1 78:3 80:14 81:4558 82:409.21 90:523.7 91:636.7 95:1 102:5 103:5 104:5 105:1 109:4558 122:23.6 124:17.3 133:23.6 134:17.3 139:523.7 140:636.7 141:119.6 142:17.3 149:14 150:4557 208:523.7 209:636.7 210:119.6 211:17.3 218:14 219:4560"
         val request = HttpRequest.newBuilder()
-            .uri(URI.create("http://localhost:8185/"))
+            .uri(URI.create(predictAPI))
             .method("POST", HttpRequest.BodyPublishers.ofString(requestBody))
             .build()
         client.sendAsync(request, BodyHandlers.ofString())
             .thenApply { it.body() }
-            .thenAccept { println(it) }
+            .thenAccept {
+                if (!it.startsWith("-")) {
+                    println(it)
+                }
+            }
             .join()
     }
 }
 
 fun main(args: Array<String>) {
-    var task = "harvest"
+    var task = "encode"
     var start = 0
     var limit = 2000
     var url = "https://www.amazon.com/dp/B0C1H26C46"
@@ -122,6 +139,7 @@ fun main(args: Array<String>) {
             args[i] == "-task" -> task = args[++i]
             args[i] == "-start" -> start = args[++i].toIntOrNull() ?: start
             args[i] == "-limit" -> limit = args[++i].toIntOrNull() ?: limit
+            args[i] == "-url" -> url = args[++i]
             else -> remainders.add(args[i])
         }
         ++i
