@@ -9,11 +9,11 @@ import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.nodes.node.ext.canonicalName
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ScentSession
+import ai.platon.scent.analysis.corpus.annotateNodes
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HNormUrl
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.dom.nodes.AnchorGroup
-import ai.platon.scent.dom.nodes.annotateNodes
 import ai.platon.scent.entities.HarvestResult
 import kotlinx.coroutines.runBlocking
 import org.apache.commons.lang3.StringUtils
@@ -21,14 +21,15 @@ import org.nield.kotlinstatistics.standardDeviation
 import org.slf4j.LoggerFactory
 import java.nio.file.Files
 import java.util.*
+import kotlin.streams.toList
 
 open class VerboseHarvester(
-    context: ScentContext = ScentContexts.create()
+    val context: ScentContext = ScentContexts.create()
 ) {
 
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
 
-    private val session: ScentSession = context.createSession()
+    val session: ScentSession = context.createSession()
 
     init {
         System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
@@ -71,8 +72,10 @@ open class VerboseHarvester(
         anchorGroups.take(1).forEach {
             it.urlStrings.shuffled().take(10).forEachIndexed { i, url -> println("${1 + i}.\t$url") }
             it.urlStrings.take(options.topLinks)
+                .parallelStream()
                 .map { session.load(it, options) }
                 .map { session.parse(it, options) }
+                .toList()
                 .let { session.arrangeDocuments(normUrl, portalPage, it.asSequence()) }
         }
         

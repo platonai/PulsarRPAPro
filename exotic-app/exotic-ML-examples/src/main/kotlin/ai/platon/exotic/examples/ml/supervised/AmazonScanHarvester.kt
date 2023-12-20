@@ -77,7 +77,7 @@ class AmazonScanHarvester {
         val options = session.options(args)
         val documents = session.scan(urlBase, options, start, limit).map { session.parse(it, options) }
         
-        val encodeOptions = EncodeOptions(labels, datasetPath)
+        val encodeOptions = EncodeOptions(datasetPath, labels = labels)
         crawler.encodeDocuments(documents.asIterable(), encodeOptions)
         
         println("Dataset is exported | $datasetPath")

@@ -11,10 +11,10 @@ import ai.platon.pulsar.dom.nodes.node.ext.isImage
 import ai.platon.pulsar.dom.nodes.node.ext.location
 import ai.platon.pulsar.dom.nodes.node.ext.ownerDocument
 import ai.platon.pulsar.dom.nodes.node.ext.removeAttrsIf
-import ai.platon.scent.dom.nodes.VisualDocument
+import ai.platon.scent.analysis.corpus.VisualDocument
+import ai.platon.scent.analysis.corpus.visualDocument
 import ai.platon.scent.dom.nodes.node.ext.isLocallyConstant
 import ai.platon.scent.dom.nodes.node.ext.isSimpleTable
-import ai.platon.scent.dom.nodes.node.ext.visualDocument
 import ai.platon.scent.entities.PageTableGroup
 import ai.platon.scent.entities.data
 import ai.platon.scent.view.builder.TableViewBuilder
@@ -44,7 +44,7 @@ class ExoticPageTableViewBuilder(
         val messageView = output.body.selectFirst("div#page-message")!!
 
         sampleTable = tables.lastOrNull()?:OpenMapTable(0)
-        documents = sampleTable.rows.mapNotNull { it.data.component.ownerDocument.visualDocument }
+        documents = sampleTable.rows.mapNotNull { it.data.component?.ownerDocument?.visualDocument }
         val sampleDocument = documents.firstOrNull()?: return FeaturedDocument.NIL
 
         val domain = URLUtil.getDomainName(sampleDocument.location)

@@ -90,8 +90,8 @@ top-g0,top-g1,top-g2,top-g3,left-g0,left-g1,left-g2,left-g3,width-g0,width-g1,wi
             return mapOf<String, Any>()
         }
         
-        val encodeOptions = EncodeOptions(exportPath = datasetPath)
-        val df = session.encodeNodes(listOf(document), encodeOptions, filter = biddingNodeFilter)
+        val encodeOptions = EncodeOptions(datasetPath = datasetPath)
+        val df = session.encodeNodes(document, encodeOptions, filter = biddingNodeFilter)
         val columns = df.schema.columns
 
         if (df.points.isEmpty()) {

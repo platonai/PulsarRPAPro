@@ -1,9 +1,7 @@
 package ai.platon.exotic.examples.ml
 
-import ai.platon.exotic.common.ExoticUtils
 import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
-import ai.platon.pulsar.common.AppPaths
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import org.slf4j.LoggerFactory
@@ -86,16 +84,25 @@ class HarvestExamples(
     ).filter { it.isNotBlank() }
 
     val seeds = listOf(
-        "https://list.suning.com/0-20006-0-0-0-0-0-0-0-0-11635.html -expires 1s -ol \".product-box a[href~=product]\"",
-        "https://list.gome.com.cn/cat10000070-00-0-48-1-0-0-0-1-0-0-1-0-0-0-0-0-0.html?intcmp=phone-163",
+        "https://list.suning.com/0-20006-0-0-0-0-0-0-0-0-11635.html -expires 1d -ol \".product-box a[href~=product]\"",
+        "https://list.gome.com.cn/cat10000062.html?intcmp=sy-1000051866-0",
         "http://category.dangdang.com/cid4002590.html -tp 140 -i 1h -scrollCount 20 -ii 1d -ol a[href~=product]",
-        "https://search.jd.com/Search?keyword=basketball&enc=utf-8&wq=basketball&pvid=27d8a05385cd49298b5caff778e14b97",
         "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
+        "https://www.hua.com/baihe/",
+        "https://home.meishichina.com/recipe/huoguo/",
+        "https://www.xiachufang.com/category/1445/",
+        "http://www.huafensi.com/huahui/",
+        "http://shop.boqii.com/cat/",
+        "http://www.aquainfo.cn/sclistpc/%E5%86%9C%E4%BA%A7%E5%93%81-%E6%B0%B4%E4%BA%A7-%E6%B5%B7%E6%B0%B4%E9%B1%BC%E7%B1%BB------.htm",
+        "https://www.21cake.com/gallery-index---0---1.html",
+        "http://www.oppeinwindows.com/product-list?category_id=16",
+        "https://consumer.panasonic.cn/product/homeav/led-tv/",
+        "https://youku.com/channel/webmovie",
         "https://shopee.sg/Computers-Peripherals-cat.11013247 -ol a[href~=sp_atk] -tl 20 -ignoreFailure -component .page-product__breadcrumb  -component .product-briefing",
     ).filter { it.isNotBlank() }
-
+    
     fun arrangeDocuments() {
-        listOf(seeds).flatten().filter { it.isNotBlank() }.forEach { url ->
+        listOf(seeds, testedSeeds).flatten().filter { it.isNotBlank() }.forEach { url ->
             arrangeDocument(url)
         }
     }
@@ -112,8 +119,9 @@ class HarvestExamples(
 
 fun main() {
     BrowserSettings.headless()
-    HarvestExamples().harvestAll()
-
-    val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
-    ExoticUtils.openBrowser("$baseDir")
+    HarvestExamples().arrangeDocuments()
+//    HarvestExamples().harvestAll()
+//
+//    val baseDir = AppPaths.REPORT_DIR.resolve("harvest/corpus/")
+//    ExoticUtils.openBrowser("$baseDir")
 }

@@ -14,7 +14,6 @@ import ai.platon.scent.common.normUrl
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.ml.BasicNGramNodeEncoder
 import ai.platon.scent.ml.EncodeOptions
-import ai.platon.scent.ml.NodeDataFrame
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
 import java.nio.file.Files
@@ -47,7 +46,7 @@ class DOMClassifier {
 
     private val messageWriter = session.context.getBean<ScentMiscMessageWriter>()
 
-    private val exportPath = AppPaths.get("/tmp/dataset-dom-20230108.csv")
+    private val datasetPath = AppPaths.get("/tmp/dataset-dom-20230108.csv")
     private val modelPath = AppPaths.get("/tmp/dom_decision_tree.pmml")
     private val predictResultPath = AppPaths.get("/tmp/dom-predict-result.csv")
 
@@ -66,7 +65,7 @@ class DOMClassifier {
     fun encode() {
         labelSet.clear()
         
-        val encodeOptions = EncodeOptions(exportPath = exportPath)
+        val encodeOptions = EncodeOptions(datasetPath = datasetPath)
         var i = 0
         IntRange(0, numChunks - 1).forEach { ident ->
             prepareAnnotationTasks(ident)
@@ -77,11 +76,11 @@ class DOMClassifier {
                 .mapNotNull { it.normUrl }
                 .mapNotNull { loadTrainableDocumentOrNull(it, args) }
                 .forEach { document ->
-                    val encoder = BasicNGramNodeEncoder(nGram = options.nGram)
+                    val encoder = BasicNGramNodeEncoder(encodeOptions)
                     val nodes = document.document.collectIf(biddingNodeFilter)
                     val points = encoder.encode(nodes)
                     if (points.isNotEmpty()) {
-                        val df = NodeDataFrame(points, encoder.schema, encodeOptions)
+                        // val df = NodeDataFrame(points, encoder.schema, encodeOptions)
                     }
 
                     if (++i % 1000 == 0) {
@@ -90,7 +89,7 @@ class DOMClassifier {
                 }
         }
 
-        logger.info("Feature file is exported. | {}", exportPath)
+        logger.info("Feature file is exported. | {}", datasetPath)
 
         logger.info("All done! ✨ \uD83C\uDF1F ✨")
     }
