@@ -265,6 +265,7 @@
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
 				<artifactId>pulsar-ql-common</artifactId>
+				<classifier>shaded</classifier>
 				<version>${pulsar.version}</version>
 			</dependency>
 

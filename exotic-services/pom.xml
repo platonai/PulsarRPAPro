@@ -22,6 +22,7 @@
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-ql-common</artifactId>
+			<classifier>shaded</classifier>
 		</dependency>
 
 		<dependency>
@@ -131,7 +132,7 @@
 						<groupId>org.apache.maven.plugins</groupId>
 						<artifactId>maven-war-plugin</artifactId>
 						<configuration>
-									<warName>exotic</warName>
+							<warName>exotic</warName>
 						</configuration>
 					</plugin>
 				</plugins>

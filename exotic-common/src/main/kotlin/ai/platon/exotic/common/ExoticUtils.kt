@@ -69,7 +69,7 @@ object ExoticUtils {
     }
     
     /**
-     * Encode to libsvm record,
+     * Encode to libsvm record.
      *
      * @param features the feature vector
      * @param label    the label, negative value means not specified

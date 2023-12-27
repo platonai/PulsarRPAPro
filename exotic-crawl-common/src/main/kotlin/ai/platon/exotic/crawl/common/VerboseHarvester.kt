@@ -26,32 +26,33 @@ import kotlin.streams.toList
 open class VerboseHarvester(
     val context: ScentContext = ScentContexts.create()
 ) {
-
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
-
+    
     val session: ScentSession = context.createSession()
-
+    
     init {
         System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
         Systems.setProperty(CapabilityTypes.FETCH_SCROLL_DOWN_COUNT, 0)
     }
-
+    
     val defaultArgs = "" +
 //            " -expires 1d" +
 //            " -itemExpires 1d" +
 //                " -scrollCount 6" +
 //                " -itemScrollCount 4" +
-            " -topLinks 40" +
-            " -nScreens 5" +
+        " -requireSize 100000" +
+        " -itemRequireSize 200000" +
+        " -topLinks 60" +
+        " -nScreens 5" +
 //                " -polysemous" +
 //            " -diagnose" +
-            " -nVerbose 3" +
+        " -nVerbose 3" +
 //                " -pageLoadTimeout 60s" +
-            " -showTip" +
+        " -showTip" +
 //            " -showImage" +
 //                " -cellType PLAIN_TEXT" +
-            ""
-
+        ""
+    
     fun arrangeLinks(portalUrl: String): SortedSet<AnchorGroup> {
         logger.info("Arranging links in page $portalUrl")
         val normUrl = HNormUrl.parse(portalUrl, session.sessionConfig.toVolatileConfig())
@@ -73,6 +74,7 @@ open class VerboseHarvester(
             it.urlStrings.shuffled().take(10).forEachIndexed { i, url -> println("${1 + i}.\t$url") }
             it.urlStrings.take(options.topLinks)
                 .parallelStream()
+                .filter { UrlUtils.isStandard(it) }
                 .map { session.load(it, options) }
                 .map { session.parse(it, options) }
                 .toList()
@@ -81,12 +83,12 @@ open class VerboseHarvester(
         
         portalDocument.also { it.annotateNodes(options) }.also { session.export(it, type = "portal") }
     }
-
+    
     fun printAnchorGroups(anchorGroups: Collection<AnchorGroup>, showBestGroups: Boolean = false) {
         if (anchorGroups.isEmpty()) {
             return
         }
-
+        
         println(anchorGroups.first().urlStrings.first())
         println(ResultSetFormatter(AnchorGroup.toResultSet(anchorGroups), withHeader = true))
         if (showBestGroups) {
@@ -96,12 +98,12 @@ open class VerboseHarvester(
             }
         }
     }
-
+    
     fun printAllAnchorGroups(anchorGroups: Collection<AnchorGroup>) {
         if (anchorGroups.isEmpty()) {
             return
         }
-
+        
         println(anchorGroups.first().urlStrings.first())
         println(ResultSetFormatter(AnchorGroup.toResultSet(anchorGroups), withHeader = true))
         anchorGroups.forEachIndexed { i, group ->
@@ -112,19 +114,19 @@ open class VerboseHarvester(
             }
         }
     }
-
+    
     fun harvest(url: String) = harvest(url, defaultArgs)
-
+    
     fun harvest(url: String, args: String) = harvest(url, session.options(args))
-
+    
     fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
-
+    
     fun harvest(documents: List<FeaturedDocument>, options: HarvestOptions): HarvestResult {
         val result = runBlocking { session.harvest(documents.asSequence(), options) }
         report(result, options)
         return result
     }
-
+    
     fun harvest(session: ScentSession, portalUrl: String, options: HarvestOptions) {
         val (url0, args0) = UrlUtils.splitUrlArgs(portalUrl)
         val options0 = session.options("$options $args0")
@@ -132,24 +134,24 @@ open class VerboseHarvester(
         val result = runBlocking { session.harvest(url0, options0) }
         report(result, options)
     }
-
+    
     private fun report(result: HarvestResult, options: HarvestOptions) {
         val exports = session.buildAll(result.tableGroup, options)
-
+        
         val json = session.buildJson(result.tableGroup)
         val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
         Files.createDirectories(path.parent)
         Files.writeString(path, json)
-
+        
         logger.info("Harvest reports: {}", path.parent)
         exports.keys.map { it.toString() }
             .filter { it.matches(".+/tables/.+".toRegex()) }
             .forEach { ExoticUtils.openBrowser(it) }
     }
-
+    
     private fun toReport(i: Int, group: AnchorGroup): String {
         val component = group.component
-        val e = component?.element?:return ""
+        val e = component?.element ?: return ""
         val name = StringUtils.abbreviateMiddle(e.canonicalName, "..", 40)
         val label = StringUtils.abbreviateMiddle(group.label, "..", 30)
         val lengthStd = group.urlStrings.map { it.length }.standardDeviation().toInt()
@@ -157,7 +159,7 @@ open class VerboseHarvester(
         // very slow
         val distortion = String.format("%.4f", group.distortion)
         val path = group.path
-
+        
         return """
             ${i.inc()}.
             Group: ${group.id}
