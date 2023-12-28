@@ -16,4 +16,4 @@ cd exotic-standalone/target/ || exit
 URL=$1
 shift
 
-java -jar exotic-standalone*.jar harvest "$URL" -diagnose -vj
+java -jar exotic-standalone*.jar harvest "$URL" -diagnose -vj "$@"

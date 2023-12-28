@@ -15,4 +15,4 @@ $JAR=(Resolve-Path $FILES[0])
 $URL = $args[0]
 $args = $args[1..($args.Length - 1)]
 
-java -jar "$JAR" harvest "$URL" -diagnose -vj
+java -jar "$JAR" harvest "$URL" -diagnose -vj $args

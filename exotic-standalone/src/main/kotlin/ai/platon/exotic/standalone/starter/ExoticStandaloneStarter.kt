@@ -7,7 +7,5 @@ fun main(argv: Array<String>) {
 
     val executor = ExoticExecutor(argv)
     executor.parseCmdLine()
-    executor.harvest = true
-    executor.configuredUrl = "https://www.hua.com/flower/"
     executor.execute()
 }
