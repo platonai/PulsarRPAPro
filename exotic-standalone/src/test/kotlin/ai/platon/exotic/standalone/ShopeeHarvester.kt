@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone
 
-import ai.platon.exotic.crawl.common.VerboseHarvester
+import ai.platon.exotic.crawl.common.VerboseCrawler1
 
 fun main() {
     val portalUrl = "https://shopee.sg/Computers-Peripherals-cat.11013247"
@@ -10,5 +10,5 @@ fun main() {
             " -component .product-briefing" +
             " -diagnose"
 
-    VerboseHarvester().harvest(portalUrl, args)
+    VerboseCrawler1().harvest(portalUrl, args)
 }

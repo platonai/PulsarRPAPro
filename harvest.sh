@@ -1,3 +1,10 @@
+#!/bin/bash
+
+if (( $# == 0 )); then
+  echo "Usage: harvest.sh <URL>"
+  exit 0
+fi
+
 FILE_COUNT=$(find "exotic-standalone/target/" -wholename "exotic-standalone*.jar" | wc -l)
 
 if (( FILE_COUNT == 0 )); then
@@ -5,4 +12,8 @@ if (( FILE_COUNT == 0 )); then
 fi
 
 cd exotic-standalone/target/ || exit
-java -jar exotic-standalone*.jar harvest https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ -diagnose -vj
+
+URL=$1
+shift
+
+java -jar exotic-standalone*.jar harvest "$URL" -diagnose -vj

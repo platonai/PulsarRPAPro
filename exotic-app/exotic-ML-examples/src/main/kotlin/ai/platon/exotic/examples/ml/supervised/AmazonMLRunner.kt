@@ -81,7 +81,7 @@ class AmazonMLRunner(
     }
     
     fun harvest(args: String = "") {
-        val args2 = "$args -diagnose -vj -trustSamples"
+        val args2 = "$args -diagnose -vj -trustSamples -showCombinedTable -minimalColumnCount 3"
         val options = session.options(args2)
         
         // scan with start/limit seems not working

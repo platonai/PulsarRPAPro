@@ -23,10 +23,10 @@ import java.nio.file.Files
 import java.util.*
 import kotlin.streams.toList
 
-open class VerboseHarvester(
+open class VerboseCrawler1(
     val context: ScentContext = ScentContexts.create()
 ) {
-    private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
+    private val logger = LoggerFactory.getLogger(VerboseCrawler1::class.java)
     
     val session: ScentSession = context.createSession()
     

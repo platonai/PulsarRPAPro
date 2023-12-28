@@ -1,11 +1,11 @@
 package ai.platon.exotic.examples.ml
 
+import ai.platon.exotic.crawl.common.VerboseCrawler
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.proxy.ProxyPoolManager
 import ai.platon.scent.ScentContext
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
-import ai.platon.scent.tools.VerboseCrawler
 
 class HarvestExamples(context: ScentContext) : VerboseCrawler(context) {
     
@@ -106,7 +106,7 @@ class HarvestExamples(context: ScentContext) : VerboseCrawler(context) {
     }
     
     fun harvestAll() {
-        listOf(testedSeeds, seeds).flatten().toSet().filter { it.contains("suning") }.parallelStream().forEach {
+        listOf(testedSeeds, seeds).flatten().toSet().filter { it.contains("hua") }.parallelStream().forEach {
             harvest(it, defaultHarvestArgs)
         }
     }

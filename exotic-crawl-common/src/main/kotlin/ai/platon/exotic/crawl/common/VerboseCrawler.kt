@@ -2,13 +2,13 @@ package ai.platon.exotic.crawl.common
 
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.NetUtil
+import ai.platon.pulsar.common.ProcessLauncher
+import ai.platon.pulsar.common.browser.Browsers
 import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.dom.FeaturedDocument
-import ai.platon.pulsar.dom.nodes.ML_LABEL
-import ai.platon.pulsar.dom.nodes.node.ext.isNonBlankText
-import ai.platon.pulsar.dom.nodes.node.ext.isText
+import ai.platon.pulsar.dom.nodes.node.ext.isRegularText
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.scent.ScentContext
 import ai.platon.scent.analysis.corpus.annotateNodes
@@ -21,6 +21,7 @@ import ai.platon.scent.ml.EncodeOptions
 import ai.platon.scent.ml.data.SimpleDataFrame
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import kotlinx.coroutines.runBlocking
+import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.nio.file.Files
@@ -35,16 +36,22 @@ open class VerboseCrawler(
     val isActive get() = !closed.get() && session.isActive
     
     val defaultHarvestArgs = "" +
-//                " -scrollCount 6" +
-//                " -itemScrollCount 4" +
+        " -scrollCount 6" +
+        " -itemScrollCount 4" +
+        " -i 10d -ii 10000d" +
+        " -requireSize 10000 -itemRequireSize 200000" +
+        " -topLinks 100" +
+        " -ignoreFailure" +
+        " -showCombinedTable" +
+        " -minimalColumnCount 3" +
         " -nScreens 5" +
-//                " -polysemous" +
+//      " -polysemous" +
         " -diagnose" +
         " -nVerbose 1" +
-//                " -pageLoadTimeout 60s" +
+//      " -pageLoadTimeout 60s" +
         " -showTip" +
-        " -showImage" +
-//                " -cellType PLAIN_TEXT" +
+//        " -showImage" +
+//      " -cellType PLAIN_TEXT" +
         ""
     
     val session = ScentContexts.createSession()
@@ -136,20 +143,20 @@ open class VerboseCrawler(
         
         return anchorGroups.firstOrNull()
     }
-
+    
     fun encodeOutDocuments(portalUrl: String, args: String, encodeOptions: EncodeOptions): SimpleDataFrame {
         val urls = parseOutLinks(portalUrl, args).map { session.normalize(it).spec }
-        return session.encodeNodes(urls, args, encodeOptions) { it.isText && it.isNonBlankText && it.nthScreen <= 2 }
+        return session.encodeNodes(urls, args, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
     }
-
+    
     fun encodeDocuments(
         documents: Iterable<FeaturedDocument>, encodeOptions: EncodeOptions
-    ) {
-        documents.forEach { document ->
-            session.encodeNodes(document, encodeOptions) { it.isText && it.isNonBlankText && it.nthScreen <= 2 }
-        }
-    }
-
+    ) = session.encodeDocuments(documents, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
+    
+    fun encodeElements(
+        rootElements: Iterable<Element>, encodeOptions: EncodeOptions
+    ) = session.encodeElements(rootElements, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
+    
     fun harvest(url: String, args: String) = harvest(url, session.options(args))
     
     fun harvest(url: String, options: HarvestOptions): HarvestResult {
@@ -163,23 +170,46 @@ open class VerboseCrawler(
     
     fun harvest(documents: Sequence<FeaturedDocument>, options: HarvestOptions): HarvestResult {
         val result = session.harvest(documents, options)
+        logger.info("Harvest finished.")
+        logger.info("Ready to report the harvest result ...")
         report(result, options)
         return result
     }
     
-    private fun report(result: HarvestResult, options: HarvestOptions) {
+    fun report(result: HarvestResult, options: HarvestOptions) {
         try {
             session.buildAll(result.tableGroup, options)
             
             val json = session.buildJson(result.tableGroup)
             val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
-            Files.createDirectories(path.parent)
+            val baseDir = path.parent
+            Files.createDirectories(baseDir)
             Files.writeString(path, json)
             
-            logger.info("Harvest result: file://${path.parent}")
+            logger.info("Harvest result: file://$baseDir")
+            
+            // openBrowser("$baseDir")
         } catch (e: Exception) {
             logger.warn(e.stringify("Failed to report harvest result - "))
         }
+    }
+    
+    fun openBrowser() {
+        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
+        val baseDir = path.parent
+        openBrowser(baseDir.toString())
+    }
+    
+    fun openBrowser(url: String) {
+        val chromeBinary = Browsers.searchChromeBinary()
+        val dataDir = AppPaths.getTmp("exotic-chrome")
+        val args = listOf(
+            url,
+            "--user-data-dir=$dataDir",
+            "--no-first-run",
+            "--no-default-browser-check"
+        )
+        ProcessLauncher.launch("$chromeBinary", args)
     }
     
     override fun close() {

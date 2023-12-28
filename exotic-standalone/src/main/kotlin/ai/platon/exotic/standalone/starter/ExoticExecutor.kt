@@ -1,7 +1,8 @@
 package ai.platon.exotic.standalone.starter
 
+import ai.platon.exotic.crawl.common.VerboseCrawler
+import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.exotic.standalone.api.StandaloneApplication
-import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.options.LoadOptions
@@ -26,41 +27,26 @@ class ExoticExecutor(val argv: Array<String>) {
     var mute = false
 
     var parsed = false
-        private set
     var predicate = false
-        private set
     var arrange = false
-        private set
     var harvest = false
-        private set
     var scrape = false
-        private set
     var server = false
-        private set
     var criticalHelp = false
-        private set
     var help = false
-        private set
     var configuredUrl = ""
-        private set
 
     var scrapeFields = mutableListOf<String>()
     var headless = false
-        private set
 
     var sql = ""
-        private set
 
     var helpVerbose = false
-        private set
     var helpArgs: Array<String>? = null
-        private set
 
     var lastOutput: String? = null
-        private set
 
     var lastHelpMessage: String? = null
-        private set
 
     constructor(args: String) : this(args.split(" ").toTypedArray())
 
@@ -203,7 +189,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         runBlocking {
-            val harvester = VerboseHarvester()
+            val harvester = VerboseCrawler1()
             val groups = harvester.arrangeLinks(configuredUrl)
             harvester.printAllAnchorGroups(groups)
         }
@@ -217,7 +203,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
         
         runBlocking {
-            VerboseHarvester().harvest(portalUrl, args)
+            VerboseCrawler1().harvest(portalUrl, args)
         }
     }
 
@@ -229,7 +215,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         runBlocking {
-            VerboseHarvester().harvest(portalUrl, args)
+            VerboseCrawler().harvest(portalUrl, args)
         }
     }
 

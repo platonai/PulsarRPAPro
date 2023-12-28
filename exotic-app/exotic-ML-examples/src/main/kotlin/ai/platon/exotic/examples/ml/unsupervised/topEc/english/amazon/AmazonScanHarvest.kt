@@ -1,12 +1,10 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.amazon
 
-import ai.platon.exotic.crawl.common.VerboseHarvester
+import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.dom.FeaturedDocument
-import ai.platon.pulsar.persist.gora.FileBackendPageStore
 import ai.platon.scent.context.ScentContexts
-import org.apache.gora.mongodb.store.MongoStore
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
 import kotlin.streams.asSequence
@@ -62,7 +60,7 @@ object AmazonScanHarvest {
         val runtimeMxBean = ManagementFactory.getRuntimeMXBean()
         println(runtimeMxBean.inputArguments)
         
-        val crawler = VerboseHarvester()
+        val crawler = VerboseCrawler1()
         crawler.harvest(documents, options)
         
         // labeling & encoding

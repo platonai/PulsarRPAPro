@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.shopee
 
-import ai.platon.exotic.crawl.common.VerboseHarvester
+import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.gora.FileBackendPageStore
@@ -55,7 +55,7 @@ object ShopeeScanHarvest {
         val runtimeMxBean = ManagementFactory.getRuntimeMXBean()
         println(runtimeMxBean.inputArguments)
 
-        val crawler = VerboseHarvester()
+        val crawler = VerboseCrawler1()
         crawler.harvest(documents, options)
     }
 }
