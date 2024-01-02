@@ -59,6 +59,10 @@ object AmazonUrls {
         return URIBuilder(url).queryParams.firstOrNull { it.name == parameterName }?.value
     }
     
+    fun normalizeAsinUrl(asinUrl: String): String? {
+        return AmazonAsinUrlNormalizer().normalize(asinUrl)
+    }
+    
     fun normalizeSellerUrl(sellerUrl: String): String? {
         val builder = URIBuilder(sellerUrl)
         
