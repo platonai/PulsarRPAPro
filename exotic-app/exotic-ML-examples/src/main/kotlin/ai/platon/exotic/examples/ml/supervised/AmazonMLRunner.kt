@@ -97,9 +97,12 @@ class AmazonMLRunner(
 }
 
 fun main(args: Array<String>) {
-    var task = "harvest"
+    // Keep consistent with spring environment
+//    System.setProperty(CapabilityTypes.STORAGE_CRAWL_ID, "pulsar_rpa_tmp")
+
+    var task = "check"
     var start = 0
-    var limit = 300
+    var limit = 30000
     var url = "https://www.amazon.com/dp/B0C1H26C46"
 
     var i = 0
