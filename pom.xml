@@ -77,15 +77,6 @@
 		<module>exotic-app</module>
 	</modules>
 
-	<profiles>
-		<profile>
-			<id>spark</id>
-			<modules>
-				<module>exotic-spark</module>
-			</modules>
-		</profile>
-	</profiles>
-
 	<build>
 		<defaultGoal>install</defaultGoal>
 
@@ -374,7 +365,7 @@
 		<kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 		<kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
 
-		<pulsar.version>1.12.0-SNAPSHOT</pulsar.version>
+		<pulsar.version>1.12.0</pulsar.version>
 		<scent.version>1.12.0-SNAPSHOT</scent.version>
 
 		<dokka.version>1.9.10</dokka.version>
