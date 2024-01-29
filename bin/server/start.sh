@@ -1,5 +1,12 @@
 #!/bin/bash
 
+PROC_NAME="PULSAR_RPA_PRO"
+COUNT=$(pgrep -cf "$PROC_NAME")
+if (( COUNT > 0 )); then
+  echo "$PROC_NAME is already running."
+  exit 0
+fi
+
 DAEMON=false
 DISPLAY_MODE="GUI"
 PRIVACY_CONTEXT=2
@@ -72,7 +79,7 @@ if [[ -e "$LOGBACK_CONFIG_FILE_LOCATION" ]]; then
 fi
 
 EXEC_CALL=(java
--Dproc_EXOTICS
+-Dproc_"$PROC_NAME"
 "-Xms2G" "-Xmx10g" "-XX:+HeapDumpOnOutOfMemoryError"
 "-XX:-OmitStackTraceInFastThrow"
 "-XX:ErrorFile=$USER_HOME/java_error_in_exotics_%p.log"
@@ -84,7 +91,7 @@ EXEC_CALL=(java
 )
 
 LOGOUT=/dev/null
-PID="$LOG_DIR/exotics.pid"
+PID="$LOG_DIR/pulsar-rpa-pro.pid"
 if $DAEMON; then
   exec "${EXEC_CALL[@]}" >> "$LOGOUT" 2>&1 &
   echo $! > "$PID"
