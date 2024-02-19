@@ -99,8 +99,10 @@
                                        class="form-control" id="name" placeholder="name">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
                             </div>
-                            <!-- reserved -->
-                            <div class="form-group col d-none">
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
                                 <label for="maxPages" class="col-form-label">Max Pages<em class="required">*</em></label>
                                 <!--                                <input type="text" th:field="*{maxPages}" class="form-control" id="maxPages"-->
                                 <!--                                       placeholder="maxPages">-->
@@ -110,6 +112,15 @@
                                 </select>
                                 <span th:if="${#fields.hasErrors('maxPages')}" th:errors="*{maxPages}"
                                       class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
+                                <label for="priority" class="col-form-label">Name<em class="required">*</em></label>
+                                <input type="text" th:field="*{priority}" th:required="required"
+                                       class="form-control" id="priority" placeholder="name">
+                                <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}" class="text-danger"></span>
                             </div>
                         </div>
                     </div>

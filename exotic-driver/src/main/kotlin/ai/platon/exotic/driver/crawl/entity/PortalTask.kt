@@ -1,6 +1,7 @@
 package ai.platon.exotic.driver.crawl.entity
 
 import ai.platon.exotic.driver.crawl.scraper.TaskStatus
+import ai.platon.pulsar.common.Priority13
 import org.apache.commons.lang3.StringUtils
 import org.springframework.data.annotation.CreatedDate
 import org.springframework.data.annotation.LastModifiedDate
@@ -19,7 +20,7 @@ class PortalTask(
 
     var args: String = "",
 
-    var priority: Int = 0,
+    var priority: Int = Priority13.LOWER2.value,
 ) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

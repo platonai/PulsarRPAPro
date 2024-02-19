@@ -68,6 +68,7 @@
                                     <a th:href="@{/crawl/portal-tasks/view/{id}(id=${task.id})}"
                                        title="Local detail" class="btn btn-info">
                                         <i class="fas fa-eye ml-1"></i></a>
+                                    <!-- TODO: show the link only when serverTaskId exists -->
                                     <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
                                        title="Server side detail" class="btn btn-info">
                                         <i class="fas fa-meh-rolling-eyes ml-1"></i></a>
