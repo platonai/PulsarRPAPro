@@ -60,44 +60,57 @@ class CrawlTaskRunner(
         val page = PageRequest.of(0, 1000, sort)
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
             .sortedBy { it.parsedPriority }
-            .filter { shouldRun(it) }
+            .filter { shouldSchedule(it) }
 
         rules.forEach { rule -> startCrawl(rule) }
     }
 
-    fun shouldRun(rule: CrawlRule): Boolean {
-        var canRun = false
+    fun shouldSchedule(rule: CrawlRule): Boolean {
+        var schedule = false
         try {
-            canRun = canRun0()
-            if (canRun) {
-                canRun = shouldRun1(rule)
+            schedule = serverHasResourceToExecuteMoreTask()
+            if (schedule) {
+                schedule = taskIsWithinSchedulingTime(rule)
             }
         } catch (e: Exception) {
             logger.warn(e.stringify())
         }
         
-        return canRun
+        return schedule
     }
     
     @Synchronized
     fun startCrawl(rule: CrawlRule) {
-        try {
-            val now = Instant.now()
-            
+        val now = Instant.now()
+        
+        if (rule.deadTime <= now) {
+            rule.status = RuleStatus.Finished.toString()
+        } else {
             rule.status = RuleStatus.Running.toString()
             rule.crawlCount = rule.crawlCount?.inc() ?: 1
             rule.lastCrawlTime = now
-            
-            
-            // TODO: temporary code
-            if (Instant.now() < Instant.parse("2024-02-29T00:00:00Z")) {
-                rule.priority = Priority13.LOWER3.toString()
-            }
-            
-            
+        }
+        
+        // TODO: temporary code
+        if (Instant.now() < Instant.parse("2024-02-29T00:00:00Z")) {
+            rule.priority = Priority13.LOWER3.toString()
+        }
+        
+        try {
             crawlRuleRepository.save(rule)
             crawlRuleRepository.flush()
-            
+        } catch (e: Exception) {
+            logger.warn(e.stringify())
+        }
+        
+        if (rule.status == RuleStatus.Running.toString()) {
+            doStartCrawl(rule)
+        }
+    }
+    
+    @Synchronized
+    private fun doStartCrawl(rule: CrawlRule) {
+        try {
             val portalUrls = rule.portalUrls
             
             if (portalUrls.isBlank()) {
@@ -254,16 +267,20 @@ class CrawlTaskRunner(
         )
     }
     
-    private fun canRun0(): Boolean {
+    private fun serverHasResourceToExecuteMoreTask(): Boolean {
         // The pending task count
         val count = scraper.driver.count()
         return count < 10
     }
     
-    private fun shouldRun1(rule: CrawlRule): Boolean {
+    private fun taskIsWithinSchedulingTime(rule: CrawlRule): Boolean {
+        val now = Instant.now()
+        if (rule.deadTime <= now) {
+            return false
+        }
+
         val lastCrawlTime = rule.lastCrawlTime
         if (rule.period.seconds > 0) {
-            val now = Instant.now()
             if (lastCrawlTime + rule.period <= now) {
                 return true
             }
