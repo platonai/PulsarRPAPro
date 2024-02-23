@@ -59,9 +59,19 @@ class CrawlTaskRunner(
     
     @Synchronized
     fun restartCrawlRulesNextRound() {
+        if (Instant.now() < Instant.parse("2024-02-25T12:00:00Z")) {
+            fixRules()
+        }
+        
+        
+        
+        
+        
+        
         val status = listOf(RuleStatus.Running, RuleStatus.Finished).map { it.toString() }
         val sort = Sort.by(Sort.Order.desc("id"))
         val page = PageRequest.of(0, 1000, sort)
+        
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
             .sortedBy { it.parsedPriority }
             .filter { shouldSchedule(it) }
@@ -86,27 +96,6 @@ class CrawlTaskRunner(
     @Synchronized
     fun startCrawl(rule: CrawlRule) {
         val now = Instant.now()
-        
-        
-        
-        
-        
-        // TODO: temporary code
-        if (Instant.now() < Instant.parse("2024-02-25T12:00:00Z")) {
-            val id = rule.id
-            if (id != null && id > 100 && rule.status == RuleStatus.Running.toString()) {
-                rule.status = RuleStatus.Paused.toString()
-                rule.deadTime = Instant.now().plus(Duration.ofDays(1))
-                rule.priority = Priority13.LOWER3.toString()
-                crawlRuleRepository.save(rule)
-                return
-            }
-        }
-        
-        
-        
-        
-        
         
         if (rule.deadTime <= now) {
             rule.status = RuleStatus.Finished.toString()
@@ -329,6 +318,22 @@ class CrawlTaskRunner(
         }
         
         return false
+    }
+
+    private fun fixRules() {
+        val status = listOf(RuleStatus.Running, RuleStatus.Finished).map { it.toString() }
+        val sort = Sort.by(Sort.Order.desc("id"))
+        val page = PageRequest.of(0, 1000, sort)
+        
+        crawlRuleRepository.findAllByStatusIn(status, page).forEach { rule ->
+            val id = rule.id
+            if (id != null && id > 100 && rule.status == RuleStatus.Running.toString()) {
+                rule.status = RuleStatus.Paused.toString()
+                rule.deadTime = Instant.now().plus(Duration.ofDays(1))
+                rule.priority = Priority13.LOWER3.toString()
+                crawlRuleRepository.save(rule)
+            }
+        }
     }
     
     private fun createPagedUrls(url: String, maxPages: Int): List<String> {
