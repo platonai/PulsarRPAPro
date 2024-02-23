@@ -4,7 +4,10 @@ import ai.platon.exotic.driver.common.IS_DEVELOPMENT
 import ai.platon.exotic.driver.crawl.ExoticCrawler
 import ai.platon.exotic.driver.crawl.entity.CrawlRule
 import ai.platon.exotic.driver.crawl.entity.PortalTask
-import ai.platon.exotic.driver.crawl.scraper.*
+import ai.platon.exotic.driver.crawl.scraper.ListenablePortalTask
+import ai.platon.exotic.driver.crawl.scraper.RuleStatus
+import ai.platon.exotic.driver.crawl.scraper.ScrapeTask
+import ai.platon.exotic.driver.crawl.scraper.TaskStatus
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
 import ai.platon.exotic.services.api.persist.PortalTaskRepository
 import ai.platon.pulsar.common.DateTimes
@@ -21,6 +24,7 @@ import org.slf4j.LoggerFactory
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Sort
 import org.springframework.stereotype.Component
+import java.time.Duration
 import java.time.Instant
 
 @Component
@@ -38,21 +42,21 @@ class CrawlTaskRunner(
     fun loadUnfinishedTasks() {
         // portalTaskRepository.findAllByStatus("Running")
     }
-
+    
     @Synchronized
     fun startCreatedCrawlRules() {
         val now = Instant.now()
-
+        
         val status = listOf(RuleStatus.Created).map { it.toString() }
         val sort = Sort.by(Sort.Order.desc("id"))
         val page = PageRequest.of(0, 1000, sort)
-
+        
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
             .filter { it.startTime.epochSecond <= now.epochSecond }
-
+        
         rules.forEach { rule -> startCrawl(rule) }
     }
-
+    
     @Synchronized
     fun restartCrawlRulesNextRound() {
         val status = listOf(RuleStatus.Running, RuleStatus.Finished).map { it.toString() }
@@ -61,10 +65,10 @@ class CrawlTaskRunner(
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
             .sortedBy { it.parsedPriority }
             .filter { shouldSchedule(it) }
-
+        
         rules.forEach { rule -> startCrawl(rule) }
     }
-
+    
     fun shouldSchedule(rule: CrawlRule): Boolean {
         var schedule = false
         try {
@@ -82,6 +86,27 @@ class CrawlTaskRunner(
     @Synchronized
     fun startCrawl(rule: CrawlRule) {
         val now = Instant.now()
+        
+        
+        
+        
+        
+        // TODO: temporary code
+        if (Instant.now() < Instant.parse("2024-02-25T12:00:00Z")) {
+            val id = rule.id
+            if (id != null && id > 100 && rule.status == RuleStatus.Running.toString()) {
+                rule.status = RuleStatus.Paused.toString()
+                rule.deadTime = Instant.now().plus(Duration.ofDays(1))
+                rule.priority = Priority13.LOWER3.toString()
+                crawlRuleRepository.save(rule)
+                return
+            }
+        }
+        
+        
+        
+        
+        
         
         if (rule.deadTime <= now) {
             rule.status = RuleStatus.Finished.toString()
@@ -128,7 +153,7 @@ class CrawlTaskRunner(
             if (pagedPortalUrls.isEmpty()) {
                 logger.info("No portal urls in rule #{}", rule.id)
             }
-
+            
             // the client controls the retry
             val portalTasks = pagedPortalUrls.map {
                 PortalTask(it, "-refresh", 3).also {
@@ -278,34 +303,34 @@ class CrawlTaskRunner(
         if (rule.deadTime <= now) {
             return false
         }
-
+        
         val lastCrawlTime = rule.lastCrawlTime
         if (rule.period.seconds > 0) {
             if (lastCrawlTime + rule.period <= now) {
                 return true
             }
         }
-
+        
         val expression = rule.cronExpression
         if (expression.isNullOrBlank()) {
             return false
         }
-
+        
         val cronDefinition = CronDefinitionBuilder.instanceDefinitionFor(CronType.QUARTZ)
         val parser = CronParser(cronDefinition)
         val quartzCron: Cron = parser.parse(expression)
         quartzCron.validate()
         val executionTime = ExecutionTime.forCron(quartzCron)
-
+        
         val zonedLastCrawlTime = lastCrawlTime.atZone(DateTimes.zoneId)
         val timeToNextExecution = executionTime.timeToNextExecution(zonedLastCrawlTime)
         if (timeToNextExecution.isPresent && timeToNextExecution.get().seconds <= 0) {
             return true
         }
-
+        
         return false
     }
-
+    
     private fun createPagedUrls(url: String, maxPages: Int): List<String> {
         return if (url.contains("{{page}}")) {
             IntRange(1, maxPages).map { pg -> url.replace("{{page}}", pg.toString()) }

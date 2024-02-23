@@ -59,8 +59,12 @@
                                 <i class="fas fa-list ml-1"></i></a>
                             <a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" class="btn btn-info m-1" rel="noindex nofollow noopener">
                                 <i class="fas fa-edit ml-1"></i></a>
-                            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" class="btn btn-info m-1" rel="noindex nofollow noopener">
-                                <i class="fas fa-play ml-1"></i></a>
+                            <!-- TODO: use javascript to prevent bots -->
+                            <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}"
+                               th:data-confirm-start="|Are you sure you want to start this task ${rule.id}?|"
+                               onclick="if (!confirm(this.getAttribute('data-confirm-start'))) return false"
+                               class="btn btn-info m-1" rel="noindex nofollow noopener"
+                            ><i class="fas fa-play ml-1"></i></a>
                             <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" class="btn btn-info m-1" rel="noindex nofollow noopener">
                                 <i class="fas fa-pause ml-1"></i></a>
 <!--                            <a th:href="@{/crawl/rules/archive/{id}(id=${rule.id})}" class="btn btn-info m-1">-->
