@@ -4,9 +4,6 @@ bin=$(dirname "$0")/..
 bin=$(cd "$bin">/dev/null || exit; pwd)
 APP_HOME=$(cd "$bin"/..>/dev/null || exit; pwd)
 
-# Switching remote URLs from HTTPS to SSH
-# git remote set-url origin git@github.com:platonai/exotic.git
-
 SNAPSHOT_VERSION=$(head -n 1 "$APP_HOME/VERSION")
 VERSION=${SNAPSHOT_VERSION//"-SNAPSHOT"/""}
 LAST_COMMIT_ID=$(git log --format="%H" -n 1)
