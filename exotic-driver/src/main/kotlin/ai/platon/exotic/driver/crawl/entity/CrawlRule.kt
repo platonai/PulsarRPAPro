@@ -80,7 +80,7 @@ class CrawlRule {
     var period: Duration = Duration.ofDays(3650)
     
     @Column(name = "priority")
-    var priority: String? = Priority13.LOWER2.toString()
+    var priority: String? = Priority13.LOWER3.toString()
 
     @Column(name = "cron_expression")
     var cronExpression: String? = null
@@ -149,7 +149,7 @@ class CrawlRule {
     val localLastModifiedDateTime: LocalDateTime
         get() = lastModifiedDate.atOffset(zoneOffset).toLocalDateTime()
 
-    val parsedPriority get() = Priority13.valueOfOrNull(priority ?: "") ?: Priority13.LOWER2
+    val priority13 get() = Priority13.valueOfOrNull(priority ?: "") ?: Priority13.LOWER3
     
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)

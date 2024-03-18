@@ -7,6 +7,7 @@ import ai.platon.pulsar.common.proxy.ProxyEntry
 import ai.platon.pulsar.common.proxy.ProxyInsufficientBalanceException
 import ai.platon.pulsar.common.proxy.ProxyRetryException
 import ai.platon.pulsar.common.proxy.ProxyVendorException
+import ai.platon.pulsar.common.warnInterruptible
 import com.google.gson.GsonBuilder
 import java.io.IOException
 import java.nio.file.Files
@@ -36,31 +37,32 @@ class ZMProxyParser: ProxyParser() {
     companion object {
         const val PARAM_PROXY_ZM_API_KEY = "proxy.zm.api.key"
     }
-
+    
     private val gson = GsonBuilder().create()
     private val dateTimeDetector = DateTimeDetector()
-
+    
     override fun parse(text: String, format: String): List<ProxyEntry> {
         return doParse(text, format)
     }
-
+    
     private fun doParse(text: String, format: String): List<ProxyEntry> {
+        // For platon.AI member, try this app key: 2d5f64c71bdf2b6e632f951c7aab2c9b
         val apiKey = getApiKey() ?: "{YOUR-API-KEY}"
-
+        
         if (format == "json") {
             val result = gson.fromJson(text, ProxyResult::class.java)
             if (result.success) {
-                return result.data.map { ProxyEntry(it.ip, it.port,
-                    it.outip.takeIf { it.isNotBlank() } ?: it.ip,
-                    declaredTTL = parseInstant(it.expire_time))
-                }
+                return result.data.map { data -> ProxyEntry(data.ip, data.port).also {
+                    it.outIp = data.outip.takeIf { it.isNotBlank() } ?: data.ip
+                    it.declaredTTL = parseInstant(data.expire_time)
+                }}
             }
-
+            
             if (result.code != 0) {
                 when (result.code) {
                     113, 117 -> {
                         val ip = extractIp(result.msg)
-                        val link = "https://wapi.http.linkudp.com/index/index/save_white?neek=76534&appkey=$apiKey&white=$ip&whois=platon.AI"
+                        val link = "https://wapi.http.linkudp.com/index/index/save_white?neek=76534&appkey=$apiKey&white=$ip"
                         logger.warn(result.msg + " using one of the following link:\n$link\n$text")
                         throw ProxyVendorException("Proxy vendor exception, please add $ip to the vendor's while list")
                     }
@@ -77,19 +79,19 @@ class ZMProxyParser: ProxyParser() {
                 }
             }
         }
-
+        
         return listOf()
     }
-
+    
     /**
      * TODO: use an external config file
      * */
     private fun getApiKey(): String? {
         return kotlin.runCatching { getApiKey0() }
-            .onFailure { logger.warn(it.message) }
+            .onFailure { warnInterruptible(this, it) }
             .getOrNull()
     }
-
+    
     @Throws(IOException::class)
     private fun getApiKey0(): String? {
         var apiKey = System.getProperty(PARAM_PROXY_ZM_API_KEY)
@@ -101,7 +103,7 @@ class ZMProxyParser: ProxyParser() {
         }
         return apiKey
     }
-
+    
     private fun extractIp(ipString: String): String {
         val pattern = Pattern.compile(IPADDRESS_PATTERN)
         val matcher = pattern.matcher(ipString)
@@ -111,7 +113,7 @@ class ZMProxyParser: ProxyParser() {
             "0.0.0.0"
         }
     }
-
+    
     private fun parseInstant(str: String): Instant {
         return dateTimeDetector.parseDateTimeStrictly(str).toInstant()
     }

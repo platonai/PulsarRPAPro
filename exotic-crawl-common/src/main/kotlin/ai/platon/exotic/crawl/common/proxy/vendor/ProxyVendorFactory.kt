@@ -10,7 +10,7 @@ abstract class ProxyParser {
     companion object {
         const val IPADDRESS_PATTERN = "(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)"
     }
-
+    
     val logger = LoggerFactory.getLogger(ProxyParser::class.java)
     abstract fun parse(text: String, format: String): List<ProxyEntry>
     open fun parse(path: Path, format: String): List<ProxyEntry> = parse(Files.readString(path), format)

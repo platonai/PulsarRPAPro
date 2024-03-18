@@ -59,7 +59,7 @@ class CrawlTaskRunner(
     
     @Synchronized
     fun restartCrawlRulesNextRound() {
-        if (Instant.now() < Instant.parse("2024-02-25T12:00:00Z")) {
+        if (Instant.now() < Instant.parse("2024-02-26T12:00:00Z")) {
             fixRules()
         }
         
@@ -73,7 +73,7 @@ class CrawlTaskRunner(
         val page = PageRequest.of(0, 1000, sort)
         
         val rules = crawlRuleRepository.findAllByStatusIn(status, page)
-            .sortedBy { it.parsedPriority }
+            .sortedBy { it.priority13 }
             .filter { shouldSchedule(it) }
         
         rules.forEach { rule -> startCrawl(rule) }
@@ -147,7 +147,7 @@ class CrawlTaskRunner(
             val portalTasks = pagedPortalUrls.map {
                 PortalTask(it, "-refresh", 3).also {
                     it.rule = rule
-                    it.priority = rule.parsedPriority.value
+                    it.priority = rule.priority13.value
                     it.status = TaskStatus.CREATED
                 }
             }
@@ -327,7 +327,7 @@ class CrawlTaskRunner(
         
         crawlRuleRepository.findAllByStatusIn(status, page).forEach { rule ->
             val id = rule.id
-            if (id != null && id > 100 && rule.status == RuleStatus.Running.toString()) {
+            if (id != null && id > 10 && rule.status == RuleStatus.Running.toString()) {
                 rule.status = RuleStatus.Paused.toString()
                 rule.deadTime = Instant.now().plus(Duration.ofDays(1))
                 rule.priority = Priority13.LOWER3.toString()
