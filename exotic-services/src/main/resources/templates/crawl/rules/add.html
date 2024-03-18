@@ -40,7 +40,7 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="portalUrls" class="col-form-label">Portal urls to start crawl from:<em class="required">*</em></label>
+                            <label for="portalUrls" class="col-form-label">Portal urls to start the crawl:<em class="required">*</em></label>
                             <textarea th:field="*{portalUrls}" th:required="required" th:rows="3"
                                       class="form-control" id="portalUrls"></textarea>
                             <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="*{portalUrls}"
@@ -122,10 +122,10 @@
                             <select th:field="*{period}" class="form-control" id="period">
                                 <option value="PT240000H" selected="selected">Once</option>
                                 <option th:value="'PT-1H'">Use Cron</option>
-                                <option th:value="'PT10M'">Every 10 minutes</option>
-                                <option th:value="'PT10M'">Every 30 minutes</option>
-                                <option th:value="'PT1H'">Every hour</option>
-                                <option th:value="'PT12H'">Every 12 hour</option>
+<!--                                <option th:value="'PT10M'">Every 10 minutes</option>-->
+<!--                                <option th:value="'PT30M'">Every 30 minutes</option>-->
+<!--                                <option th:value="'PT1H'">Every hour</option>-->
+<!--                                <option th:value="'PT12H'">Every 12 hour</option>-->
                                 <option th:value="'PT24H'">Every day</option>
                                 <option th:value="'PT72H'">Every 3 days</option>
                                 <option th:value="'PT168H'">Every 7 days</option>

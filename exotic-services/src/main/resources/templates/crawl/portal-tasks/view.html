@@ -75,6 +75,7 @@
                                 <dd class="d-inline-flex px-2" th:text="${task.status}"></dd>
                                 <dt class="d-inline-flex px-2">Server Task Id</dt>
                                 <dd class="d-inline-flex px-2">
+                                    <!-- TODO: show the link only when serverTaskId exists -->
                                     <a th:href="@{/crawl/remote/tasks/view/{id}(id=${task.serverTaskId})}"
                                        th:text="${task.serverTaskId}" target="_blank"></a>
                                 </dd>

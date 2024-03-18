@@ -40,7 +40,7 @@
                 <div class="card my-3">
                     <div class="card-body">
                         <div class="form-group">
-                            <label for="portalUrls" class="col-form-label">Portal urls to start crawl from:<em class="required">*</em></label>
+                            <label for="portalUrls" class="col-form-label">Portal urls to start the crawl:<em class="required">*</em></label>
                             <textarea th:field="*{portalUrls}" th:required="required" th:rows="3"
                                       class="form-control" id="portalUrls"></textarea>
                             <span th:if="${#fields.hasErrors('portalUrls')}" th:errors="*{portalUrls}"
@@ -99,8 +99,10 @@
                                        class="form-control" id="name" placeholder="name">
                                 <span th:if="${#fields.hasErrors('name')}" th:errors="*{name}" class="text-danger"></span>
                             </div>
-                            <!-- reserved -->
-                            <div class="form-group col d-none">
+                        </div>
+
+                        <div class="row">
+                            <div class="form-group col">
                                 <label for="maxPages" class="col-form-label">Max Pages<em class="required">*</em></label>
                                 <!--                                <input type="text" th:field="*{maxPages}" class="form-control" id="maxPages"-->
                                 <!--                                       placeholder="maxPages">-->
@@ -111,6 +113,27 @@
                                 <span th:if="${#fields.hasErrors('maxPages')}" th:errors="*{maxPages}"
                                       class="text-danger"></span>
                             </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card my-3 d-none">
+                    <div class="card-header">
+                        <label for="priority" class="col-form-label">Priority<em class="required">*</em></label>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <select th:field="*{priority}" class="form-control" id="priority">
+                                <option th:value="'HIGHER'">HIGHER</option>
+                                <option th:value="'NORMAL'">NORMAL</option>
+                                <option th:value="'LOWER'">LOWER</option>
+                                <option th:value="'LOWER2'" selected="selected">LOWER2</option>
+                                <option th:value="'LOWER3'">LOWER3</option>
+                                <option th:value="'LOWER4'">LOWER4</option>
+                                <option th:value="'LOWER5'">LOWER5</option>
+                                <option th:value="'LOWEST'">LOWEST</option>
+                            </select>
+                            <span th:if="${#fields.hasErrors('priority')}" th:errors="*{priority}" class="text-danger"></span>
                         </div>
                     </div>
                 </div>

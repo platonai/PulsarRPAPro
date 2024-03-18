@@ -7,6 +7,7 @@ import ai.platon.exotic.services.api.component.CrawlTaskRunner
 import ai.platon.exotic.services.api.persist.CrawlRuleRepository
 import ai.platon.exotic.services.api.persist.PortalTaskRepository
 import ai.platon.exotic.services.common.jackson.prettyScentObjectWritter
+import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.getLogger
@@ -16,6 +17,7 @@ import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.validation.BindingResult
 import org.springframework.web.bind.annotation.*
+import java.time.Duration
 import java.time.Instant
 import javax.validation.Valid
 import kotlin.random.Random
@@ -86,6 +88,13 @@ class CrawlRuleWebController(
             return "crawl/rules/add"
         }
 
+        if (rule.period.toDays() >= 3650) {
+            if (rule.deadTime == DateTimes.doomsday) {
+                // Run only once, and set the dead time to 2 days later, so it has to be scheduled in 2 days
+                rule.deadTime = rule.startTime + Duration.ofDays(2)
+            }
+        }
+        
         rule.createdDate = Instant.now()
         rule.status = RuleStatus.Created.toString()
 

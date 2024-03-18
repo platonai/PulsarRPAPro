@@ -1,5 +1,25 @@
 #!/bin/bash
 
+PROC_NAME="PULSAR_RPA_PRO"
+COUNT=$(pgrep -cf "$PROC_NAME")
+if (( COUNT > 0 )); then
+  date
+  echo "$PROC_NAME is already running."
+  exit 0
+fi
+
+bin=$(dirname "$0")
+bin=$(cd "$bin">/dev/null || exit; pwd)
+
+JAR=$(find "$bin" -name "exotic-server*.jar")
+if [[ -z $JAR ]]; then
+  JAR=$(find "$bin/.." -name "exotic-server*.jar")
+fi
+if [[ -z $JAR ]]; then
+  echo "Cannot find exotic-server*.jar"
+  exit 1
+fi
+
 DAEMON=false
 DISPLAY_MODE="GUI"
 PRIVACY_CONTEXT=2
@@ -57,7 +77,6 @@ if [[ -e $JAVA ]]; then
 fi
 JAVA="$JAVA_HOME/bin/java"
 
-JAR=$(find . -name "exotic-server*.jar")
 LOGBACK_CONFIG_FILE_LOCATION=$(find . -name "logback*.xml")
 
 APP_OPTS=(
@@ -91,7 +110,7 @@ if (( COUNT > 0 )); then
 fi
 
 LOGOUT=/dev/null
-PID="$LOG_DIR/exotics.pid"
+PID="$LOG_DIR/pulsar-rpa-pro.pid"
 if $DAEMON; then
   exec "${EXEC_CALL[@]}" >> "$LOGOUT" 2>&1 &
   echo $! > "$PID"

@@ -30,14 +30,13 @@
 
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-boot</artifactId>
+            <artifactId>pulsar-rest</artifactId>
             <version>${pulsar.version}</version>
         </dependency>
 
         <dependency>
-            <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-rest</artifactId>
-            <version>${pulsar.version}</version>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-crawl-common</artifactId>
         </dependency>
 
         <dependency>

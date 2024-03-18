@@ -35,6 +35,7 @@ class TestCases {
         println(LocalDateTime.now().truncatedTo(ChronoUnit.SECONDS))
         println(ZoneId.systemDefault())
         println(LocalDateTime.parse("2200-01-01T08:00"))
+        println(Instant.parse("2024-02-29T00:00:00Z"))
 
         println(Instant.now())
     }

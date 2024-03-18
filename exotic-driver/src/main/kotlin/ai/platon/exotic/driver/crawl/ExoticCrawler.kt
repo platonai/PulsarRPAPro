@@ -76,9 +76,6 @@ class ExoticCrawler(val env: Environment? = null): AutoCloseable {
     @Throws(Exception::class)
     fun scrape(task: ListenableScrapeTask) {
         try {
-//            task.onItemSuccess = {
-//                createPendingItems(it)
-//            }
             outPageScraper.scrape(task)
         } catch (t: Throwable) {
             logger.warn("Unexpected exception", t)
@@ -88,9 +85,6 @@ class ExoticCrawler(val env: Environment? = null): AutoCloseable {
     @Throws(Exception::class)
     fun scrapeOutPages(task: ListenablePortalTask) {
         try {
-//            task.onItemSuccess = {
-//                createPendingItems(it)
-//            }
             outPageScraper.scrape(task)
         } catch (t: Throwable) {
             logger.warn("Unexpected exception", t)
@@ -124,5 +118,5 @@ fun main() {
     val scraper = ExoticCrawler()
     scraper.crawl()
 
-    readLine()
+    readlnOrNull()
 }

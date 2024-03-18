@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone.api
 
-import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.exotic.common.ExoticUtils
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_DAY
 import ai.platon.pulsar.common.DateTimes.MILLIS_PER_SECOND
 import org.springframework.beans.factory.annotation.Value

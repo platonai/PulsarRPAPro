@@ -33,8 +33,14 @@
         </dependency>
 
         <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-common</artifactId>
+        </dependency>
+
+        <dependency>
             <groupId>com.google.code.gson</groupId>
             <artifactId>gson</artifactId>
+            <version>${gson.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>

@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone.api
 
-import ai.platon.exotic.driver.common.ExoticUtils
+import ai.platon.exotic.common.ExoticUtils
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
@@ -31,7 +31,7 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @ImportResource("classpath:config/app/app-beans/app-context.xml")
 @EnableJpaRepositories("ai.platon.exotic.services.api.persist")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
-// failed to import Applications
+// should work but failed to import Applications
 //@Import(ExoticApplication::class, ExoticServerApplication::class)
 @EnableScheduling
 @EnableJpaAuditing

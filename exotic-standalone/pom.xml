@@ -17,6 +17,14 @@
 	<dependencies>
 		<dependency>
 			<groupId>ai.platon.exotic</groupId>
+			<artifactId>exotic-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ai.platon.exotic</groupId>
+			<artifactId>exotic-crawl-common</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-server</artifactId>
 		</dependency>
 		<dependency>

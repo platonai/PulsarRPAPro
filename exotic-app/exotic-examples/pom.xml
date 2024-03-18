@@ -24,13 +24,23 @@
     <dependencies>
         <dependency>
             <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-all</artifactId>
-            <version>${pulsar.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>ai.platon.pulsar</groupId>
             <artifactId>pulsar-protocol</artifactId>
             <version>${pulsar.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-crawl-common</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
 
         <dependency>

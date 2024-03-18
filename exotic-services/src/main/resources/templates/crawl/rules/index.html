@@ -24,9 +24,6 @@
             <a th:href="@{'/crawl/rules/add'}" class="btn btn-info">
                 <i class="fas fa-plus-square ml-2"> Add Rule</i>
             </a>
-            <a th:href="@{'/crawl/rules/jd/add'}" class="btn btn-info">
-                <i class="fas fa-plus-circle ml-2"> Add Rule - jd.com</i>
-            </a>
         </div>
         <div class="card-body">
             <div th:switch="${rules}" class="my-5">
@@ -68,9 +65,16 @@
                                     <a th:href="@{/crawl/rules/edit/{id}(id=${rule.id})}" title="Edit"
                                        class="btn btn-info" rel="noindex nofollow noopener">
                                         <i class="fas fa-edit ml-1"></i></a>
-<!--                                    <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}" title="Run Now" class="btn btn-info">-->
-<!--                                        <i class="fas fa-play ml-1"></i></a>-->
-                                    <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" title="Pause" class="btn btn-info" rel="noindex nofollow noopener">
+<!--                                    <a th:href="@{/crawl/rules/start/{id}(id=${rule.id})}"-->
+<!--                                       th:data-confirm-start="|Are you sure you want to start this task ${rule.id}?|"-->
+<!--                                       onclick="if (!confirm(this.getAttribute('data-confirm-start'))) return false"-->
+<!--                                       class="btn btn-info m-1" rel="noindex nofollow noopener"-->
+<!--                                    ><i class="fas fa-play ml-1"></i></a>-->
+                                    <a th:href="@{/crawl/rules/pause/{id}(id=${rule.id})}" title="Pause"
+                                       th:data-confirm-pause="|Are you sure you want to pause this task ${rule.id}?|"
+                                       onclick="if (!confirm(this.getAttribute('data-confirm-pause'))) return false"
+                                       class="btn btn-info" rel="noindex nofollow noopener"
+                                    >
                                         <i class="fas fa-pause ml-1"></i></a>
                                 </td>
                             </tr>

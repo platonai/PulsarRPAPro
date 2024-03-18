@@ -1,9 +1,10 @@
 package ai.platon.exotic.driver.crawl.entity
 
-import ai.platon.exotic.driver.common.ExoticUtils
-import ai.platon.exotic.driver.common.NameGenerator
+import ai.platon.exotic.common.ExoticUtils
+import ai.platon.exotic.common.NameGenerator
 import ai.platon.exotic.driver.crawl.scraper.RuleStatus
 import ai.platon.pulsar.common.DateTimes
+import ai.platon.pulsar.common.Priority13
 import ai.platon.pulsar.common.urls.UrlUtils
 import com.cronutils.descriptor.CronDescriptor
 import com.cronutils.model.Cron
@@ -77,6 +78,9 @@ class CrawlRule {
 
     @Column(name = "period")
     var period: Duration = Duration.ofDays(3650)
+    
+    @Column(name = "priority")
+    var priority: String? = Priority13.LOWER3.toString()
 
     @Column(name = "cron_expression")
     var cronExpression: String? = null
@@ -145,6 +149,8 @@ class CrawlRule {
     val localLastModifiedDateTime: LocalDateTime
         get() = lastModifiedDate.atOffset(zoneOffset).toLocalDateTime()
 
+    val priority13 get() = Priority13.valueOfOrNull(priority ?: "") ?: Priority13.LOWER3
+    
     fun buildArgs(): String {
         val taskTime = LocalDateTime.now().truncatedTo(ChronoUnit.HOURS)
         val formattedTime = DateTimes.format(taskTime, "YYMMddHH")

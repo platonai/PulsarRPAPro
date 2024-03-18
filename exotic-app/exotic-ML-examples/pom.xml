@@ -21,19 +21,23 @@
     <artifactId>exotic-ML-examples</artifactId>
     <name>Exotic ML Examples</name>
 
+    <build>
+        <defaultGoal>package</defaultGoal>
+
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+                <configuration>
+                    <mainClass>ai.platon.exotic.examples.ml.unsupervised.topEc.english.amazon.AmazonScanHarvestKt</mainClass>
+                    <addResources>true</addResources>
+                    <executable>true</executable>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+
     <dependencies>
-        <dependency>
-            <groupId>ai.platon.pulsar</groupId>
-            <artifactId>pulsar-all</artifactId>
-            <version>${pulsar.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>ai.platon.exotic</groupId>
-            <artifactId>exotic-examples</artifactId>
-            <version>1.12.1-SNAPSHOT</version>
-        </dependency>
-
         <!-- Internal dependency -->
         <dependency>
             <groupId>ai.platon.scent</groupId>
@@ -79,8 +83,29 @@
             <groupId>ai.platon.scent</groupId>
             <artifactId>scent-boot</artifactId>
             <version>${scent.version}</version>
+            <exclusions>
+                <exclusion>
+                    <groupId>org.slf4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+                <exclusion>
+                    <groupId>org.apache.logging.log4j</groupId>
+                    <artifactId>*</artifactId>
+                </exclusion>
+            </exclusions>
         </dependency>
+
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-driver</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ai.platon.exotic</groupId>
+            <artifactId>exotic-crawl-common</artifactId>
+        </dependency>
+
         <!-- Required by ai.platon.pulsar.browser.driver.chrome.impl.Chrome -->
+        <!-- TODO: remove jackson-databind -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -96,34 +121,18 @@
             <scope>test</scope>
         </dependency>
 
-        <dependency>
-            <groupId>ai.platon.exotic</groupId>
-            <artifactId>exotic-driver</artifactId>
-        </dependency>
+<!--        <dependency>-->
+<!--            <groupId>org.jpmml</groupId>-->
+<!--            <artifactId>pmml-model-jackson</artifactId>-->
+<!--        </dependency>-->
+<!--        <dependency>-->
+<!--            <groupId>org.jpmml</groupId>-->
+<!--            <artifactId>pmml-evaluator-metro</artifactId>-->
+<!--        </dependency>-->
 
         <dependency>
-            <groupId>org.jpmml</groupId>
-            <artifactId>pmml-model-jackson</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>org.jpmml</groupId>
-            <artifactId>pmml-evaluator-metro</artifactId>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
         </dependency>
     </dependencies>
-
-    <build>
-        <defaultGoal>package</defaultGoal>
-
-        <plugins>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-                <configuration>
-                    <mainClass>ai.platon.exotic.examples.HarvestExamplesKt</mainClass>
-                    <addResources>true</addResources>
-                    <executable>true</executable>
-                </configuration>
-            </plugin>
-        </plugins>
-    </build>
 </project>

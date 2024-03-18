@@ -43,6 +43,11 @@
     tr:nth-child(2n) td { background: #f5f5f5; }
 
     .hidden { display: none; }
+    .green { color: green }
+    .greenyellow { color: greenyellow }
+    .yellow { color: yellow }
+    .orangered { color: orangered }
+    .darkred { color: darkred }
 
     a.link.image {
       display: block;
@@ -60,14 +65,14 @@
       color: #333;
     }
 
-    #content {
-      background-color: #FFF;
-      font-size: 14px;
-      border-radius: 0;
-      padding-left: 121px;
-      padding-top: 5px;
-      box-sizing: border-box;
-    }
+    /*#content {*/
+    /*  background-color: #FFF;*/
+    /*  font-size: 14px;*/
+    /*  border-radius: 0;*/
+    /*  padding-left: 121px;*/
+    /*  padding-top: 5px;*/
+    /*  box-sizing: border-box;*/
+    /*}*/
 
     .search-box span.input {
       border: 1px solid;
@@ -180,7 +185,7 @@
     }
     div.table {
       margin-right: 10px;
-      overflow-x: auto;
+      /*overflow-x: auto;*/
       margin-bottom: 26px;
       table-layout: fixed;
       white-space: nowrap;
@@ -190,6 +195,14 @@
       white-space: nowrap;
       overflow: hidden;
       text-overflow: ellipsis;
+    }
+
+    table.table thead th input, table.table thead td input {
+        width: 4em;
+    }
+
+    div.table td.disabled {
+        color: lightgray;
     }
 
     .tablesorter-headerUnSorted:after {
@@ -218,6 +231,13 @@
     <!--            <a class="mode-bi" href="http://bi.platonic.fun/" target="_blank">Advanced</a>-->
     <!--        </div>-->
     <div id="page-message"><div>Total 17 pages, generated 3 tables</div><div>2022-05-16T21:40:45.881309</div><hr><div>https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -expires PT240H -ignoreFailure -itemExpires PT240H -outLinkSelector a[href~=sp_atk] -verboseJson -componentSelectors .page-product__breadcrumb -componentSelectors .product-briefing</div></div>
+      <hr />
+      <div class="actions">
+          <a class="ui-button">Show Generated CSS</a> |
+          <a class="ui-button">Show Generated X-SQL</a> |
+          <a class="ui-button">Show Machine Learning Statistics</a>
+      </div>
+      <hr />
     <div id="tables"><div><div class="message"><i class="no">1.</i>e<b>X</b>tracted <em>33</em> fields from page area <b></b></div></div><div class="table"><table class="table">
       <thead><tr><td>&nbsp;</td><td></td><td>T1C2</td><td>T1C3</td><td>T1C4</td><td>T1C5</td><td>T1C6</td><td>T1C7</td><td>T1C8</td><td>T1C9</td><td>T1C10</td><td>T1C11</td><td>T1C12</td><td>T1C13</td><td>T1C14</td><td>T1C15</td><td>T1C16</td><td>T1C17</td><td>T1C18</td><td>T1C19</td><td>T1C20</td><td>T1C21</td><td>T1C22</td><td>T1C23</td><td>T1C24</td><td>T1C25</td><td>T1C26</td><td>T1C27</td><td>T1Url</td><td>T2Title</td><td>T2C2</td><td>T2C3</td><td>T2C4</td><td>T2C5</td><td>T2C6</td><td></td></tr></thead><tbody>
     <tr>
@@ -423,6 +443,112 @@ from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Pr
 <script>
 
     // delete, annotate and confirm cells as a labeled sample for ML
+
+    let scentServer = 'http://localhost:8182/api/annotate/batch'
+    let authToken = 'b06test42c13cb000f74539b20be9550b8a1a90b9'
+    let exampleData = {
+        "authToken": authToken,
+        "annotations": [
+            {
+                "vi": "461 400 400 500", "label": "Title", "url": "https://www.amazon.com/HUAWEI-P60-Pro-MNA-LX9-Unlocked/dp/B0C1GZL24G/"
+            },
+            {
+                "vi": "561 500 500 1000", "label": "Title", "url": "https://www.amazon.com/dp/B0C1H26C46"
+            }
+        ]
+    }
+
+    function submitAnnotations(annotations) {
+        fetch(scentServer, {
+            method: "POST",
+            body: JSON.stringify({ authToken: authToken, annotations: annotations }),
+            headers: {
+                "Content-type": "application/json; charset=UTF-8"
+            }
+        });
+    }
+
+    window.addEventListener("DOMContentLoaded", function() {
+        // on document loaded
+
+        // document.getElementById("inputContainer").addEventListener("input", function(e) { // passing the event
+        //     const tgt = e.target;
+        //     const id = tgt.id;
+        //     console.log("You typed in",id)
+        // })
+
+        let ths = document.querySelectorAll("table.table thead tr th, table.table thead tr td")
+        ths.forEach(function(th, key, list) {
+            th.addEventListener("dblclick", function(ev) {
+                let table = th.parentElement.parentElement.parentElement
+                let nth = key + 1
+
+                let text = th.textContent
+                let input = th.querySelector("input[name=name]")
+                if (!input) {
+                    th.setAttribute("data-name", text)
+                    th.innerHTML = `<input name="name" value='${text}' />`
+                    input = th.querySelector("input[name=name]")
+
+                    // input.addEventListener("change", function(ev) {
+                    //     input.classList.remove('green')
+                    //     input.classList.add("darkred")
+                    //     table.querySelectorAll(`tbody tr td:nth-child(${nth})`).forEach(function (td) {
+                    //         td.classList.remove('green')
+                    //         td.classList.add('darkred')
+                    //     })
+                    // })
+
+                    input.addEventListener("blur", function (ev) {
+                        // update the database now
+                        // alert("New column name: " + input.value)
+
+                        // input.classList.remove('darkred')
+                        // input.classList.add("green")
+
+                        let columnElements = table.querySelectorAll(`tbody tr td:nth-child(${nth})`)
+                        let annotations = []
+                        columnElements.forEach(function (td) {
+                            if (!td.classList.contains('disabled')) {
+                                td.classList.remove('green')
+                                td.classList.add('darkred')
+                            }
+                        })
+                        columnElements.forEach(function (td) {
+                            let tr = td.parentElement
+                            let annotation = {
+                                'vi': td.getAttribute('data-vi') || '0 0 -1 -1',
+                                'url': tr.getAttribute("data-url")
+                            }
+                            if (!td.classList.contains('disabled')) {
+                                annotation['label'] = input.value
+                            }
+                            annotations.push(annotation)
+                        })
+
+                        submitAnnotations(annotations)
+
+                        columnElements.forEach(function (td) {
+                            if (!td.classList.contains('disabled')) {
+                                td.classList.remove('darkred')
+                                td.classList.add('green')
+                            }
+                        })
+                    })
+                }
+
+                input = th.querySelector("input[name=name]")
+                input.classList.add("green")
+            });
+        });
+
+        let tds = document.querySelectorAll("table.table tbody td");
+        tds.forEach(function(ele) {
+            ele.addEventListener("dblclick", function(ev) {
+                ele.classList.toggle("disabled");
+            });
+        });
+    });
 
 </script>
 
