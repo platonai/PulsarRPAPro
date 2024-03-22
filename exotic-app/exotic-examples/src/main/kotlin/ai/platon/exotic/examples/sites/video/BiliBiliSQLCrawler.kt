@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.video
 
-import ai.platon.pulsar.test.VerboseSQLExecutor
+import ai.platon.exotic.crawl.common.VerboseSQLExecutor
 
 fun main() {
     val portalUrl = "https://www.bilibili.com/movie/?spm_id_from=333.1007.0.0"

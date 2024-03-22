@@ -1,9 +1,9 @@
 package ai.platon.exotic.examples.sites.fashion.saxx
 
+import ai.platon.exotic.crawl.common.ProductExtractor
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.sql.SQLTemplate
-import ai.platon.pulsar.test.ProductExtractor
 
 fun main() {
     val indexSQL = """

@@ -1,4 +1,4 @@
-package ai.platon.exotic.examples.sites
+package ai.platon.exotic.examples.sites.search
 
 import ai.platon.pulsar.context.PulsarContexts
 
