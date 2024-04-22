@@ -9,6 +9,11 @@ import java.time.ZoneId
 
 val EPOCH_LDT = LocalDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault())
 
+val DOOMSDAY_LDT = DateTimes.toLocalDateTime(DateTimes.doomsday)
+
+val IS_PRODUCT = Files.exists(AppPaths.get("conf/PRODUCT"))
+val IS_DEVELOPMENT = !IS_PRODUCT
+
 const val PROP_DOWNLOAD_LAST_PAGE_NUMBER = "downloadLastPageNumber"
 
 const val PROP_DOWNLOAD_LAST_PAGE_SIZE = "downloadLastPageSize"
@@ -23,8 +28,3 @@ const val DEV_MAX_OUT_PAGES = 20
 const val PRODUCT_MAX_OUT_PAGES = 1000
 const val DEV_MAX_PENDING_TASKS = 20
 const val PRODUCT_MAX_PENDING_TASKS = 50
-
-val IS_PRODUCT = Files.exists(AppPaths.get("conf/PRODUCT"))
-val IS_DEVELOPMENT = !IS_PRODUCT
-
-val DOOMSDAY = DateTimes.toLocalDateTime(DateTimes.doomsday)

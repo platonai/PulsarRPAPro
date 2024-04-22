@@ -10,11 +10,14 @@ import ai.platon.scent.ml.EncodeOptions
 import ai.platon.scent.ml.NodePoint
 import ai.platon.scent.ml.jpmml.JPMMLEvaluator
 import com.google.common.base.CharMatcher
+import org.apache.commons.io.FileUtils
 import org.apache.commons.lang3.StringUtils
 import org.jsoup.nodes.Element
 import org.jsoup.nodes.Node
+import java.net.URL
 import java.nio.file.Files
 import java.nio.file.Path
+import java.nio.file.Paths
 
 class DOMEvaluator(
     modelPath: Path,
@@ -161,13 +164,13 @@ top-g0,top-g1,top-g2,top-g3,left-g0,left-g1,left-g2,left-g3,width-g0,width-g1,wi
 }
 
 fun main() {
-    val home = AppPaths.SYS_USER_HOME
-//    val model = MLEvaluator(
-//        "$home/.pulsar/ml/dom_decision_tree.pmml",
-//        "$home/PlatonAI/data/ml/dataset-15921387134184871264-labeled.csv"
-//    )
-
-    val model = DOMEvaluator(AppPaths.get("/tmp/dom_decision_tree.pmml"))
+    // http://platonic.fun/pub/ml/bidding/dom_decision_tree_bidding.0.0.1.pmml
+    val modelPath = Paths.get("/tmp/dom_decision_tree.pmml")
+    if (!Files.exists(modelPath)) {
+        val modelURL = "http://platonic.fun/pub/ml/bidding/dom_decision_tree_bidding.0.0.1.pmml"
+        FileUtils.copyURLToFile(URL(modelURL), modelPath.toFile())
+    }
+    val model = DOMEvaluator(modelPath)
 
     val urls = """
 http://www.ccgp.gov.cn/cggg/zygg/gkzb/201811/t20181128_11209985.htm
