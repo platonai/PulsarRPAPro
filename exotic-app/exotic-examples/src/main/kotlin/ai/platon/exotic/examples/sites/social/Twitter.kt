@@ -20,7 +20,7 @@ class Twitter {
     private val iterator = Iterators.cycle(keywords)
     
     fun visit() {
-        val args = "-i 7s -ii 7s -ignoreFailure"
+        val args = "-i 1s -ignoreFailure"
         
         val url = "https://twitter.com/home"
         val options = session.options(args)
