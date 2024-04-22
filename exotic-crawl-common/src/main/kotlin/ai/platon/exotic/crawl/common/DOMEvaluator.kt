@@ -35,16 +35,15 @@ class DOMEvaluator(
 
     private val messageWriter = session.context.getBean<ScentMiscMessageWriter>()
 
-    private val defaultArgs = "" +
-            " -nScreens 1" +
-            " -trustSamples" +
-//                " -polysemous" +
-            " -diagnose" +
-            " -nVerbose 1" +
-            " -showTip" +
-            " -showImage" +
-//                " -cellType PLAIN_TEXT"
-            ""
+    private val defaultArgs = """
+        -requireSize 100000
+        -nScreens 1
+        -trustSamples
+        -diagnose
+        -nVerbose 1
+        -showTip
+        -showImage
+        """.trimIndent()
 
     private val datasetPath = Files.createTempFile("dataset-", "csv")
     
