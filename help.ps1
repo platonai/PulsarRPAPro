@@ -1,4 +1,11 @@
-$FILES=(Get-ChildItem -Path "exotic-standalone/target/" -Filter "exotic-standalone*.jar" -Recurse)
+# Find the first parent directory containing the VERSION file
+$AppHome=(Get-Item -Path $MyInvocation.MyCommand.Path).Directory
+while ($AppHome -ne $null -and !(Test-Path "$AppHome/VERSION")) {
+    $AppHome=$AppHome.Parent
+}
+cd $AppHome
+
+$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "exotic-standalone*.jar" -Recurse)
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {
