@@ -1,10 +1,11 @@
 package ai.platon.exotic.examples.sites.fashion.tommyjohn
 
+import ai.platon.exotic.crawl.common.ProductExtractor
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.sql.SQLTemplate
 import ai.platon.pulsar.ql.context.SQLContexts
-import ai.platon.pulsar.test.ProductExtractor
+import ai.platon.scent.ql.h2.context.ScentSQLContexts
 
 fun main() {
     // BrowserSettings.withGUI()
@@ -69,18 +70,17 @@ fun main() {
            )
         """
 
-    val context = SQLContexts.create()
+    val context = ScentSQLContexts.create()
 
     val now = DateTimes.formatNow("HH")
     val path = AppPaths.getTmp("rs").resolve(now).resolve("tommy")
     val executor = ProductExtractor(path, context)
     val itemUrls = arrayOf(
-        "https://tommyjohn.com/collections/loungewear-mens?sort-by=relevance&sort-order=descending",
-        "https://tommyjohn.com/collections/mens-socks?sort-by=relevance&sort-order=descending",
-        "https://tommyjohn.com/collections/mens-undershirts?sort-by=relevance&sort-order=descending",
-        "https://tommyjohn.com/collections/mens-underwear-all-styles",
+        "https://www.tommyjohn.com/collections/mens-sleep-lounge?sort-by=relevance&sort-order=descending",
+        "https://www.tommyjohn.com/collections/mens-undershirts?sort-by=relevance&sort-order=descending",
+        "https://www.tommyjohn.com/collections/mens-underwear",
     )
-    itemUrls.take(1).forEach { url ->
+    itemUrls.forEach { url ->
         val itemsSQL = SQLTemplate(itemsSQLTemplate).createInstance(url).sql
         executor.extract(itemsSQL, reviewsSQLTemplate)
     }

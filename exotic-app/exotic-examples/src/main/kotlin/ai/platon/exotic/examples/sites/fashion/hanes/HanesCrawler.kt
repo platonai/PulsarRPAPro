@@ -1,10 +1,11 @@
 package ai.platon.exotic.examples.sites.fashion.hanes
 
+import ai.platon.exotic.crawl.common.ProductExtractor
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.DateTimes
 import ai.platon.pulsar.common.sql.SQLTemplate
 import ai.platon.pulsar.ql.context.SQLContexts
-import ai.platon.pulsar.test.ProductExtractor
+import ai.platon.scent.ql.h2.context.ScentSQLContexts
 
 fun main() {
     val itemsSQLTemplate = """
@@ -26,7 +27,7 @@ fun main() {
             )
         """
 
-    val context = SQLContexts.create()
+    val context = ScentSQLContexts.create()
     val now = DateTimes.formatNow("HH")
     val path = AppPaths.getTmp("rs").resolve(now).resolve("tommy")
     val executor = ProductExtractor(path, context)

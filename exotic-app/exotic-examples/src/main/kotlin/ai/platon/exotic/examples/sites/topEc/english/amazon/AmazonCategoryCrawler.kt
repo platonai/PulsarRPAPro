@@ -1,10 +1,10 @@
 package ai.platon.exotic.examples.sites.topEc.english.amazon
 
+import ai.platon.exotic.crawl.common.VerboseCrawler
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.context.PulsarContext
 import ai.platon.pulsar.context.PulsarContexts
 import ai.platon.pulsar.dom.Documents
-import ai.platon.pulsar.test.VerboseCrawler
 
 class AmazonCategoryCrawler(
     context: PulsarContext = PulsarContexts.create()

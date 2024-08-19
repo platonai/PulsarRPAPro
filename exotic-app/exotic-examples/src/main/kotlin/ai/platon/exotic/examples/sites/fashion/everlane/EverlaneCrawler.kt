@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.fashion.everlane
 
-import ai.platon.pulsar.test.VerboseSQLExecutor
+import ai.platon.exotic.crawl.common.VerboseSQLExecutor
 
 fun main() {
     val indexSQL = """

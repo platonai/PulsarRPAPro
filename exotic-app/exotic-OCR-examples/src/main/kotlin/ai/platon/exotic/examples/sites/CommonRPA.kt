@@ -4,6 +4,7 @@ import ai.platon.exotic.examples.sites.food.dianping.TaskDef
 import ai.platon.pulsar.common.AppContext
 import ai.platon.pulsar.common.CheckState
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.crawl.fetch.driver.AbstractWebDriver
 import ai.platon.pulsar.crawl.fetch.driver.NavigateEntry
 import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.persist.WebPage
@@ -56,6 +57,7 @@ open class CommonRPA {
     }
 
     open fun checkPreviousPage(driver: WebDriver): CheckState {
+        require(driver is AbstractWebDriver)
         val navigateHistory = driver.browser.navigateHistory
         val now = Instant.now()
 

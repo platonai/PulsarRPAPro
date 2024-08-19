@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone.starter
 
-import ai.platon.exotic.crawl.common.VerboseCrawler
+import ai.platon.exotic.crawl.common.AdvancedVerboseCrawler
 import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.exotic.standalone.api.StandaloneApplication
 import ai.platon.pulsar.browser.common.BrowserSettings
@@ -215,7 +215,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         runBlocking {
-            VerboseCrawler().harvest(portalUrl, args)
+            AdvancedVerboseCrawler().harvest(portalUrl, args)
         }
     }
 
