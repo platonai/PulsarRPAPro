@@ -246,7 +246,6 @@
 				<groupId>ai.platon.pulsar</groupId>
 				<artifactId>pulsar-persist</artifactId>
 				<version>${pulsar.version}</version>
-				<classifier>shaded</classifier>
 			</dependency>
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
@@ -365,7 +364,7 @@
 		<kotlin.compiler.incremental>true</kotlin.compiler.incremental>
 		<kotlin.compiler.jvmTarget>11</kotlin.compiler.jvmTarget>
 
-		<pulsar.version>1.12.4</pulsar.version>
+		<pulsar.version>1.12.8</pulsar.version>
 		<scent.version>1.12.3</scent.version>
 
 		<dokka.version>1.9.10</dokka.version>
