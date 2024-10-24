@@ -1,13 +1,11 @@
 package ai.platon.exotic.examples.agents
 
-import ai.platon.exotic.crawl.common.ExoticMLPaths
-import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.urls.Hyperlink
 import ai.platon.pulsar.crawl.common.url.ListenableHyperlink
 import ai.platon.pulsar.crawl.filter.AbstractScopedUrlNormalizer
+import ai.platon.scent.tools.VerboseCrawler
 import java.nio.file.Files
-import java.time.Instant
 
 object EBayUrls {
     val itemUrlPrefix = "https://www.ebay.com/itm/"
@@ -41,25 +39,24 @@ class EBayProductUrlNormalizer : AbstractScopedUrlNormalizer() {
 /**
  * Copy EBay product pages to the directory to wait for training.
  * */
-class EBayHarvesterStarter(
+class EBayTaskGenerator(
     val args: String,
     val projectId: String
 ) {
-    private val crawler = VerboseCrawler1()
+    private val crawler = VerboseCrawler()
     private val session = crawler.session
     
-    private val datasetPath = ExoticMLPaths.datasetDir.resolve(projectId)
-    private val htmlBaseDir = datasetPath.resolve("html")
+    private val project = EncodeProject(projectId, EncodeProject.Type.PREDICT)
     
     init {
-        Files.createDirectories(htmlBaseDir)
+        project.createDirectories()
         session.context.urlNormalizer.add(EBayProductUrlNormalizer())
     }
     
     fun collectListPageLinks(): List<Hyperlink> {
         return session.loadDocument("https://www.ebay.com/b/Apple/bn_21819543").selectHyperlinks("a[href~=/b/]")
     }
-
+    
     fun loadAllAndExportToEncode(portalUrls: List<String>) {
         val options = session.options(args)
         val itemOptions = options.createItemOptions()
@@ -68,35 +65,27 @@ class EBayHarvesterStarter(
         val urls = documents.flatMap { it.selectHyperlinks(options.outLinkSelector) }
             .mapNotNullTo(HashSet()) { urlNormalizer.normalize(it) }
             .map { createListenableHyperlink(it, itemOptions.args) }
-
+        
         session.submitAll(urls)
         session.context.await()
-
-        createInfoFile()
+        
+        project.createEncodeInfo(mapOf("args" to args, "itemArgs" to itemOptions.args))
+        project.createConfigFile(mapOf("args" to args))
     }
 
     private fun createListenableHyperlink(link: Hyperlink, args: String): ListenableHyperlink {
         val l = ListenableHyperlink(link.url, link.text, link.order, link.referrer, link.args, link.href)
 
-        l.args = "$args -parse"
+        l.args = "$args -parse -requireSize 500000"
         l.event.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
             val url = page.url
             if (page.protocolStatus.isSuccess && EBayUrls.isProductPage(url)) {
-                val path = htmlBaseDir.resolve(AppPaths.fromUri(url, suffix = ".html"))
+                val path = project.htmlBaseDir.resolve(AppPaths.fromUri(url, suffix = ".html"))
                 Files.writeString(path, document.outerHtml, Charsets.UTF_8)
             }
         }
-
+        
         return l
-    }
-
-    private fun createInfoFile() {
-        val path = datasetPath.resolve("htmlExportInfo.txt")
-        val info = """
-            buildTime: ${Instant.now()}
-            args: $args
-        """.trimIndent()
-        Files.writeString(path, info)
     }
 }
 
@@ -117,9 +106,24 @@ fun main() {
         "https://www.ebay.com/b/Cell-Phone-Displays/136699/bn_317614"
     )
     
-    val projectId = "p1727773434"
-    val args = " -i 10d -ii 100d -tl 1000 -ol a[href*=/itm/] -component #mainContent -itemRequireSize 800000 "
+    val portalUrls2 = """
+        https://www.ebay.com/b/Bath-Body-Products/11838/bn_1850348
+        https://www.ebay.com/b/Bath-Body-Mixed-Items/29584/bn_2310611
+        https://www.ebay.com/b/Bath-Bombs-Fizzies/72759/bn_2310690
+        https://www.ebay.com/b/Bath-Oils/31751/bn_2311546
+        https://www.ebay.com/b/Bath-Salts/67390/bn_2313805
+        https://www.ebay.com/b/Bath-Sets-Kits/67391/bn_2314007
+        https://www.ebay.com/b/Body-Powders/29581/bn_2309590
+        https://www.ebay.com/b/Body-Sprays-Mists/31753/bn_2313838
+        https://www.ebay.com/b/Bubble-Baths/31755/bn_2313619
+        https://www.ebay.com/b/Deodorants-Antiperspirants/29580/bn_2310460
+    """.trimIndent().split("\n").map { it.trim() }
+
+//    val projectId = "p1727773434"
+    val projectId = "p1729409382"
+    val args = " -i 10d -ii 100d -tl 1000 -ol a[href*=/itm/] -component #mainContent -itemRequireSize 500000 "
     
-    val harvester = EBayHarvesterStarter(args, projectId)
-    harvester.loadAllAndExportToEncode(portalUrls)
+    val harvester = EBayTaskGenerator(args, projectId)
+    harvester.loadAllAndExportToEncode(portalUrls2)
+    // harvester.createHarvestResultDatasetView()
 }
