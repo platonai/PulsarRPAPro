@@ -3,6 +3,7 @@ package ai.platon.exotic.examples.ml.supervised
 import ai.platon.exotic.crawl.common.AmazonAsinUrlNormalizer
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.dom.nodes.node.ext.isRegularText
 import ai.platon.pulsar.persist.gora.generated.GWebPage
 import ai.platon.scent.common.clearMLLabels
 import ai.platon.scent.common.mlLabels
@@ -74,7 +75,10 @@ class AmazonMLRunner(
 
         // val encodeOptions = EncodeOptions(labels, datasetPath, nGram = 1, nodeType = 1, textStrategy = 1)
         val encodeOptions = EncodeOptions(datasetPath)
-        crawler.encodeElements(rootElements.asIterable(), encodeOptions)
+//        crawler.encodeElements(rootElements.asIterable(), encodeOptions)
+        session.encodeForElements(rootElements.asIterable(), encodeOptions) {
+            it.isRegularText
+        }
         
         println("Dataset is exported | $datasetPath")
         println("All done.")

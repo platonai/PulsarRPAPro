@@ -4,28 +4,18 @@ import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.NetUtil
 import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.browser.Browsers
-import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.context.PulsarContext
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.dom.FeaturedDocument
-import ai.platon.pulsar.dom.nodes.node.ext.isRegularText
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.persist.WebPage
-import ai.platon.scent.analysis.corpus.annotateNodes
+import ai.platon.pulsar.skeleton.common.options.LoadOptions
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
-import ai.platon.scent.dom.nodes.AnchorGroup
-import ai.platon.scent.dom.nodes.node.ext.nthScreen
 import ai.platon.scent.entities.HarvestResult
-import ai.platon.scent.ml.EncodeOptions
-import ai.platon.scent.ml.data.SimpleDataFrame
-import kotlinx.coroutines.runBlocking
-import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
 import java.net.URL
 import java.nio.file.Files
-import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
 
 open class VerboseCrawler(

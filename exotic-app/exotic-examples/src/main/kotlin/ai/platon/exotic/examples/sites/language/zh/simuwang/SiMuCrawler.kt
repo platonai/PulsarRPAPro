@@ -1,8 +1,8 @@
 package ai.platon.exotic.examples.sites.language.zh.simuwang
 
-import ai.platon.pulsar.crawl.event.impl.CloseMaskLayerHandler
-import ai.platon.pulsar.crawl.event.impl.LoginHandler
 import ai.platon.pulsar.ql.context.SQLContexts
+import ai.platon.pulsar.skeleton.crawl.event.impl.CloseMaskLayerHandler
+import ai.platon.pulsar.skeleton.crawl.event.impl.LoginHandler
 
 class SiMuLoginHandler(
     loginUrl: String,
@@ -34,8 +34,8 @@ open class SiMuCrawler {
     val loginHandler = SiMuLoginHandler(portalUrl, username, password)
     val closeMaskLayerHandler = CloseMaskLayerHandler(closeMaskLayerSelector)
     val options = session.options(args).also {
-        it.event.browseEvent.onBrowserLaunched.addLast(loginHandler)
-        it.event.browseEvent.onDocumentActuallyReady.addLast(closeMaskLayerHandler)
+        it.event.browseEventHandlers.onBrowserLaunched.addLast(loginHandler)
+        it.event.browseEventHandlers.onDocumentActuallyReady.addLast(closeMaskLayerHandler)
     }
 
     open fun crawl() {

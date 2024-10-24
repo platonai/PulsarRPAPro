@@ -2,7 +2,7 @@ package ai.platon.exotic.crawl.common
 
 import ai.platon.pulsar.common.config.AppConstants
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.crawl.filter.AbstractScopedUrlNormalizer
+import ai.platon.pulsar.skeleton.crawl.filter.AbstractScopedUrlNormalizer
 import org.apache.http.client.utils.URIBuilder
 import java.nio.charset.Charset
 

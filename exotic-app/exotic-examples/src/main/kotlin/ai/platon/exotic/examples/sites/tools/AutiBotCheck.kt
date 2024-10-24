@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.tools
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val urls = """

@@ -1,7 +1,7 @@
 package ai.platon.exotic.examples
 
 import ai.platon.pulsar.browser.common.BrowserSettings
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     BrowserSettings.disableProxy().privacy(1).withSPA().withPrototypeBrowser()

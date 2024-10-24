@@ -3,7 +3,7 @@ package ai.platon.exotic.examples.sites.topEc.english.amazon
 import ai.platon.exotic.crawl.common.VerboseCrawler
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.context.PulsarContext
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.dom.Documents
 
 class AmazonCategoryCrawler(

@@ -5,9 +5,9 @@ import ai.platon.exotic.handlers.JdHtmlIntegrityChecker
 import ai.platon.pulsar.common.AppFiles
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.ImmutableConfig
-import ai.platon.pulsar.crawl.fetch.privacy.PrivacyContextMonitor
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
+import ai.platon.pulsar.skeleton.crawl.fetch.privacy.PrivacyContextMonitor
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
 import org.h2.tools.Server

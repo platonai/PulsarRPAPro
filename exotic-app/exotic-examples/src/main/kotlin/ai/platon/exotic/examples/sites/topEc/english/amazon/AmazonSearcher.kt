@@ -1,10 +1,10 @@
 package ai.platon.exotic.examples.sites.topEc.english.amazon
 
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.event.WebPageWebDriverEventHandler
-import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.skeleton.crawl.event.WebPageWebDriverEventHandler
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriver
 
 class AmazonSearcherJsEventHandler: WebPageWebDriverEventHandler() {
     override suspend fun invoke(page: WebPage, driver: WebDriver): Any? {
@@ -43,7 +43,7 @@ fun main() {
     val cx = PulsarContexts.create()
     val i = cx.createSession()
     val opts = i.options("-i 0s")
-    opts.event.browseEvent.onFeatureComputed.addLast(AmazonSearcherJsEventHandler())
+    opts.event.browseEventHandlers.onFeatureComputed.addLast(AmazonSearcherJsEventHandler())
     i.load(portalUrl, opts)
 
     readLine()

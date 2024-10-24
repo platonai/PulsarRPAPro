@@ -4,11 +4,10 @@ import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.sql.SQLConverter
 import ai.platon.pulsar.common.sql.SQLInstance
-import ai.platon.pulsar.ql.ResultSets
+import ai.platon.pulsar.ql.common.ResultSets
 import ai.platon.pulsar.ql.context.SQLContext
 import ai.platon.pulsar.ql.context.SQLContexts
 import ai.platon.pulsar.ql.h2.utils.ResultSetUtils
-import ai.platon.scent.ScentContext
 import ai.platon.scent.ql.h2.context.ScentSQLContext
 import java.sql.ResultSet
 import java.util.*

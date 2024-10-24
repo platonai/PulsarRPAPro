@@ -12,7 +12,7 @@ import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import kotlin.streams.toList
@@ -51,13 +51,13 @@ class JdRPA(
 
     fun options(args: String): LoadOptions {
         val options = session.options(args)
-        initItemItemEventHandler(options)
+        initItemitemEventHandler(options)
         return options
     }
 
-    private fun initItemItemEventHandler(options: LoadOptions) {
+    private fun initItemitemEventHandler(options: LoadOptions) {
         val eh = options.itemEvent
-        val be = eh.browseEvent
+        val be = eh.browseEventHandler
         // Warp up the browser to avoid being blocked by the server.
         be.onBrowserLaunched.addLast { page, driver ->
             driver.addBlockedURLs(blockedUrls)

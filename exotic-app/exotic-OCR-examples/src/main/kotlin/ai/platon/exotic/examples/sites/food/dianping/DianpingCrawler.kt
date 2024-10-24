@@ -2,15 +2,15 @@ package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.urls.UrlAware
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.context.support.AbstractPulsarContext
-import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.select.selectHyperlinks
 import ai.platon.pulsar.persist.WebPage
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.context.support.AbstractPulsarContext
+import ai.platon.pulsar.skeleton.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.skeleton.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import java.time.Duration
 

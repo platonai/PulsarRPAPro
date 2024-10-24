@@ -75,18 +75,9 @@ open class AdvancedVerboseCrawler(
         return anchorGroups.firstOrNull()
     }
     
-    fun encodeOutDocuments(portalUrl: String, args: String, encodeOptions: EncodeOptions): SimpleDataFrame {
-        val urls = parseOutLinks(portalUrl, args).map { session.normalize(it).spec }
-        return session.encodeNodes(urls, args, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
-    }
-    
     fun encodeDocuments(
         documents: Iterable<FeaturedDocument>, encodeOptions: EncodeOptions
     ) = session.encodeDocuments(documents, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
-    
-    fun encodeElements(
-        rootElements: Iterable<Element>, encodeOptions: EncodeOptions
-    ) = session.encodeElements(rootElements, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
     
     fun harvest(url: String, args: String) = harvest(url, session.options(args))
     

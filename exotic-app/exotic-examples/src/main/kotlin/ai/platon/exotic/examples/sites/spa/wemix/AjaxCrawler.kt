@@ -3,13 +3,11 @@ package ai.platon.exotic.examples.sites.spa.wemix
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.stringify
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.event.WebPageWebDriverEventHandler
-import ai.platon.pulsar.crawl.event.WebPageWebDriverHandler
-import ai.platon.pulsar.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.persist.WebPage
-import ai.platon.pulsar.session.PulsarSession
-import kotlinx.coroutines.runBlocking
+import ai.platon.pulsar.skeleton.context.PulsarContexts
+import ai.platon.pulsar.skeleton.crawl.event.WebPageWebDriverEventHandler
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.skeleton.session.PulsarSession
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
@@ -83,7 +81,7 @@ private class AjaxCrawler(
 
         val apiFetcherHandler = AjaxFetchHandler(initPageNumber, reportDirectory)
         val options = session.options("-refresh")
-        options.event.browseEvent.onWillComputeFeature.addLast(apiFetcherHandler)
+        options.event.browseEventHandlers.onWillComputeFeature.addLast(apiFetcherHandler)
 
         try {
             session.load(url, options)

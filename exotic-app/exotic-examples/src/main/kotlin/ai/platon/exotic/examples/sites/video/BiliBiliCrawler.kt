@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.video
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val portalUrl = "https://www.bilibili.com/movie/?spm_id_from=333.1007.0.0"

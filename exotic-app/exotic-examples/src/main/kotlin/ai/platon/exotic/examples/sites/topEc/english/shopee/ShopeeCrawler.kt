@@ -1,9 +1,9 @@
 package ai.platon.exotic.examples.sites.topEc.english.shopee
 
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.common.url.ParsableHyperlink
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.skeleton.crawl.common.url.ParsableHyperlink
 
 fun main() {
 //    BrowserSettings.headless()

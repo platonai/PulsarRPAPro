@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import com.google.gson.GsonBuilder
 
 fun main() {

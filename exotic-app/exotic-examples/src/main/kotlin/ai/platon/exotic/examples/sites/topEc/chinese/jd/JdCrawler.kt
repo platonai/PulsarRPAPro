@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.topEc.chinese.jd
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val portalUrl = "https://list.jd.com/list.html?cat=652,12345,12349"

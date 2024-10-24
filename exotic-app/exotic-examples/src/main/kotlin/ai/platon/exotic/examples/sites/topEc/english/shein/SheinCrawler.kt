@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.topEc.english.shein
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val portalUrl = "https://us.shein.com/New-in-Trends-sc-00654187.html"

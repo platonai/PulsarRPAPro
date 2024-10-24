@@ -1,7 +1,7 @@
 package ai.platon.exotic.examples.sites.topEc.chinese
 
 import ai.platon.exotic.examples.sites.topEc.chinese.login.taobao.TaobaoLoginHandler
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val urls = """
@@ -17,7 +17,7 @@ fun main() {
     val session = PulsarContexts.createSession()
     val options = session.options(args)
 
-    options.event.browseEvent.onBrowserLaunched.addLast { page, driver ->
+    options.event.browseEventHandlers.onBrowserLaunched.addLast { page, driver ->
         // TODO: rotate accounts
         val username = System.getenv("PULSAR_TAOBAO_USERNAME") ?: "MustFallUsername"
         val password = System.getenv("PULSAR_TAOBAO_PASSWORD") ?: "MustFallPassword"
@@ -27,7 +27,7 @@ fun main() {
         // sign in all websites requiring login
     }
 
-    options.event.loadEvent.onHTMLDocumentParsed.addLast { page, document ->
+    options.event.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
         println(document.title + " | " + document.baseURI)
     }
     urls.forEach { session.submitForOutPages(it, options) }

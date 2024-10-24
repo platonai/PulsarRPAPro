@@ -1,10 +1,10 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.common.*
-import ai.platon.pulsar.crawl.fetch.driver.WebDriver
-import ai.platon.pulsar.crawl.fetch.driver.WebDriverCancellationException
-import ai.platon.pulsar.crawl.fetch.driver.WebDriverException
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriverCancellationException
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriverException
 import net.sourceforge.tess4j.Tesseract
 import net.sourceforge.tess4j.TesseractException
 import org.apache.commons.lang3.StringUtils

@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.topEc.english.shopee
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val portalUrl = "https://shopee.sg/Computers-Peripherals-cat.11013247"

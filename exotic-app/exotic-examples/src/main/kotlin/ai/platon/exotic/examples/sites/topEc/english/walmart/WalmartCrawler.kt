@@ -2,7 +2,7 @@ package ai.platon.exotic.examples.sites.topEc.english.walmart
 
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
@@ -46,7 +46,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
     responseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker, WalmartHtmlChecker())
 
     val options = session.options(args)
-    val seh = options.itemEvent.browseEvent
+    val seh = options.itemEvent.browseEventHandlers
     seh.onWillFetch.addLast { page, driver ->
         // delay(1_000L + Random.nextInt(20_000))
     }

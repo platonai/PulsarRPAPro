@@ -93,17 +93,17 @@ class DOMEvaluator(
         val titleLabel = "1"
         val result: MutableMap<String, String> = mutableMapOf()
         val sb = StringBuilder()
-        for (x in df.points) {
-            val x1 = IntRange(0, columns.size - 1).associate { i -> columns[i].name to x[i] }
-            val r = predict(x1)
-            
-            val p = r["probability($titleLabel)"]
-            if (p == 1.0) {
-                r.entries.associateTo(result) { it.key to it.value.toString() }
-                extractFields(url, x, result)
-                break
-            }
-        }
+//        for (x in df.points) {
+//            val x1 = IntRange(0, columns.size - 1).associate { i -> columns[i].name to x[i] }
+//            val r = predict(x1)
+//
+//            val p = r["probability($titleLabel)"]
+//            if (p == 1.0) {
+//                r.entries.associateTo(result) { it.key to it.value.toString() }
+//                extractFields(url, x, result)
+//                break
+//            }
+//        }
         
         if (predictResultPath != null && result.isNotEmpty()) {
             csvFormat(sb, result)

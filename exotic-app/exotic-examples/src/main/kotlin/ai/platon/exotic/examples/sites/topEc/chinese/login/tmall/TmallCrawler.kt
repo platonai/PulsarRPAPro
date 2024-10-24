@@ -1,8 +1,8 @@
 package ai.platon.exotic.examples.sites.topEc.chinese.login.tmall
 
 import ai.platon.exotic.examples.sites.topEc.chinese.login.taobao.TaobaoLoginHandler
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.context.PulsarContexts
+import ai.platon.pulsar.skeleton.session.PulsarSession
 
 fun main() {
     val portalUrl = "https://list.tmall.com/search_product.htm?q=大家电"
@@ -16,7 +16,7 @@ fun main() {
 
     val options = session.options(args)
     val loginHandler = TaobaoLoginHandler(username, password, warnUpUrl = portalUrl)
-    options.event.browseEvent.onBrowserLaunched.addLast(loginHandler)
+    options.event.browseEventHandlers.onBrowserLaunched.addLast(loginHandler)
 
     session.loadOutPages(portalUrl, options)
 

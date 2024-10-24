@@ -2,8 +2,8 @@ package ai.platon.exotic.examples.agents
 
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.urls.Hyperlink
-import ai.platon.pulsar.crawl.common.url.ListenableHyperlink
-import ai.platon.pulsar.crawl.filter.AbstractScopedUrlNormalizer
+import ai.platon.pulsar.skeleton.crawl.common.url.ListenableHyperlink
+import ai.platon.pulsar.skeleton.crawl.filter.AbstractScopedUrlNormalizer
 import ai.platon.scent.tools.VerboseCrawler
 import java.nio.file.Files
 

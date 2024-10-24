@@ -4,18 +4,18 @@ import ai.platon.exotic.examples.sites.CommonRPA
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.brief
 import ai.platon.pulsar.common.getLogger
-import ai.platon.pulsar.common.message.MiscMessageWriter
-import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.serialize.json.prettyPulsarObjectMapper
 import ai.platon.pulsar.common.stringify
-import ai.platon.pulsar.context.support.AbstractPulsarContext
-import ai.platon.pulsar.crawl.CoreMetrics
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.common.message.MiscMessageWriter
+import ai.platon.pulsar.skeleton.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.context.support.AbstractPulsarContext
+import ai.platon.pulsar.skeleton.crawl.CoreMetrics
+import ai.platon.pulsar.skeleton.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import com.fasterxml.jackson.core.JsonProcessingException
 import com.google.gson.GsonBuilder
@@ -71,34 +71,34 @@ class RestaurantRPA(
         val options = session.options(args)
 
         registerEventHandlers(options)
-        registerItemEventHandlers(options)
+        registeritemEventHandlers(options)
 
         return options
     }
 
     private fun registerEventHandlers(options: LoadOptions) {
-        options.event.loadEvent.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+        options.event.loadEventHandlers.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
             collectPortalUrls(document) }
     }
 
-    private fun registerItemEventHandlers(options: LoadOptions) {
+    private fun registeritemEventHandlers(options: LoadOptions) {
         val ie = options.itemEvent
 
-        ie.loadEvent.onWillLoad.addLast {
+        ie.loadEventHandlers.onWillLoad.addLast {
             it
         }
 
-        ie.loadEvent.onWillFetch.addLast { page ->
+        ie.loadEventHandlers.onWillFetch.addLast { page ->
             page.fetchRetries = 0
 //            page.maxRetries = 6
             page.pageModel?.clear()
         }
 
-        ie.loadEvent.onLoaded.addLast { page ->
+        ie.loadEventHandlers.onLoaded.addLast { page ->
             dumpPageModel(page)
         }
 
-        val be = ie.browseEvent
+        val be = ie.browseEventHandlers
         be.onWillCheckDocumentState.addLast { page, driver ->
         }
 
@@ -152,7 +152,7 @@ class RestaurantRPA(
             }
         }
 
-        ie.loadEvent.onHTMLDocumentParsed.addLast { page, document ->
+        ie.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
             val fields = page.variables.variables
                 .filterKeys { it.startsWith(Screenshot.OCR) }
                 .mapValues { it.value.toString() }
@@ -197,7 +197,7 @@ class RestaurantRPA(
         }
 
         val pageModel = page.pageModel ?: return
-        val fieldGroups = pageModel.fieldGroups.map { it.name to it.fields }
+        val fieldGroups = pageModel.unboxedFieldGroups
         if (fieldGroups.isEmpty()) {
             return
         }

@@ -3,7 +3,7 @@ package ai.platon.exotic.examples.sites
 import ai.platon.exotic.examples.sites.food.dianping.DianpingCrawler
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.pulsar.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.common.options.LoadOptions
 
 /**
  * java -jar exotic-OCR-examples*.jar -pc 8 -tab 10 -supervised -site walmart

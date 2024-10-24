@@ -19,7 +19,7 @@ import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.driver.cdt.ChromeDevtoolsDriver
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.protocol.browser.emulator.util.HtmlIntegrityChecker
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.session.PulsarSession
 import ai.platon.scent.context.ScentContexts
 import org.jsoup.nodes.Document
 import java.time.Duration
@@ -63,7 +63,7 @@ class WalmartRPA(
             collectPortalUrls(document)
         }
 
-        val be = options.itemEvent.browseEvent
+        val be = options.itemEvent.browseEventHandlers
         be.onBrowserLaunched.addLast { page, driver ->
             // Warp up the browser to avoid being blocked by the website
             if (driver is ChromeDevtoolsDriver) {

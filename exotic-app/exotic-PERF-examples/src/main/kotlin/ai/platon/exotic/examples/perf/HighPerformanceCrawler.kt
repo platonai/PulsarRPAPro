@@ -6,10 +6,10 @@ import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.browser.common.InteractSettings
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.config.CapabilityTypes
-import ai.platon.pulsar.common.metrics.MetricsSystem
 import ai.platon.pulsar.common.proxy.ProxyPoolManager
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.common.url.ListenableHyperlink
+import ai.platon.pulsar.skeleton.common.metrics.MetricsSystem
+import ai.platon.pulsar.skeleton.context.PulsarContexts
+import ai.platon.pulsar.skeleton.crawl.common.url.ListenableHyperlink
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContextInitializer
@@ -50,7 +50,7 @@ class HighPerformanceCrawler(
         val links = LinkExtractors.fromResource(resource).asSequence()
             .map { ListenableHyperlink(it, "", args = args) }
             .onEach {
-                it.event.browseEvent.onWillNavigate.addLast { page, driver ->
+                it.event.browseEventHandlers.onWillNavigate.addLast { page, driver ->
                     // This is a temporary solution to override InteractSettings, will be improved in the future
                     page.setVar("InteractSettings", interactSettings)
                     driver.addBlockedURLs(blockingUrls)

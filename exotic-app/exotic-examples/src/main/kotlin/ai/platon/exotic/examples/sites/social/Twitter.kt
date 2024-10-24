@@ -1,9 +1,9 @@
 package ai.platon.exotic.examples.sites.social
 
 import ai.platon.pulsar.browser.common.BrowserSettings
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.fetch.driver.WebDriver
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.persist.WebPage
+import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriver
 import com.google.common.collect.Iterators
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch

@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val session = PulsarContexts.createSession()

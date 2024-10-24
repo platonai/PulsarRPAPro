@@ -5,10 +5,10 @@ import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.exotic.standalone.api.StandaloneApplication
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.common.options.LoadOptions
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.ql.ResultSets
+import ai.platon.pulsar.ql.common.ResultSets
+import ai.platon.pulsar.skeleton.common.options.LoadOptions
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.ql.h2.context.ScentSQLContexts

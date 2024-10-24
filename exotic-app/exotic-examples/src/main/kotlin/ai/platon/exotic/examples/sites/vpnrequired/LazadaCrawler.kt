@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.sites.vpnrequired
 
-import ai.platon.pulsar.context.PulsarContexts
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 fun main() {
     val portalUrl = "https://www.lazada.com.my/shop-pressure-cookers/"

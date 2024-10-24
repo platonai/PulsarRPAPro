@@ -1,8 +1,8 @@
 package ai.platon.exotic.examples.sites.topEc.chinese.login.s1688
 
-import ai.platon.pulsar.context.PulsarContexts
-import ai.platon.pulsar.crawl.event.impl.LoginHandler
-import ai.platon.pulsar.session.PulsarSession
+import ai.platon.pulsar.skeleton.context.PulsarContexts
+import ai.platon.pulsar.skeleton.crawl.event.impl.LoginHandler
+import ai.platon.pulsar.skeleton.session.PulsarSession
 
 class S1688Crawler(
     val portalUrl: String = "https://list.tmall.com/search_product.htm?q=大家电",
@@ -17,14 +17,16 @@ class S1688Crawler(
     val passwordSelector = "input#fm-login-password"
     val password = System.getenv("PULSAR_TAOBAO_PASSWORD") ?: "MustFallPassword"
     val submitSelector = "button[type=submit]"
-
+    
     fun crawl() {
         val options = session.options(args)
-
-        val loginHandler = LoginHandler(loginUrl,
-            usernameSelector, username, passwordSelector, password, submitSelector, activateSelector)
-        options.event.browseEvent.onBrowserLaunched.addLast(loginHandler)
-
+        
+        val loginHandler = LoginHandler(
+            loginUrl,
+            usernameSelector, username, passwordSelector, password, submitSelector, activateSelector
+        )
+        options.event.browseEventHandlers.onBrowserLaunched.addLast(loginHandler)
+        
         session.loadOutPages(portalUrl, options)
     }
 }
