@@ -1,15 +1,15 @@
 # Find the first parent directory containing the VERSION file
 $AppHome=(Get-Item -Path $MyInvocation.MyCommand.Path).Directory
-while ($AppHome -ne $null -and !(Test-Path "$AppHome/VERSION")) {
+while ($null -ne $AppHome -and !(Test-Path "$AppHome/VERSION")) {
     $AppHome=$AppHome.Parent
 }
-cd $AppHome
+Set-Location $AppHome
 
-# Check java version, make sure it is Java 11
-$JAVA_VERSION = (java -version 2>&1 | Select-String "version" | Select-String "11\.")
+# Check java version, make sure it is Java 17
+$JAVA_VERSION = (java -version 2>&1 | Select-String "version" | Select-String "17\.")
 
-if ($JAVA_VERSION -eq $null) {
-    Write-Output "WARNING: Java 11 is required to run this program"
+if ($null -eq $JAVA_VERSION) {
+    Write-Output "WARNING: Java 17 is required to run this program"
 }
 
 $args1 = $args
@@ -24,7 +24,7 @@ $FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "Pulsar
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {
-    mvn -DskipTests=true
+    &"$AppHome/mvnw" -DskipTests=true
 }
 
 # Get the first file in $FILES

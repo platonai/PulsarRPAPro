@@ -9,7 +9,7 @@ $FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "Pulsar
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {
-    mvn -DskipTests=true
+    &"$AppHome/mvnw" -DskipTests=true
 }
 
 $JAR=(Resolve-Path $FILES[0])
