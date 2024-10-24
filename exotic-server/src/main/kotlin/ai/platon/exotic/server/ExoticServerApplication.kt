@@ -1,7 +1,7 @@
-package ai.platon.exotic
+package ai.platon.exotic.server
 
-import ai.platon.exotic.handlers.AmazonHtmlIntegrityChecker
-import ai.platon.exotic.handlers.JdHtmlIntegrityChecker
+import ai.platon.exotic.server.handlers.AmazonHtmlIntegrityChecker
+import ai.platon.exotic.server.handlers.JdHtmlIntegrityChecker
 import ai.platon.pulsar.common.AppFiles
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.ImmutableConfig
@@ -10,6 +10,7 @@ import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
 import ai.platon.pulsar.skeleton.crawl.fetch.privacy.PrivacyContextMonitor
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule
+import jakarta.annotation.PostConstruct
 import org.h2.tools.Server
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -52,12 +53,14 @@ class ExoticServerApplication(
      * */
     private val immutableConfig: ImmutableConfig
 ) {
-    @Bean
+    @PostConstruct
     fun initBrowserResponseHandler() {
         browserResponseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker,
-            AmazonHtmlIntegrityChecker(immutableConfig))
+            AmazonHtmlIntegrityChecker(immutableConfig)
+        )
         browserResponseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker,
-            JdHtmlIntegrityChecker(immutableConfig))
+            JdHtmlIntegrityChecker(immutableConfig)
+        )
     }
 
     @Bean

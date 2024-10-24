@@ -16,13 +16,9 @@ import org.springframework.scheduling.annotation.EnableScheduling
     scanBasePackages = [
         "ai.platon.scent.boot.autoconfigure",
         "ai.platon.scent.rest.api",
-        "ai.platon.exotic.services.api"
+        "ai.platon.exotic.services.api",
+        "ai.platon.exotic.standalone.api",
     ]
-)
-@ComponentScan(
-    "ai.platon.scent.rest.api",
-    "ai.platon.exotic.services.api",
-    "ai.platon.exotic.standalone.api",
 )
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",

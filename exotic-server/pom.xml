@@ -22,8 +22,14 @@
 		<dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-ql</artifactId>
-
 		</dependency>
+
+		<dependency>
+			<groupId>ai.platon.pulsar</groupId>
+			<artifactId>gora-shaded-mongodb</artifactId>
+			<version>${gora-shaded-mongodb.version}</version>
+		</dependency>
+
 		<dependency>
 			<groupId>ai.platon.scent</groupId>
 			<artifactId>scent-boot</artifactId>
@@ -39,12 +45,6 @@
 			<artifactId>distributed-lock-mongo</artifactId>
 			<version>1.4.3</version>
 		</dependency>
-		<dependency>
-			<groupId>ai.platon.pulsar</groupId>
-			<artifactId>gora-shaded-mongodb</artifactId>
-			<version>0.8</version>
-		</dependency>
-
 		<dependency>
 			<groupId>javax.servlet</groupId>
 			<artifactId>javax.servlet-api</artifactId>

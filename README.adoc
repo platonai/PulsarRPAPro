@@ -34,12 +34,17 @@ There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/p
 * The latest version of the Java 11 JDK
 * Java and jar on the PATH
 * Google Chrome 90+
+* MongoDB started
 
-== Download
+== Download & Run
 Download the latest executable jar:
 [source,bash]
 ----
 wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
+# start mongodb
+docker-compose -f docker/docker-compose.yaml up
+java -jar exotic-standalone.jar
+java -jar exotic-standalone.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ----
 
 == Build from source
@@ -64,6 +69,9 @@ git clone https://github.com/platonai/exotic.git
 cd exotic
 mvn clean && mvn
 cd exotic-standalone/target/
+
+# Don't forget to start MongoDB
+docker-compose -f docker/docker-compose.yaml up
 ----
 For Chinese developers, we strongly suggest that you follow link:https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[this] instruction to accelerate the building.
 

@@ -4,18 +4,17 @@ import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.NetUtil
 import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.browser.Browsers
-import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.context.PulsarContext
-import ai.platon.pulsar.skeleton.context.PulsarContexts
+import ai.platon.pulsar.common.warnUnexpected
+import ai.platon.pulsar.skeleton.context.PulsarContext
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.skeleton.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.entities.HarvestResult
 import org.slf4j.LoggerFactory
 import java.net.URL
-import java.nio.file.Files
 import java.util.concurrent.atomic.AtomicBoolean
 
 open class VerboseCrawler(
@@ -89,19 +88,11 @@ open class VerboseCrawler(
     
     fun report(result: HarvestResult, options: HarvestOptions) {
         try {
-            session.buildAll(result.tableGroup, options)
-            
-            val json = session.buildJson(result.tableGroup)
-            val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
-            val baseDir = path.parent
-            Files.createDirectories(baseDir)
-            Files.writeString(path, json)
-            
+            val exportedDocuments = session.buildAll(result.tableGroup, options)
+            val baseDir = exportedDocuments.keys.firstOrNull()?.parent ?: return
             logger.info("Harvest result: file://$baseDir")
-            
-            // openBrowser("$baseDir")
         } catch (e: Exception) {
-            logger.warn(e.stringify("Failed to report harvest result - "))
+            warnUnexpected(this, e, "Failed to report harvest result")
         }
     }
     

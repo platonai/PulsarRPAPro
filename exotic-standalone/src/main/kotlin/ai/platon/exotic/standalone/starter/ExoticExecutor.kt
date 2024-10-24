@@ -9,12 +9,16 @@ import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.ql.common.ResultSets
 import ai.platon.pulsar.skeleton.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.crawl.common.URLUtil
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.dom.HarvestOptions
+import ai.platon.scent.ml.encoding.EncodeProject
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.builder.SpringApplicationBuilder
+import java.nio.file.Files
+import java.nio.file.Paths
 import java.sql.ResultSet
 import kotlin.system.exitProcess
 
@@ -217,6 +221,24 @@ class ExoticExecutor(val argv: Array<String>) {
         runBlocking {
             AdvancedVerboseCrawler().harvest(portalUrl, args)
         }
+    }
+    
+    internal fun harvest2() {
+        val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
+        if (!UrlUtils.isStandard(portalUrl)) {
+            System.err.println("The portal url is invalid")
+            return
+        }
+        
+        val options = session.options(args)
+        val projectId = options.projectId
+        
+        val crawler = AdvancedVerboseCrawler()
+        crawler.loadOutPages(portalUrl, args)
+        crawler.harvest(projectId)
+        // build views
+        
+        // return the views path
     }
 
     internal fun executeSQL() {

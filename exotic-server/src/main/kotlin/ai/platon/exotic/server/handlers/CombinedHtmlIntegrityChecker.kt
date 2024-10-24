@@ -1,4 +1,4 @@
-package ai.platon.exotic.handlers
+package ai.platon.exotic.server.handlers
 
 import ai.platon.pulsar.common.HtmlIntegrity
 import ai.platon.pulsar.common.config.ImmutableConfig

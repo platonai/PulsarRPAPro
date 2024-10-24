@@ -7,7 +7,6 @@ Exotic (代表奇异之星 - Exotic Star) 是 PulsarRPA 的专业版，包含升
 *#不用再写爬虫了。Exotic 从网站学习，自动生成所有提取规则，将 Web 当作数据库进行查询，完整精确地交付规模化的 Web 数据：#*
 
 . 步骤1：使用高级人工智能自动提取网页中的每个字段，并生成提取 SQL
-. 步骤2：测试 SQL，并在必要时改进它们以匹配前端业务需求
 . 步骤3：在 Web 控制台中创建调度规则，以连续运行 SQL 并下载所有 Web 数据，从而推动您的业务向前发展
 
 最受欢迎的网站已经有几十个 link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[采集案例]，我们正在不断增加更多的案例。
@@ -42,6 +41,10 @@ Exotic (代表奇异之星 - Exotic Star) 是 PulsarRPA 的专业版，包含升
 [source,bash]
 ----
 wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
+# start mongodb
+docker-compose -f docker/docker-compose.yaml up
+java -jar exotic-standalone.jar
+java -jar exotic-standalone.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ----
 
 == 从源代码构建
@@ -66,6 +69,9 @@ git clone https://github.com/platonai/exotic.git
 cd exotic
 mvn clean && mvn
 cd exotic-standalone/target/
+
+# Don't forget to start MongoDB
+docker-compose -f docker/docker-compose.yaml up
 ----
 对于国内开发者，我们强烈建议您按照 link:https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[这个] 指导来加速构建。
 

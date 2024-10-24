@@ -1,5 +1,7 @@
 package ai.platon.exotic.crawl.common
 
+import ai.platon.pulsar.common.warnUnexpected
+import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.nodes.node.ext.isRegularText
 import ai.platon.scent.ScentContext
@@ -9,14 +11,17 @@ import ai.platon.scent.dom.nodes.AnchorGroup
 import ai.platon.scent.dom.nodes.node.ext.nthScreen
 import ai.platon.scent.entities.HarvestResult
 import ai.platon.scent.ml.EncodeOptions
-import ai.platon.scent.ml.data.SimpleDataFrame
+import ai.platon.scent.ml.encoding.EncodeProject
 import ai.platon.scent.ql.h2.context.ScentSQLContext
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import kotlinx.coroutines.runBlocking
-import org.jsoup.nodes.Element
 import org.slf4j.LoggerFactory
+import java.nio.file.Files
+import java.nio.file.Path
 import java.util.*
 import java.util.concurrent.atomic.AtomicBoolean
+import kotlin.io.path.listDirectoryEntries
+import kotlin.io.path.notExists
 
 open class AdvancedVerboseCrawler(
     context: ScentContext = ScentSQLContexts.create()
@@ -79,10 +84,12 @@ open class AdvancedVerboseCrawler(
         documents: Iterable<FeaturedDocument>, encodeOptions: EncodeOptions
     ) = session.encodeDocuments(documents, encodeOptions) { it.isRegularText && it.nthScreen <= 2 }
     
-    fun harvest(url: String, args: String) = harvest(url, session.options(args))
+    fun harvest(portalUrl: String, args: String) = harvest(portalUrl, session.options(args))
     
-    fun harvest(url: String, options: HarvestOptions): HarvestResult {
-        val result = runBlocking { session.harvest(url, options) }
+    fun harvest(portalUrl: String, options: HarvestOptions): HarvestResult {
+        val result = runBlocking {
+            session.harvest(portalUrl, options)
+        }
         report(result, options)
         return result
     }
@@ -96,6 +103,42 @@ open class AdvancedVerboseCrawler(
         logger.info("Ready to report the harvest result ...")
         report(result, options)
         return result
+    }
+
+    fun harvest(projectId: String, start: Int = 0, limit: Int = Int.MAX_VALUE) {
+        val args2 = "-projectId $projectId -diagnose -vj -trustSamples"
+//        val args2 = "$args -vj -trustSamples"
+        val options = session.options(args2)
+        
+        val encodeProject = EncodeProject(projectId, EncodeProject.Type.TRAINING)
+        val documents = loadDocuments(encodeProject.htmlBaseDir, start, limit)
+        
+        documents.chunked(200).forEach { chunk ->
+            harvest1(chunk.asSequence(), options)
+        }
+    }
+    
+    private fun harvest1(document: Sequence<FeaturedDocument>, options: HarvestOptions) {
+        runCatching { harvest(document, options) }.onFailure { warnUnexpected(this, it) }
+    }
+    
+    private fun loadDocuments(htmlBaseDir: Path, start: Int, limit: Int): Sequence<FeaturedDocument> {
+        val count = when {
+            htmlBaseDir.notExists() -> 0
+            else -> Files.list(htmlBaseDir).filter { it.fileName.toFile().endsWith("htm") }.count()
+        }
+        if (count < 20) {
+            logger.warn("Too few samples, might not generate a good result")
+        }
+        
+        val documents = htmlBaseDir.listDirectoryEntries("*.htm")
+            .asSequence()
+            .drop(start)
+            .take(limit)
+            .map { Documents.parse(it, "UTF-8", it.toString()) }
+            .onEach { it.document.setBaseUri(it.normalizedURI ?: it.baseURI) }
+        
+        return documents
     }
     
     override fun close() {
