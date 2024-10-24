@@ -69,7 +69,7 @@ class ExoticExecutor(val argv: Array<String>) {
 
         when {
             arrange -> arrange()
-            predicate -> predicate()
+            predicate -> predict()
             harvest -> harvest()
             scrape -> scrape()
             server -> runServer()
@@ -195,7 +195,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
     }
     
-    internal fun predicate() {
+    internal fun predict() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")

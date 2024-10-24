@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="layout :: head(~{this :: title}, null, null)">
+    <title>Rule List</title>
+
+</head>
+
+<body>
+
+<div th:replace="layout :: nav"></div>
+
+<div class="card my-3 rounded-0">
+    <div class="card-body">
+        <h2 class="text-center text-info">An Army of AI Agents for Scalable Web Scraping</h2>
+        <h5 class="text-center text-info">This application shows how to schedule and manage web scraping tasks
+            with PulsarRPA</h5>
+    </div>
+</div>
+
+<div class="container my-5">
+    <div class="card-deck text-center">
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/rules/}">Rules</a></h3>
+                <p class="text-info">Tells how and when to scrape web data.</p>
+                <br />
+            </div>
+        </div>
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/remote/tasks/}">Data</a></h3>
+                <p class="text-info">View & download the web data.</p>
+            </div>
+        </div>
+        <div class="card box-shadow">
+            <div class="card-body">
+                <h3 class="py-5 text-uppercase"><a class="text-decoration-none" th:href="@{/crawl/portal-tasks/}">Tasks</a></h3>
+                <p class="text-info">Check the task status.</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+</body>
+
+</html>

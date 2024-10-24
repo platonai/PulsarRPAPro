@@ -50,7 +50,6 @@ class EBayTaskGenerator(
     
     init {
         project.createDirectories()
-        session.context.urlNormalizer.add(EBayProductUrlNormalizer())
     }
     
     fun collectListPageLinks(): List<Hyperlink> {
@@ -65,10 +64,10 @@ class EBayTaskGenerator(
         val urls = documents.flatMap { it.selectHyperlinks(options.outLinkSelector) }
             .mapNotNullTo(HashSet()) { urlNormalizer.normalize(it) }
             .map { createListenableHyperlink(it, itemOptions.args) }
-        
+
         session.submitAll(urls)
         session.context.await()
-        
+
         project.createEncodeInfo(mapOf("args" to args, "itemArgs" to itemOptions.args))
         project.createConfigFile(mapOf("args" to args))
     }
@@ -122,7 +121,7 @@ fun main() {
 //    val projectId = "p1727773434"
     val projectId = "p1729409382"
     val args = " -i 10d -ii 100d -tl 1000 -ol a[href*=/itm/] -component #mainContent -itemRequireSize 500000 "
-    
+
     val harvester = EBayTaskGenerator(args, projectId)
     harvester.loadAllAndExportToEncode(portalUrls2)
     // harvester.createHarvestResultDatasetView()
