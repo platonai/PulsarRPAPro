@@ -1,10 +1,10 @@
-Usage: java -jar exotic-standalone*.jar [options] harvest <url> [args...]
+Usage: java -jar PulsarRPAPro.jar [options] harvest <url> [args...]
            (to harvest webpages automatically using our advanced AI)
-   or  java -jar exotic-standalone*.jar [options] scrape <url> [args...]
+   or  java -jar PulsarRPAPro.jar [options] scrape <url> [args...]
            (to scrape a webpage or a batch of webpages)
-   or  java -jar exotic-standalone*.jar [options] sql <sql>
+   or  java -jar PulsarRPAPro.jar [options] sql <sql>
            (to execute a X-SQL)
-   or  java -jar exotic-standalone*.jar [options] serve
+   or  java -jar PulsarRPAPro.jar [options] serve
            (to run the standalone server: both the REST server and the web console)
 
 Arguments following the urls are passed as the arguments for harvest or scrape methods.

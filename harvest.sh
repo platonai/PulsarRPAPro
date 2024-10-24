@@ -5,7 +5,7 @@ if (( $# == 0 )); then
   exit 0
 fi
 
-FILE_COUNT=$(find "exotic-standalone/target/" -wholename "exotic-standalone*.jar" | wc -l)
+FILE_COUNT=$(find "exotic-standalone/target/" -wholename "PulsarRPAPro.jar" | wc -l)
 
 if (( FILE_COUNT == 0 )); then
   mvn -DskipTests=true
@@ -16,4 +16,4 @@ cd exotic-standalone/target/ || exit
 URL=$1
 shift
 
-java -jar exotic-standalone*.jar harvest "$URL" -diagnose -vj "$@"
+java -jar PulsarRPAPro.jar harvest "$URL" -diagnose -vj "$@"

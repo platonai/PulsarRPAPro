@@ -1,8 +1,8 @@
-FILE_COUNT=$(find "exotic-standalone/target/" -wholename "exotic-standalone*.jar" | wc -l)
+FILE_COUNT=$(find "exotic-standalone/target/" -wholename "PulsarRPAPro.jar" | wc -l)
 
 if (( FILE_COUNT == 0 )); then
   mvn -DskipTests=true
 fi
 
 cd exotic-standalone/target/ || exit
-java -jar exotic-standalone*.jar
+java -jar PulsarRPAPro.jar

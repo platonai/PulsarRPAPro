@@ -57,7 +57,7 @@ if [[ -e $JAVA ]]; then
 fi
 JAVA="$JAVA_HOME/bin/java"
 
-JAR=$(find . -name "exotic-standalone*.jar")
+JAR=$(find . -name "PulsarRPAPro.jar")
 
 EXEC_CALL=(java
 -Dproc_EXOTICS

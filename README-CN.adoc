@@ -2,54 +2,51 @@
 
 link:README.adoc[English] | 简体中文 | https://gitee.com/platonai_galaxyeye/exotic[中国镜像]
 
-Exotic (代表奇异之星 - Exotic Star) 是 PulsarRPA 的专业版，包含升级后的 PulsarRPA 服务器、一组顶级电商站点抓取实例、高级 AI 支持的自动提取小程序。
+PulsarRPAPro 包含升级的服务器、一组顶级电商网站抓取示例，以及由高级 AI 支持的自动提取小程序。
 
-*#不用再写爬虫了。Exotic 从网站学习，自动生成所有提取规则，将 Web 当作数据库进行查询，完整精确地交付规模化的 Web 数据：#*
+*#再也不用编写网页抓取器。PulsarRPAPro 从网站中学习，并大规模地完全准确地交付网页数据。#*
 
-. 步骤1：使用高级人工智能自动提取网页中的每个字段，并生成提取 SQL
-. 步骤3：在 Web 控制台中创建调度规则，以连续运行 SQL 并下载所有 Web 数据，从而推动您的业务向前发展
+目前已经为最受欢迎的网站提供了数十个链接：link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[抓取案例]，我们不断添加更多案例。
 
-最受欢迎的网站已经有几十个 link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[采集案例]，我们正在不断增加更多的案例。
+== 特性
 
-== 主要特性
+* 自动提取网页数据
+* 网络爬虫：浏览器渲染、AJAX 数据抓取
+* 高性能：高度优化，在单台机器上并行渲染数百个页面而不被阻塞
+* 低成本：抓取 100,000 个浏览器渲染的电商网页，或每天抓取 n * 10,000,000 个数据点，仅需 8 核 CPU/32G 内存
+* 网页 UI：一个非常简单但功能强大的网页 UI 来管理爬虫和下载数据
+* 机器学习：使用无监督机器学习自动提取网页中的每个字段，并生成提取规则和 SQL
+* 数据量保证：智能重试、精准调度、网页数据生命周期管理
+* 大规模：完全分布式设计，适用于大规模抓取
+* 简单 API：一行代码抓取，或一条 SQL 将网站转换为表格
+* X-SQL：扩展 SQL 管理网页数据：网页抓取、抓取、网页内容挖掘、网页 BI
+* 机器人隐身：IP 轮换、WebDriver 隐身，永不被封禁
+* RPA：模拟人类行为、SPA 抓取，或做其他酷炫的事情
+* 大数据：支持多种后端存储：MongoDB/HBase/Gora
+* 日志与指标：密切监控，每个事件都被记录
 
-* 网络爬虫：各种数据采集模式，包括浏览器渲染、ajax数据采集、普通协议采集等
-* RPA：机器人流程自动化、模仿人类行为、采集单网页应用程序或执行其他有价值的任务
-* 简洁的 API：一行代码抓取，或者一条 SQL 将整个网站栏目变成表格
-* X-SQL：扩展 SQL 来管理 Web 数据：网络爬取、数据采集、Web 内容挖掘、Web BI
-* Web UI：一个非常简单但功能强大的 Web UI，用于管理爬虫规则并下载数据
-* 机器学习：使用自监督的机器学习自动提取网页中的每个字段，并生成提取规则和SQL
-* 爬虫隐身：浏览器驱动隐身，IP 轮换，隐私上下文轮换，永远不会被屏蔽
-* 高性能：高度优化，单机并行渲染数百页而不被屏蔽
-* 低成本：每天抓取 100,000 个浏览器渲染的电子商务网页，或 n * 10,000,000 个数据点，仅需要 8 核 CPU/32G 内存
-* 数据质量保证：智能重试、精准调度、Web 数据生命周期管理
-* 大规模采集：完全分布式，专为大规模数据采集而设计
-* 大数据支持：支持各种后端存储：本地文件/MongoDB/HBase/Gora
-* 日志和指标：密切监控并记录每个事件
-* [即将发布] Information Extraction：自动学习网页数据模式，以显著的精度自动提取网页中的每一个字段
-
-== 系统要求
+== System Requirements
 
 * Memory 4G+
-* Maven 3.2+
-* Java 11 JDK 最新版本
-* java and jar on the PATH
+* The latest version of the Java 11 JDK
+* Java and jar on the PATH
 * Google Chrome 90+
+* MongoDB started
 
-== 下载
-下载最新的可执行 jar 包：
+== Download & Run
+下载最新可执行的 JAR 文件：
 [source,bash]
 ----
-wget http://static.platonic.fun/repo/ai/platon/exotic/exotic-standalone.jar
+wget http://static.platonic.fun/repo/ai/platon/exotic/PulsarRPAPro.jar
 # start mongodb
 docker-compose -f docker/docker-compose.yaml up
-java -jar exotic-standalone.jar
-java -jar exotic-standalone.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
+java -jar PulsarRPAPro.jar
+java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ----
 
-== 从源代码构建
+== Build from source
 
-如果 maven 版本号是 3.8.1 或以上，需要在 .m2/settings.xml 文件中加入如下代码：
+将以下行添加到您的 `.m2/settings.xml` 文件中。
 
 [source,xml]
 ----
@@ -73,100 +70,49 @@ cd exotic-standalone/target/
 # Don't forget to start MongoDB
 docker-compose -f docker/docker-compose.yaml up
 ----
-对于国内开发者，我们强烈建议您按照 link:https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[这个] 指导来加速构建。
+对于中国开发者，我们强烈建议您遵循链接：https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc[此] 指南以加速构建过程。
 
-== 运行独立服务器并打开 Web 控制台
+== Run the standalone server and open web console
 [source,bash]
 ----
-# Linux:
-java -jar exotic-standalone*.jar serve
-
-# Windows:
-java -jar exotic-standalone[-the-actual-version].jar serve
+java -jar PulsarRPAPro.jar serve
 ----
 
-注意:如果您在 Windows 上使用 CMD 或 PowerShell，您可能需要删除通配符 `*` 并使用 jar 包的全名。
-
-如果 Exotic 在 GUI 模式下运行，Web 控制台应该在几秒钟内打开，或者您可以手动打开它：
+如果 Exotic 以 GUI 模式运行，网页控制台应在几秒钟内自动打开，或者您可以手动打开它：
 
 http://localhost:2718/exotic/crawl/
 
-== 执行自动提取
+== Run Auto Extraction
 
-我们可以使用 `harvest` 命令，使用无监督的机器学习从一组项目页面中学习：
-
-[source,bash]
-----
-java -jar exotic-standalone*.jar harvest https://shopee.sg/Computers-Peripherals-cat.11013247 -diagnose -refresh
-----
-
-上面命令中的URL应该是一个门户URL，比如产品列表页面的URL。
-
-Exotic 访问入口网址，找出最佳的项目网页链接集，获取项目网页，然后从中学习。
-
-下面是一个电子商务网站使用无监督机器学习自动提取结果的快照：
-
-image::docs/shopee.auto.mining.png[Auto Extract]
-
-每个字段的最佳 CSS 选择器都是自动生成的，您可以以传统方式使用这些规则进行 Web 抓取：
-
-image::docs/shopee.generated.selectors.png[Auto Generated Selectors]
-
-以及生成的SQL：
-
-image::docs/shopee.generated.sql.png[Auto Generated SQL]
-
-请注意，本演示中的网站使用了 CSS 混淆技术，因此 CSS 选择器很难阅读并且经常改变。除了基于机器学习的解决方案之外，没有其他有效的技术来解决这个问题。
-
-完整的代码可以在 link:exotic-app/exotic-ML-examples/src/main/kotlin/ai/platon/exotic/examples/sites/topEc/english/shopee/ShopeeHarvester.kt[这里] 找到。
-
-== 使用生成的SQL抓取页面：
-
-`Harvest` 命令使用无监督的机器学习自动提取字段，并为所有可能的字段和提取SQL生成最佳 css 选择器。我们可以使用 `sql` 命令来执行 SQL。
-
-[source,bash,sql]
-----
-# Note: remove the wildcard `*` and use the full name of the jar on Windows
-java -jar exotic-standalone*.jar sql "
-select
-    dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.flex-column.imEX5V span') as T1C2,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.W2tD8- div.MrYJVA.Ga-lTj') as T1C3,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.W2tD8- div.MrYJVA') as T1C4,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.W2tD8- div.Wz7RdC') as T1C5,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.W2tD8- div._45NQT5') as T1C6,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.W2tD8- div.Cv8D6q') as T1C7,
-    dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.imEX5V div.pmmxKx') as T1C8,
-    dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.imEX5V div.mini-vouchers__label') as T1C9,
-    dom_first_text(dom, 'div.imEX5V div.PMuAq5 div.flex-no-overflow span.voucher-promo-value.voucher-promo-value--absolute-value') as T1C10,
-    dom_first_text(dom, 'div.HLQqkk div.imEX5V div.PMuAq5 label._0b8hHE') as T1C11,
-    dom_first_text(dom, 'div.PMuAq5 div.MGNOw3.hInOdW div.dHS5e4.xIMb1R div.LgUWja') as T1C12,
-    dom_first_text(dom, 'div.PMuAq5 div.MGNOw3.hInOdW div.dHS5e4.xIMb1R div.Nd79Ux') as T1C13,
-    dom_first_text(dom, 'div.MGNOw3.hInOdW div.dHS5e4.xIMb1R div.flex-row div.NPdOlf') as T1C14,
-    dom_first_text(dom, 'div.imEX5V div.PMuAq5 div.-+gikn.hInOdW label._0b8hHE') as T1C15,
-    dom_first_text(dom, 'div.PMuAq5 div.-+gikn.hInOdW div.items-center button.product-variation') as T1C16,
-    dom_first_text(dom, 'div.PMuAq5 div.-+gikn.hInOdW div.items-center button.product-variation') as T1C17,
-    dom_first_text(dom, 'div.imEX5V div.PMuAq5 div.-+gikn.hInOdW div._0b8hHE') as T1C18,
-    dom_first_text(dom, 'div.PMuAq5 div.-+gikn.hInOdW div.G2C2rT.items-center div') as T1C19,
-    dom_first_text(dom, 'div.flex-column.imEX5V div.vdf0Mi div.OozJX2 span') as T1C20,
-    dom_first_text(dom, 'div.HLQqkk div.flex-column.imEX5V div.vdf0Mi button.btn.btn-solid-primary.btn--l.GfiOwy') as T1C21,
-    dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.flex-column.imEX5V span.zevbuo') as T1C22,
-    dom_first_text(dom, 'div.-Esc+w.card.product-briefing div.HLQqkk div.flex-column.imEX5V span') as T1C23
-from load_and_select('https://shopee.sg/(Local-Stock)-(GEBIZ-ACRA-REG)-PLA-3D-Printer-Filament-Standard-Colours-Series-1.75mm-1kg-i.182524985.8326053759?sp_atk=3afa9679-22cb-4c30-a1db-9d271e15b7a2&xptdk=3afa9679-22cb-4c30-a1db-9d271e15b7a2', 'div.page-product');
-"
-----
-
-== 探索可执行 jar 包的其他能力
-
-直接运行可执行的 jar 包来获得帮助，以探索所提供的更多功能：
+我们可以使用 `harvest` 命令通过无监督机器学习从一组商品页面中学习。
 
 [source,bash]
 ----
-# Note: remove the wildcard `*` and use the full name of the jar on Windows
-java -jar exotic-standalone*.jar
+java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ----
-这个命令将打印帮助信息和最有用的例子。
+
+上述命令中的 URL 应该是一个门户 URL，例如产品列表页面的 URL。
+
+Exotic 访问门户 URL，找到最适合商品页面的最佳链接集，抓取商品页面，然后从中学习。
+
+以下是一个使用无监督机器学习自动提取电商网站数据的结果快照：
+
+image::docs/amazon.png[自动提取结果快照]
+
+以下是自动提取结果的整个 HTML 页面：
+
+link:docs/amazon-harvest-result.html[亚马逊自动提取结果]
+
+== Explore the Exotic executable jar
+直接运行可执行的 JAR 文件以获取帮助，探索更多提供的功能：
+[source,bash]
+----
+java -jar PulsarRPAPro.jar
+----
+此命令将打印帮助消息和最常用的示例。
 
 == Q & A
-Q: 如何使用代理？
+Q: 如何使用代理 IP?
 
-A: 点击 link:bin/tools/proxy/README.adoc[这里] 查看。
+A: 遵循链接：bin/tools/proxy/README.adoc[此] 指南进行代理轮换。
+

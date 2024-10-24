@@ -69,6 +69,8 @@
 	<build>
 		<defaultGoal>package</defaultGoal>
 
+		<finalName>PulsarRPAPro.jar</finalName>
+
 		<plugins>
 			<plugin>
 				<groupId>org.springframework.boot</groupId>

@@ -20,7 +20,7 @@ if ($args1.Length -eq 0) {
     $args1 = @("https://www.amazon.com/b?node=1292115011")
 }
 
-$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "exotic-standalone*.jar" -Recurse)
+$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "PulsarRPAPro.jar" -Recurse)
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {

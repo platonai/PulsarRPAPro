@@ -13,7 +13,7 @@ if ($JAVA_VERSION -eq $null) {
   Write-Output "WARNING: Java 11 is required to run this program"
 }
 
-$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "exotic-standalone*.jar" -Recurse)
+$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "PulsarRPAPro.jar" -Recurse)
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {

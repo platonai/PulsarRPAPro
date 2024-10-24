@@ -19,7 +19,7 @@ class HarvestExamples(context: ScentContext) : AdvancedVerboseCrawler(context) {
         "https://list.gome.com.cn/cat10000055-00-0-48-1-0-0-0-1-2h8q-0-0-10-0-0-0-0-0.html?intcmp=bx-1000078331-1",
         "https://www.amazon.com/Best-Sellers-Automotive/zgbs/automotive/ref=zg_bs_nav_0",
         "https://category.vip.com/search-1-0-1.html?q=3|49738||&rp=26600|48483&ff=|0|2|1&adidx=2&f=ad&adp=130610&adid=632686",
-        "https://shopee.sg/Computers-Peripherals-cat.11013247 -ol a[href~=sp_atk] -ignoreFailure -component .page-product__breadcrumb -component .product-briefing",
+        "https://www.amazon.com/b?node=1292115011 -ol a[href~=sp_atk] -ignoreFailure -component .page-product__breadcrumb -component .product-briefing",
         
         "https://mall.ccmn.cn/mallstocks/",
         "http://mall.molbase.cn/p/612",

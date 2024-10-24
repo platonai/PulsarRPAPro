@@ -3,7 +3,7 @@ package ai.platon.exotic.examples.ml.unsupervised.topEc.english.shopee
 import ai.platon.exotic.crawl.common.VerboseCrawler1
 
 fun main() {
-    val portalUrl = "https://shopee.sg/Computers-Peripherals-cat.11013247"
+    val portalUrl = "https://www.amazon.com/b?node=1292115011"
 
     val harvester = VerboseCrawler1()
     val anchorGroups = VerboseCrawler1().arrangeLinks(portalUrl)

@@ -76,7 +76,7 @@ exitCode=$?
 
 echo "List directory before creating symbolic link: "
 ssh $HOST ls -l $REMOTE_BASE_DIR
-ssh $HOST unlink $REMOTE_BASE_DIR/exotic-standalone.jar
-ssh $HOST ln -s $REMOTE_BASE_DIR/exotic-standalone-"$VERSION".jar $REMOTE_BASE_DIR/exotic-standalone.jar
+ssh $HOST unlink $REMOTE_BASE_DIR/PulsarRPAPro.jar
+ssh $HOST ln -s $REMOTE_BASE_DIR/exotic-standalone-"$VERSION".jar $REMOTE_BASE_DIR/PulsarRPAPro.jar
 echo "List directory after creating symbolic link: "
 ssh $HOST ls -l $REMOTE_BASE_DIR

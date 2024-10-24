@@ -5,7 +5,7 @@ while ($AppHome -ne $null -and !(Test-Path "$AppHome/VERSION")) {
 }
 cd $AppHome
 
-$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "exotic-standalone*.jar" -Recurse)
+$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "PulsarRPAPro.jar" -Recurse)
 $FILE_COUNT = ($FILES | Measure-Object).Count
 
 if ($FILE_COUNT -eq 0) {
