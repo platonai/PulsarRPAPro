@@ -4,10 +4,12 @@ import ai.platon.exotic.services.api.ExoticContextInitializer
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.builder.SpringApplicationBuilder
+import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 
 @SpringBootApplication(
     scanBasePackages = ["ai.platon.exotic.services.api"]
 )
+@EnableJpaRepositories("ai.platon.exotic.services.api.persist")
 @EntityScan(
     "ai.platon.exotic.driver.crawl.entity",
     "ai.platon.exotic.services.api.entity"
@@ -15,8 +17,6 @@ import org.springframework.boot.builder.SpringApplicationBuilder
 class ExoticStarterApplication
 
 fun main(args: Array<String>) {
-//    System.setProperty("scrape.submitter.dry.run", "true")
-
     SpringApplicationBuilder(ExoticStarterApplication::class.java)
         .profiles("h2")
         .registerShutdownHook(true)

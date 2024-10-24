@@ -1,7 +1,7 @@
 package ai.platon.exotic.services.api.entity.generated
 
 import java.time.Instant
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Table(name = "full_field_products")
 @Entity

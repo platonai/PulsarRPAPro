@@ -33,12 +33,10 @@
 		<dependency>
 			<groupId>ai.platon.scent</groupId>
 			<artifactId>scent-boot</artifactId>
-			<version>${scent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.scent</groupId>
 			<artifactId>scent-rest</artifactId>
-			<version>${scent.version}</version>
 		</dependency>
 		<dependency>
 			<groupId>ai.platon.commons</groupId>

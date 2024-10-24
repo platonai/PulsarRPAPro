@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.1</version>
+		<version>3.3.4</version>
 		<relativePath/>
 	</parent>
 
@@ -16,7 +16,7 @@
 	<packaging>pom</packaging>
 
 	<name>Exotic</name>
-	<description>Exotic is the professional edition of pulsar</description>
+	<description>The Professional Version of PulsarRPA</description>
 
 	<licenses>
 		<license>
@@ -128,9 +128,9 @@
 							<plugin>all-open</plugin>
 						</compilerPlugins>
 						<pluginOptions>
-							<option>all-open:annotation=javax.persistence.Entity</option>
-							<option>all-open:annotation=javax.persistence.Embeddable</option>
-							<option>all-open:annotation=javax.persistence.MappedSuperclass</option>
+							<option>all-open:annotation=jakarta.persistence.Entity</option>
+							<option>all-open:annotation=jakarta.persistence.Embeddable</option>
+							<option>all-open:annotation=jakarta.persistence.MappedSuperclass</option>
 						</pluginOptions>
 						<jvmTarget>${javac.target.version}</jvmTarget>
 					</configuration>
@@ -194,6 +194,12 @@
 				<configuration>
 					<jvmTarget>${javac.target.version}</jvmTarget>
 				</configuration>
+			</plugin>
+
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-dependency-plugin</artifactId>
+				<version>3.6.0</version>
 			</plugin>
 		</plugins>
 	</build>
@@ -278,6 +284,7 @@
 
 	<properties>
 		<javac.target.version>17</javac.target.version>
+		<kotlin.version>1.9.24</kotlin.version>
 
 		<version.maven-release-plugin>3.1.1</version.maven-release-plugin>
 

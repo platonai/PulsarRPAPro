@@ -21,7 +21,7 @@ import java.time.LocalDateTime
 import java.time.ZoneOffset
 import java.time.temporal.ChronoUnit
 import java.util.*
-import javax.persistence.*
+import jakarta.persistence.*
 
 @Table(name = "crawl_rules")
 @Entity
