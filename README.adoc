@@ -1,10 +1,10 @@
-= Exotic README
+= PulsarRPAPro README
 
 English | link:README-CN.adoc[简体中文] | https://gitee.com/platonai_galaxyeye/exotic[中国镜像]
 
 PulsarRPAPro is the professional version of PulsarRPA, featuring an upgraded server, a collection of top e-commerce site scraping examples, and an advanced AI-powered applet for automatic data extraction.
 
-*#Never write another web scraper. Exotic learns from the website and delivers web data completely and accurately at scale:#*
+*#Never write another web scraper. PulsarRPAPro learns from the website and delivers web data completely and accurately at scale:#*
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
@@ -78,7 +78,7 @@ For Chinese developers, we strongly suggest that you follow link:https://github.
 java -jar PulsarRPAPro.jar serve
 ----
 
-If Exotic is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
+If PulsarRPAPro is running in GUI mode, the web console should open within a few seconds, or you can open it manually:
 
 http://localhost:2718/exotic/crawl/
 
@@ -91,11 +91,11 @@ We can use the `harvest` command to leans from a set of item pages using unsuper
 java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ----
 
-The URL in the command above should be a portal URL, such as the URL of the product listing page.
+The URL specified in the command should be a portal URL, such as a product listing page URL.
 
-Exotic visits the portal URL, finds out the best link set for item pages, fetches item pages and then learn from them.
+PulsarRPAPro will visit the portal, identify the optimal set of links for item pages, retrieve those pages, and then analyze them.
 
-Here is a snapshot of the result of auto extract using unsupervised machine learning for an e-comm site.
+Below is a snapshot of the results from automatic extraction using unsupervised machine learning on an e-commerce site.
 
 image::docs/amazon.png[Auto Extraction Result Snapshot]
 
@@ -103,7 +103,7 @@ Here is the whole page of the auto extraction result in HTML format:
 
 link:docs/amazon-harvest-result.html[Auto Extraction Result of Amazon]
 
-== Explore the Exotic executable jar
+== Explore the PulsarRPAPro executable jar
 Run the executable jar directly for help to explore more power provided:
 [source,bash]
 ----
