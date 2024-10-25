@@ -88,7 +88,7 @@
 
 <body>
 <!--/* Header fragment */-->
-<div th:fragment="nav()" th:replace="fragments/nav :: nav"></div>
+<div th:fragment="nav()" th:replace="~{fragments/nav :: nav}"></div>
 
 <!--/* The value passed from calling template will be inserted in this element */-->
 <div class="container" th:fragment="content(value)" th:insert="${value}">
