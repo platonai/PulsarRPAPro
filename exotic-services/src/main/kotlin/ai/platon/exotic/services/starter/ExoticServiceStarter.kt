@@ -18,7 +18,7 @@ class ExoticStarterApplication
 
 fun main(args: Array<String>) {
     SpringApplicationBuilder(ExoticStarterApplication::class.java)
-        .profiles("h2")
+        .profiles("hsqldb")
         .registerShutdownHook(true)
         .initializers(ExoticContextInitializer())
         .run(*args)

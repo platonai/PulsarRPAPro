@@ -5,7 +5,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.4</version>
+		<version>3.3.1</version>
 		<relativePath/>
 	</parent>
 
@@ -68,8 +68,16 @@
 		<module>exotic-services</module>
 		<module>exotic-server</module>
 		<module>exotic-standalone</module>
-		<module>exotic-app</module>
 	</modules>
+
+	<profiles>
+		<profile>
+			<id>examples</id>
+			<modules>
+				<module>exotic-app</module>
+			</modules>
+		</profile>
+	</profiles>
 
 	<build>
 		<defaultGoal>install</defaultGoal>
@@ -255,10 +263,16 @@
 				<version>${project.version}</version>
 			</dependency>
 
+<!--			<dependency>-->
+<!--				<groupId>de.flapdoodle.embed</groupId>-->
+<!--				<artifactId>de.flapdoodle.embed.mongo</artifactId>-->
+<!--				<version>${embed.mongo.version}</version>-->
+<!--			</dependency>-->
+
 			<dependency>
-				<groupId>de.flapdoodle.embed</groupId>
-				<artifactId>de.flapdoodle.embed.mongo</artifactId>
-				<version>${embed.mongo.version}</version>
+				<groupId>org.hibernate</groupId>
+				<artifactId>hibernate-core</artifactId>
+				<version>6.5.3.Final</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -280,6 +294,7 @@
 			<artifactId>kotlin-stdlib-jdk8</artifactId>
 			<version>${kotlin.version}</version>
 		</dependency>
+
 	</dependencies>
 
 	<properties>
@@ -294,6 +309,7 @@
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 
 		<spring-boot-plugin.version>3.3.1</spring-boot-plugin.version>
+		<hibernate.version>6.5.3.Final</hibernate.version>
 
 		<cron-utils.version>9.1.6</cron-utils.version>
 		<embed.mongo.version>4.17.0</embed.mongo.version>

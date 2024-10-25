@@ -34,14 +34,6 @@
         </rollingPolicy>
     </appender>
 
-    <appender name="METRICS" class="ch.qos.logback.core.FileAppender">
-        <File>${logging.dir}/${logging.m.file}</File>
-        <append>true</append>
-        <encoder>
-            <pattern>%d{ISO8601} --- %m%n</pattern>
-        </encoder>
-    </appender>
-
     <appender name="COUNTERS" class="ch.qos.logback.core.FileAppender">
         <File>${logging.dir}/${logging.c.file}</File>
         <append>true</append>
@@ -118,13 +110,6 @@
     <logger name="ai.platon.scent.amazon.boot.schedule" level="DEBUG"/>
 
     <logger name="ai.platon.scent.examples" level="INFO"/>
-
-    <logger name="ai.platon.pulsar.common.metrics.MetricsSystem" level="INFO" additivity="false">
-        <appender-ref ref="METRICS"/>
-    </logger>
-    <logger name="ai.platon.pulsar.common.metrics.AppMetrics" level="INFO" additivity="false">
-        <appender-ref ref="METRICS"/>
-    </logger>
 
     <logger name="ai.platon.pulsar.common.CounterReporter" level="INFO" additivity="false">
         <appender-ref ref="COUNTERS"/>

@@ -10,7 +10,7 @@ class ServletInitializer : SpringBootServletInitializer() {
 
 	override fun configure(application: SpringApplicationBuilder): SpringApplicationBuilder {
 		return application
-			.profiles("h2")
+			.profiles("hsqldb")
 			.initializers(ExoticContextInitializer(true))
 			.sources(ExoticApplication::class.java)
 	}
