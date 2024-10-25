@@ -88,6 +88,9 @@ open class AdvancedVerboseCrawler(
     
     fun harvest(portalUrl: String, options: HarvestOptions): HarvestResult {
         val result = runBlocking {
+            if (options.isDefault("-topLinks")) {
+                options.topLinks = 40
+            }
             session.harvest(portalUrl, options)
         }
         report(result, options)
