@@ -81,7 +81,7 @@ class CrawlRuleWebController(
 
     @PostMapping("/add")
     fun add(@Valid @ModelAttribute("rule") rule: CrawlRule, result: BindingResult, model: Model): String {
-        getLogger(this).info(prettyScentObjectWritter().writeValueAsString(rule))
+        // getLogger(this).info(prettyScentObjectWritter().writeValueAsString(rule))
 
         if (result.hasErrors()) {
             // model.addAttribute("rule", rule)

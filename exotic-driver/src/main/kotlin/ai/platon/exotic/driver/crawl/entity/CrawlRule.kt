@@ -60,11 +60,9 @@ class CrawlRule {
     var maxPages: Int = 30
 
     @Column(name = "start_time")
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ssZ")
     var startTime: Instant = Instant.EPOCH
 
     @Column(name = "dead_time")
-    @DateTimeFormat(pattern = "yyyy-MM-ddTHH:mm:ssZ")
     var deadTime: Instant = DateTimes.doomsday
 
     @Column(name = "last_crawl_time")

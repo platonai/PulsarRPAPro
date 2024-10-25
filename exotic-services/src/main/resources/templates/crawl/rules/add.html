@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})">
+<head th:replace="~{layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})}">
     <title>Add Rule</title>
     <!-- Custom links for this page only -->
 <!--    <link class="custom-link" href="https://www.jqueryscript.net/demo/Clean-jQuery-Date-Time-Picker-Plugin-datetimepicker/jquery.datetimepicker.css" rel="stylesheet" />-->
@@ -181,7 +181,7 @@
     </form>
 </div>
 
-<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
+<div th:replace="~{fragments/footer :: footer}">&copy; 2022 platon.ai</div>
 
 </body>
 

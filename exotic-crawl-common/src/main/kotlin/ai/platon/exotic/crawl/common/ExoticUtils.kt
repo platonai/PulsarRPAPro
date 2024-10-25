@@ -39,20 +39,6 @@ object ExoticUtils {
         ).filter { e -> e !== "" }.joinToString().replace(", (?!.+,)".toRegex(), " and ")
     }
 
-    fun prepareDatabaseOrFail() {
-        kotlin.runCatching { prepareDatabase() }.onFailure { System.err.println(it.message) }
-    }
-
-    fun prepareDatabase() {
-        val dbPath = AppPaths.SYS_USER_HOME.resolve("exotic-h2.mv.db")
-        if (!Files.exists(dbPath)) {
-            val inStream = ResourceLoader.getResourceAsStream("db/exotic-h2.mv.db.data")
-            if (inStream != null) {
-                Files.copy(inStream, dbPath)
-            }
-        }
-    }
-
     fun openBrowser(url: String) {
         val chromeBinary = Browsers.searchChromeBinary()
         val dataDir = AppPaths.getTmp("exotic-chrome")

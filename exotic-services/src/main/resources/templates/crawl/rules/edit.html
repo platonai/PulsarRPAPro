@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="zh" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})">
+<head th:replace="~{layout :: head(~{this :: title}, ~{this :: .custom-link}, ~{this :: .custom-script})}">
     <title>Edit Rule</title>
 
     <!-- Custom links for this page only -->
@@ -211,7 +211,7 @@
 
 </div>
 
-<div th:replace="fragments/footer :: footer">&copy; 2022 platon.ai</div>
+<div th:replace="~{fragments/footer :: footer}">&copy; 2022 platon.ai</div>
 
 </body>
 

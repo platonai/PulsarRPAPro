@@ -35,6 +35,9 @@ class ExoticContextInitializer(
      * Tomcat enables the sandbox mode, write permissions are granted for only specified directories.
      * */
     private fun detectDatabasePathOnTomcat() {
+        // TODO: h2 is not used anymore, use hsql instead
+        logger.info(" h2 is not used anymore, use hsql instead")
+        
         val h2Path = listOf(
             "/var/lib/tomcat9/work/Catalina/h2",
             "/opt/exotic",
