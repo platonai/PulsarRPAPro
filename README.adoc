@@ -8,6 +8,8 @@ PulsarRPAPro is the professional version of PulsarRPA, featuring an upgraded ser
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
+== Youtube
+
 [![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
 
 == Features
