@@ -4,7 +4,7 @@ English | link:README-CN.adoc[简体中文] | https://gitee.com/platonai_galaxye
 
 PulsarRPAPro is the professional version of PulsarRPA, featuring an upgraded server, a collection of top e-commerce site scraping examples, and an advanced AI-powered applet for automatic data extraction.
 
-*#Never write another web scraper. PulsarRPAPro learns from the website and delivers web data completely and accurately at scale:#*
+*#Never write another web scraper. PulsarRPAPro learns from the website and delivers web data completely and accurately at scale#*
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
