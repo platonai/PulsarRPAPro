@@ -13,9 +13,6 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import org.springframework.core.env.get
 import org.springframework.data.jpa.repository.config.EnableJpaAuditing
-import org.thymeleaf.extras.java8time.dialect.Java8TimeDialect
-import org.thymeleaf.spring6.ISpringTemplateEngine
-import org.thymeleaf.spring6.SpringTemplateEngine
 import org.thymeleaf.templateresolver.FileTemplateResolver
 import org.thymeleaf.templateresolver.ITemplateResolver
 import java.nio.file.Files

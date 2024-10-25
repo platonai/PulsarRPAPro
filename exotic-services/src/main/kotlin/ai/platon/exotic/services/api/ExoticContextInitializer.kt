@@ -35,23 +35,20 @@ class ExoticContextInitializer(
      * Tomcat enables the sandbox mode, write permissions are granted for only specified directories.
      * */
     private fun detectDatabasePathOnTomcat() {
-        // TODO: h2 is not used anymore, use hsql instead
-        logger.info(" h2 is not used anymore, use hsql instead")
-        
-        val h2Path = listOf(
-            "/var/lib/tomcat9/work/Catalina/h2",
-            "/opt/exotic",
-            "/mnt/exotic",
+        val hsqlPath = listOf(
+            "/var/lib/tomcat9/work/Catalina",
+            "/opt",
+            "/mnt",
             "/tmp",
             "~",
         )
-            .map { Paths.get("$it/exotic-h2.mv.db") }
+            .map { Paths.get("$it/.pulsar/data/exotic/hsql/services.lobs") }
             .firstOrNull { Files.isWritable(it) }
 
-        logger.info("H2database path: $h2Path")
-        if (h2Path != null) {
-            val name = h2Path.toAbsolutePath().toString().removeSuffix(".mv.db")
-            System.setProperty("spring.datasource.url", "jdbc:h2:file:$name")
+        logger.info("HSQL path: $hsqlPath")
+        if (hsqlPath != null) {
+            val home = hsqlPath.toAbsolutePath().toString().removeSuffix(".lobs")
+            System.setProperty("spring.datasource.url", "jdbc:hsql:file:$home")
         }
     }
 }
