@@ -82,11 +82,6 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
-.mvn/timing.properties
-
-# Exclude maven wrapper
-.mvn
-!/.mvn/wrapper/maven-wrapper.jar
 
 #.idea/markdown-navigator/
 logs/
