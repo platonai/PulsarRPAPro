@@ -222,7 +222,9 @@ class ExoticExecutor(val argv: Array<String>) {
             System.err.println("The portal url is invalid")
             return
         }
-        
+
+        // TODO: harvest HTML files in local directory
+
         runBlocking {
             AdvancedVerboseCrawler().harvest(portalUrl, args)
         }
