@@ -4,9 +4,11 @@
 
 **PulsarRPAPro** is the professional version of PulsarRPA, featuring an upgraded server, a collection of top e-commerce site scraping examples, and an advanced AI-powered applet for automatic data extraction.
 
-**Never write another web scraper. PulsarRPAPro learns from the website and delivers web data completely and accurately at scale:**
+**Never write another web scraper. PulsarRPAPro learns from the website and delivers web data completely and accurately at scale.**
 
 There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/) for the most popular websites, and we are constantly adding more.
+
+== Youtube
 
 [![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
 
@@ -62,9 +64,9 @@ Add the following lines to your `.m2/settings.xml`:
 ```
 
 ```bash
-git clone https://github.com/platonai/exotic.git
-cd exotic
-mvn clean && mvn
+git clone https://github.com/platonai/PulsarRPAPro.git
+cd PulsarRPAPro
+./mvnw clean && ./mvnw
 cd exotic-standalone/target/
 
 # Don't forget to start MongoDB
