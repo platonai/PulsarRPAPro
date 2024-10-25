@@ -66,21 +66,6 @@
 		</dependency>
 
 
-		<!-- Support Java 8 date/time type -->
-		<dependency>
-			<groupId>com.fasterxml.jackson.datatype</groupId>
-			<artifactId>jackson-datatype-jsr310</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>com.fasterxml.jackson.module</groupId>
-			<artifactId>jackson-module-kotlin</artifactId>
-		</dependency>
-		<dependency>
-			<groupId>org.thymeleaf.extras</groupId>
-			<artifactId>thymeleaf-extras-java8time</artifactId>
-			<version>3.0.4.RELEASE</version>
-		</dependency>
-
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

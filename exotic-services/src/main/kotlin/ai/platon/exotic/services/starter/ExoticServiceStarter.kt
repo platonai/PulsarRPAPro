@@ -14,7 +14,9 @@ import org.springframework.data.jpa.repository.config.EnableJpaRepositories
     "ai.platon.exotic.driver.crawl.entity",
     "ai.platon.exotic.services.api.entity"
 )
-class ExoticStarterApplication
+class ExoticStarterApplication {
+
+}
 
 fun main(args: Array<String>) {
     SpringApplicationBuilder(ExoticStarterApplication::class.java)
