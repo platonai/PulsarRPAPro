@@ -4,7 +4,9 @@ import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.ProcessLauncher
 import ai.platon.pulsar.common.ResourceLoader
 import ai.platon.pulsar.common.browser.Browsers
+import org.apache.commons.lang3.SystemUtils
 import java.nio.file.Files
+import java.nio.file.Paths
 import java.text.DecimalFormat
 
 object ExoticUtils {
@@ -56,7 +58,7 @@ object ExoticUtils {
             }
         }
     }
-
+    
     fun openBrowser(url: String) {
         val chromeBinary = Browsers.searchChromeBinary()
         val dataDir = AppPaths.getTmp("exotic-chrome")

@@ -8,6 +8,8 @@ PulsarRPAPro is the professional version of PulsarRPA, featuring an upgraded ser
 
 There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/[scraping cases] for the most popular websites, we are constantly adding more cases.
 
+[![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+
 == Features
 
 * Extract Web Data Automatically
@@ -28,9 +30,8 @@ There are already dozens of link:exotic-app/exotic-examples/src/main/kotlin/ai/p
 == System Requirements
 
 * Memory 4G+
-* The latest version of the Java 11 JDK
-* Java and jar on the PATH
-* Google Chrome 90+
+* The latest version of the Java 17 JDK
+* Latest Google Chrome
 * MongoDB started
 
 == Download & Run

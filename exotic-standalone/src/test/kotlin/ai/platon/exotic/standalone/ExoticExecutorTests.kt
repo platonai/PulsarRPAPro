@@ -5,6 +5,8 @@ import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.scent.context.ScentContexts
 import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.Test
+import java.lang.management.ManagementFactory
+import java.lang.management.RuntimeMXBean
 
 class ExoticExecutorTests {
 
@@ -20,6 +22,20 @@ class ExoticExecutorTests {
         assertFalse(executor.scrape)
 
         assertTrue(executor.scrapeFields.isEmpty())
+    }
+    
+    @Test
+    fun testParseHarvestInProcessCmdLine() {
+        val cmdLine = "-headless harvestInProcess https://www.amazon.com/Best-Sellers/zgbs -requireSize 20000"
+        val executor = ExoticExecutor(cmdLine)
+        executor.parseCmdLine()
+        assertTrue(executor.harvestInProcess)
+        assertTrue(executor.headless)
+        assertFalse(executor.scrape)
+        
+        assertTrue(executor.scrapeFields.isEmpty())
+        
+        executor.harvestInProcess()
     }
 
     @Test
@@ -57,6 +73,17 @@ class ExoticExecutorTests {
         executor.parseCmdLine()
         val result = executor.scrape()
         assertTrue(result.isNotEmpty())
+    }
+    
+    @Test
+    fun testHarvestInProcess() {
+        val cmdLine = "-headless harvestInProcess https://www.amazon.com/Best-Sellers/zgbs -requireSize 20000"
+        val executor = ExoticExecutor(cmdLine)
+        executor.parseCmdLine()
+        assertTrue(executor.harvestInProcess)
+        assertTrue(executor.headless)
+        
+        executor.harvestInProcess()
     }
 
     @Test

@@ -3,22 +3,20 @@ package ai.platon.exotic.standalone.starter
 import ai.platon.exotic.crawl.common.AdvancedVerboseCrawler
 import ai.platon.exotic.crawl.common.VerboseCrawler1
 import ai.platon.exotic.standalone.api.StandaloneApplication
+import ai.platon.exotic.standalone.common.UberJars
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.ResourceLoader
+import ai.platon.pulsar.common.sleepSeconds
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
 import ai.platon.pulsar.ql.common.ResultSets
 import ai.platon.pulsar.skeleton.common.options.LoadOptions
-import ai.platon.pulsar.skeleton.crawl.common.URLUtil
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.dom.HarvestOptions
-import ai.platon.scent.ml.encoding.EncodeProject
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.builder.SpringApplicationBuilder
-import java.nio.file.Files
-import java.nio.file.Paths
 import java.sql.ResultSet
 import kotlin.system.exitProcess
 
@@ -34,6 +32,7 @@ class ExoticExecutor(val argv: Array<String>) {
     var predicate = false
     var arrange = false
     var harvest = false
+    var harvestInProcess = false
     var scrape = false
     var server = false
     var criticalHelp = false
@@ -75,6 +74,7 @@ class ExoticExecutor(val argv: Array<String>) {
             arrange -> arrange()
             predicate -> predict()
             harvest -> harvest()
+            harvestInProcess -> harvestInProcess()
             scrape -> scrape()
             server -> runServer()
             sql.isNotBlank() -> executeSQL()
@@ -111,14 +111,17 @@ class ExoticExecutor(val argv: Array<String>) {
     private fun dispatchHelp(argv0: Array<String>) {
         var i = 0
         while (i < argv0.size) {
-            val arg = argv0[i]
-
-            if (arg.equals("scrape", true)) scrape = true
-            if (arg.equals("harvest", true)) harvest = true
-            if (arg.equals("arrange", true)) arrange = true
-            if (arg.equals("sql", true)) sql = "help"
-            if (arg.equals("serve", true)) server = true
-            if (arg.equals("server", true)) server = true
+            val arg = argv0[i].lowercase()
+            
+            when (arg) {
+                "scrape" -> scrape = true
+                "harvest" -> harvest = true
+                "harvestInProcess" -> harvestInProcess = true
+                "arrange" -> arrange = true
+                "sql" -> sql = "help"
+                "serve" -> server = true
+                "server" -> server = true
+            }
 
             if (arg in listOf("-v", "-verbose")) {
                 helpVerbose = true
@@ -212,33 +215,29 @@ class ExoticExecutor(val argv: Array<String>) {
     }
 
     internal fun harvest() {
+        println("......................... harvest .....................")
+        
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
-
+        
         runBlocking {
             AdvancedVerboseCrawler().harvest(portalUrl, args)
         }
     }
-    
-    internal fun harvest2() {
+
+    internal fun harvestInProcess() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
         
-        val options = session.options(args)
-        val projectId = options.projectId
-        
-        val crawler = AdvancedVerboseCrawler()
-        crawler.loadOutPages(portalUrl, args)
-        crawler.harvest(projectId)
-        // build views
-        
-        // return the views path
+        val agent = UberJars.runUberJar(listOf("harvest", configuredUrl))
+        sleepSeconds(20)
+        val exitCode = agent.waitFor()
     }
 
     internal fun executeSQL() {
@@ -278,7 +277,17 @@ class ExoticExecutor(val argv: Array<String>) {
                 harvest = true
                 configuredUrl = argv.drop(i + 1).joinToString(" ")
                 break
-            } else if (arg == "arrange") {
+            } else if (arg == "harvestInProcess") {
+                if (isLastArg) {
+                    criticalHelp = true
+                    break
+                }
+                
+                harvestInProcess = true
+                configuredUrl = argv.drop(i + 1).joinToString(" ")
+                break
+            }
+            else if (arg == "arrange") {
                 if (isLastArg) {
                     criticalHelp = true
                     break
