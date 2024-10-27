@@ -10,13 +10,13 @@
 
 There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/) for the most popular websites, and we are constantly adding more.
 
-== YouTube
+## YouTube
 
 [![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
 
 ## Features
 
-- Extract Web Data Automatically
+- Fully Automated Web Data Extraction——No Rules, Just Results!
 - Web spider: browser rendering, ajax data crawling
 - High performance: optimized for rendering hundreds of pages in parallel on a single machine without being blocked
 - Low cost: scrape 100,000 browser-rendered e-commerce webpages or millions of data points daily with only 8-core CPU/32GB memory
