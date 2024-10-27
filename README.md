@@ -1,6 +1,8 @@
 # PulsarRPAPro README
 
-**English** | [简体中文](README-CN.adoc) | [中国镜像](https://gitee.com/platonai_galaxyeye/exotic)
+**English** | [简体中文](README-CN.md) | [中国镜像](https://gitee.com/platonai_galaxyeye/exotic)
+
+![Auto Extraction Result Snapshot](docs/amazon.png)
 
 **PulsarRPAPro** is the professional version of PulsarRPA, featuring an upgraded server, a collection of top e-commerce site scraping examples, and an advanced AI-powered applet for automatic data extraction.
 
@@ -8,7 +10,7 @@
 
 There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/) for the most popular websites, and we are constantly adding more.
 
-== Youtube
+== YouTube
 
 [![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
 
@@ -96,10 +98,6 @@ java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -d
 The URL in the command should be a portal URL, such as a product listing page URL.
 
 PulsarRPAPro will visit the portal, identify the optimal set of links for item pages, retrieve those pages, and analyze them.
-
-Below is a snapshot of the results from automatic extraction using unsupervised machine learning on an e-commerce site.
-
-![Auto Extraction Result Snapshot](docs/amazon.png)
 
 Here is the full page of the auto extraction result in HTML format:
 
