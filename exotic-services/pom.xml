@@ -121,7 +121,7 @@
                         <groupId>org.springframework.boot</groupId>
                         <artifactId>spring-boot-maven-plugin</artifactId>
                         <configuration>
-                            <mainClass>ai.platon.exotic.starter.ExoticServiceStarterKt</mainClass>
+                            <mainClass>ai.platon.exotic.services.starter.ExoticServiceStarterKt</mainClass>
                         </configuration>
                     </plugin>
                 </plugins>
