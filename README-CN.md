@@ -10,6 +10,14 @@ PulsarRPAPro 包含升级的服务器、一组顶级电商网站抓取示例，�
 
 目前已经为最受欢迎的网站提供了数十个链接：[抓取案例](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/)，我们不断添加更多案例。
 
+## 视频
+
+YouTube:
+[![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+
+Bilibili: 
+[https://www.bilibili.com/video/BV1kM2rYrEFC](https://www.bilibili.com/video/BV1kM2rYrEFC)
+
 ## 特性
 
 - 自动提取网页数据，绝对可靠！
