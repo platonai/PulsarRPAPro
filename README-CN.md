@@ -10,9 +10,17 @@ PulsarRPAPro 包含升级的服务器、一组顶级电商网站抓取示例，�
 
 目前已经为最受欢迎的网站提供了数十个链接：[抓取案例](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/)，我们不断添加更多案例。
 
+## 视频
+
+YouTube:
+[![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+
+Bilibili: 
+[https://www.bilibili.com/video/BV1kM2rYrEFC](https://www.bilibili.com/video/BV1kM2rYrEFC)
+
 ## 特性
 
-- 自动提取网页数据
+- 自动提取网页数据，绝对可靠！
 - 网络爬虫：浏览器渲染、AJAX 数据抓取
 - 高性能：高度优化，在单台机器上并行渲染数百个页面而不被阻塞
 - 低成本：抓取 100,000 个浏览器渲染的电商网页，或每天抓取 n * 10,000,000 个数据点，仅需 8 核 CPU/32G 内存
@@ -30,8 +38,7 @@ PulsarRPAPro 包含升级的服务器、一组顶级电商网站抓取示例，�
 ## System Requirements
 
 - Memory 4G+
-- The latest version of the Java 11 JDK
-- Java and jar on the PATH
+- JDK 17+
 - Google Chrome 90+
 - MongoDB started
 
@@ -63,10 +70,10 @@ java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -d
 ```
 
 ```bash
-git clone https://github.com/platonai/exotic.git
-cd exotic
+git clone https://github.com/platonai/PulsarRPAPro.git
+cd PulsarRPAPro
 mvn clean && mvn
-cd exotic-standalone/target/
+cd PulsarRPAPro/target/
 
 # Don't forget to start MongoDB
 docker-compose -f docker/docker-compose.yaml up

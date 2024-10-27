@@ -10,13 +10,17 @@
 
 There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main/kotlin/ai/platon/exotic/examples/sites/) for the most popular websites, and we are constantly adding more.
 
-== YouTube
+## Videos
 
+YouTube: 
 [![Watch the video](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+
+Bilibili: 
+[https://www.bilibili.com/video/BV1kM2rYrEFC](https://www.bilibili.com/video/BV1kM2rYrEFC)
 
 ## Features
 
-- Extract Web Data Automatically
+- Fully Automated Web Data Extraction——No Rules, Just Results!
 - Web spider: browser rendering, ajax data crawling
 - High performance: optimized for rendering hundreds of pages in parallel on a single machine without being blocked
 - Low cost: scrape 100,000 browser-rendered e-commerce webpages or millions of data points daily with only 8-core CPU/32GB memory
@@ -33,10 +37,10 @@ There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main
 
 ## System Requirements
 
-- Memory: 4GB+
-- The latest version of Java 17 JDK
-- Latest Google Chrome
-- MongoDB running
+- Memory 4G+
+- JDK 17+
+- Google Chrome 90+
+- MongoDB started
 
 ## Download & Run
 
@@ -69,7 +73,7 @@ Add the following lines to your `.m2/settings.xml`:
 git clone https://github.com/platonai/PulsarRPAPro.git
 cd PulsarRPAPro
 ./mvnw clean && ./mvnw
-cd exotic-standalone/target/
+cd PulsarRPAPro/target/
 
 # Don't forget to start MongoDB
 docker-compose -f docker/docker-compose.yaml up
@@ -108,7 +112,6 @@ Here is the full page of the auto extraction result in HTML format:
 Run the executable jar directly for help and to explore more features:
 
 ```bash
-# Note: remove the wildcard `*` and use the full name of the jar on Windows
 java -jar PulsarRPAPro.jar
 ```
 
