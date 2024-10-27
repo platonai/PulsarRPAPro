@@ -30,8 +30,7 @@ PulsarRPAPro 包含升级的服务器、一组顶级电商网站抓取示例，�
 ## System Requirements
 
 - Memory 4G+
-- The latest version of the Java 11 JDK
-- Java and jar on the PATH
+- JDK 17+
 - Google Chrome 90+
 - MongoDB started
 

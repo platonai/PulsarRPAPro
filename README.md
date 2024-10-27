@@ -33,10 +33,10 @@ There are already dozens of [scraping cases](exotic-app/exotic-examples/src/main
 
 ## System Requirements
 
-- Memory: 4GB+
-- The latest version of Java 17 JDK
-- Latest Google Chrome
-- MongoDB running
+- Memory 4G+
+- JDK 17+
+- Google Chrome 90+
+- MongoDB started
 
 ## Download & Run
 
@@ -108,7 +108,6 @@ Here is the full page of the auto extraction result in HTML format:
 Run the executable jar directly for help and to explore more features:
 
 ```bash
-# Note: remove the wildcard `*` and use the full name of the jar on Windows
 java -jar PulsarRPAPro.jar
 ```
 
