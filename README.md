@@ -69,7 +69,7 @@ Add the following lines to your `.m2/settings.xml`:
 git clone https://github.com/platonai/PulsarRPAPro.git
 cd PulsarRPAPro
 ./mvnw clean && ./mvnw
-cd exotic-standalone/target/
+cd PulsarRPAPro/target/
 
 # Don't forget to start MongoDB
 docker-compose -f docker/docker-compose.yaml up

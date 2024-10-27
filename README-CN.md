@@ -63,10 +63,10 @@ java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -d
 ```
 
 ```bash
-git clone https://github.com/platonai/exotic.git
-cd exotic
+git clone https://github.com/platonai/PulsarRPAPro.git
+cd PulsarRPAPro
 mvn clean && mvn
-cd exotic-standalone/target/
+cd PulsarRPAPro/target/
 
 # Don't forget to start MongoDB
 docker-compose -f docker/docker-compose.yaml up
