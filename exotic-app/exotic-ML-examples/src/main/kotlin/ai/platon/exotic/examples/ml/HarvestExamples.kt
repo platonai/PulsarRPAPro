@@ -94,20 +94,24 @@ class HarvestExamples(context: ScentContext) : VerboseHarvester(context) {
         "http://shop.boqii.com/cat/list-576-0-0-0.html",
     )
     
+    private val defaultArgs = """
+    
+    """.trimIndent()
+    
     fun arrangeDocuments() {
         listOf(seeds, testedSeeds).flatten().toSet().filter { it.isNotBlank() }.forEach { url ->
-            arrangeDocument(url, defaultHarvestArgs)
+            arrangeDocument(url, defaultArgs)
         }
     }
     
     fun harvest() {
         val url = seeds[0]
-        harvest(url, defaultHarvestArgs)
+        harvest(url, defaultArgs)
     }
     
     fun harvestAll() {
         listOf(testedSeeds, seeds).flatten().toSet().filter { it.contains("hua") }.parallelStream().forEach {
-            harvest(it, defaultHarvestArgs)
+            harvest(it, defaultArgs)
         }
     }
 }

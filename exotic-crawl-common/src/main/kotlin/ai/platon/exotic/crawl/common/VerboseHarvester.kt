@@ -26,10 +26,21 @@ open class VerboseHarvester(
     private val closed = AtomicBoolean()
 
     val sqlContext get() = context as ScentSQLContext
-    
+
     override val session = sqlContext.createSession()
-    
-    fun export(projectId: String, urls: Iterable<String>) {
+
+    fun copy(projectId: String, htmlFiles: List<Path>) {
+        logger.info("Copying {} files to harvest, use VerboseHarvester.harvest({}) to learn and output data",
+            htmlFiles.size, projectId)
+        val project = EncodeProject(projectId, EncodeProject.Type.TRAINING)
+        htmlFiles.forEach { path ->
+            Files.copy(path, project.htmlBaseDir.resolve(path.fileName))
+        }
+    }
+
+    fun export(projectId: String, urls: List<String>) {
+        logger.info("Exporting {} pages to harvest, use VerboseHarvester.harvest({}) to learn and output data",
+            urls.size, projectId)
         val project = EncodeProject(projectId, EncodeProject.Type.TRAINING)
         urls.forEach { url ->
             val page = session.load(url)
