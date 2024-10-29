@@ -1,6 +1,6 @@
 package ai.platon.exotic.standalone
 
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.VerboseHarvester
 
 fun main() {
     val portalUrl = "https://www.amazon.com/b?node=1292115011"
@@ -10,5 +10,5 @@ fun main() {
             " -component .product-briefing" +
             " -diagnose"
 
-    VerboseCrawler1().harvest(portalUrl, args)
+    VerboseHarvester().harvest(portalUrl, args)
 }

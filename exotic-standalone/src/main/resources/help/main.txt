@@ -15,4 +15,4 @@ where options include:
                     print this help message to the error stream
     --help [topic [-v|-verbose]]
                     print this help message to the output stream, or print help message for topic
-                    the topic can be one of: [harvest|scrape|SQL], case insensitive
+                    the topic can be one of: [harvest|scrape|SQL], case-insensitive

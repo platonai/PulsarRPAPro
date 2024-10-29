@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.amazon
 
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.dom.FeaturedDocument
@@ -60,7 +60,7 @@ object AmazonScanHarvest {
         val runtimeMxBean = ManagementFactory.getRuntimeMXBean()
         println(runtimeMxBean.inputArguments)
         
-        val crawler = VerboseCrawler1()
+        val crawler = VerboseHarvester()
         crawler.harvest(documents, options)
         
         // labeling & encoding

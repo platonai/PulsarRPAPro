@@ -1,57 +1,41 @@
 package ai.platon.exotic.crawl.common
 
 import ai.platon.pulsar.common.AppPaths
-import ai.platon.pulsar.common.Systems
-import ai.platon.pulsar.common.config.CapabilityTypes
+import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.nodes.node.ext.canonicalName
 import ai.platon.scent.ScentContext
-import ai.platon.scent.ScentSession
 import ai.platon.scent.analysis.corpus.annotateNodes
-import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HNormUrl
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.dom.nodes.AnchorGroup
-import ai.platon.scent.entities.HarvestResult
-import kotlinx.coroutines.runBlocking
+import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import org.apache.commons.lang3.StringUtils
 import org.nield.kotlinstatistics.standardDeviation
-import org.slf4j.LoggerFactory
-import java.nio.file.Files
 import java.util.*
-import kotlin.streams.toList
 
-open class VerboseCrawler1(
-    val context: ScentContext = ScentContexts.create()
-) {
-    private val logger = LoggerFactory.getLogger(VerboseCrawler1::class.java)
+class LinkAnalyzer {
+    private val logger = getLogger(this)
     
-    val session: ScentSession = context.createSession()
-    
-    init {
-        System.setProperty(CapabilityTypes.BROWSER_IMAGES_ENABLED, "true")
-        Systems.setProperty(CapabilityTypes.FETCH_SCROLL_DOWN_COUNT, 0)
-    }
+    val context: ScentContext = ScentSQLContexts.create()
+    val session = context.createSession()
     
     val defaultArgs = "" +
-//            " -expires 1d" +
-//            " -itemExpires 1d" +
-//                " -scrollCount 6" +
-//                " -itemScrollCount 4" +
-        " -requireSize 100000" +
-        " -itemRequireSize 200000" +
-        " -topLinks 60" +
-        " -nScreens 5" +
-//                " -polysemous" +
-//            " -diagnose" +
-        " -nVerbose 3" +
-//                " -pageLoadTimeout 60s" +
-        " -showTip" +
-//            " -showImage" +
-//                " -cellType PLAIN_TEXT" +
+        " -scrollCount 6" +
+        " -itemScrollCount 4" +
+        " -i 10d -ii 10000d" +
+        " -requireSize 10000 -itemRequireSize 200000" +
+        " -topLinks 100" +
+        " -ignoreFailure" +
         ""
+    
+    fun arrangeLinks(portalUrl: String, args: String): SortedSet<AnchorGroup> {
+        val normUrl = session.normalize(portalUrl, session.options(args))
+        val portalPage = session.load(normUrl)
+        val portalDocument = session.parse(portalPage)
+        return session.arrangeLinks(normUrl, portalDocument)
+    }
     
     fun arrangeLinks(portalUrl: String): SortedSet<AnchorGroup> {
         logger.info("Arranging links in page $portalUrl")
@@ -113,40 +97,6 @@ open class VerboseCrawler1(
                 println("${j.inc()}.\t${anchorSpec.url}")
             }
         }
-    }
-    
-    fun harvest(url: String) = harvest(url, defaultArgs)
-    
-    fun harvest(url: String, args: String) = harvest(url, session.options(args))
-    
-    fun harvest(url: String, options: HarvestOptions) = harvest(session, url, options)
-    
-    fun harvest(documents: List<FeaturedDocument>, options: HarvestOptions): HarvestResult {
-        val result = runBlocking { session.harvest(documents.asSequence(), options) }
-        report(result, options)
-        return result
-    }
-    
-    fun harvest(session: ScentSession, portalUrl: String, options: HarvestOptions) {
-        val (url0, args0) = UrlUtils.splitUrlArgs(portalUrl)
-        val options0 = session.options("$options $args0")
-        options0.topLinks = options0.topLinks.coerceAtLeast(40)
-        val result = runBlocking { session.harvest(url0, options0) }
-        report(result, options)
-    }
-    
-    private fun report(result: HarvestResult, options: HarvestOptions) {
-        val exports = session.buildAll(result.tableGroup, options)
-        
-        val json = session.buildJson(result.tableGroup)
-        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
-        Files.createDirectories(path.parent)
-        Files.writeString(path, json)
-        
-        logger.info("Harvest reports: {}", path.parent)
-        exports.keys.map { it.toString() }
-            .filter { it.matches(".+/tables/.+".toRegex()) }
-            .forEach { ExoticUtils.openBrowser(it) }
     }
     
     private fun toReport(i: Int, group: AnchorGroup): String {

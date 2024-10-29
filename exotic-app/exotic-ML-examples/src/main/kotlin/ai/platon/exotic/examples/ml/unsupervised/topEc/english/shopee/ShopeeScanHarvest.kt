@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.shopee
 
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.gora.FileBackendPageStore
@@ -8,7 +8,6 @@ import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
 import java.lang.management.ManagementFactory
 import java.nio.file.Files
-import kotlin.streams.toList
 
 /**
  * Scan webpages in a directory and run an un-supervised ML algorithm.
@@ -55,7 +54,7 @@ object ShopeeScanHarvest {
         val runtimeMxBean = ManagementFactory.getRuntimeMXBean()
         println(runtimeMxBean.inputArguments)
 
-        val crawler = VerboseCrawler1()
+        val crawler = VerboseHarvester()
         crawler.harvest(documents, options)
     }
 }

@@ -1,11 +1,11 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.amazon
 
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.VerboseHarvester
 
 fun main() {
     val portalUrl = "https://www.amazon.com/Best-Sellers/zgbs"
 
-    val harvester = VerboseCrawler1()
-    val anchorGroups = VerboseCrawler1().arrangeLinks(portalUrl)
+    val harvester = VerboseHarvester()
+    val anchorGroups = VerboseHarvester().arrangeLinks(portalUrl)
     harvester.printAnchorGroups(anchorGroups, true)
 }

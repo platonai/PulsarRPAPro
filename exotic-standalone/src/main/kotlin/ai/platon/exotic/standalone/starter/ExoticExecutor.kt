@@ -1,7 +1,7 @@
 package ai.platon.exotic.standalone.starter
 
-import ai.platon.exotic.crawl.common.AdvancedVerboseCrawler
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.LinkAnalyzer
+import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.exotic.standalone.api.StandaloneApplication
 import ai.platon.exotic.standalone.common.UberJars
 import ai.platon.pulsar.browser.common.BrowserSettings
@@ -196,9 +196,9 @@ class ExoticExecutor(val argv: Array<String>) {
         }
 
         runBlocking {
-            val harvester = VerboseCrawler1()
-            val groups = harvester.arrangeLinks(configuredUrl)
-            harvester.printAllAnchorGroups(groups)
+            val analyzer = LinkAnalyzer()
+            val groups = analyzer.arrangeLinks(configuredUrl)
+            analyzer.printAllAnchorGroups(groups)
         }
     }
     
@@ -210,7 +210,7 @@ class ExoticExecutor(val argv: Array<String>) {
         }
         
         runBlocking {
-            VerboseCrawler1().harvest(portalUrl, args)
+            VerboseHarvester().harvest(portalUrl, args)
         }
     }
 
@@ -226,7 +226,7 @@ class ExoticExecutor(val argv: Array<String>) {
         // TODO: harvest HTML files in local directory
 
         runBlocking {
-            AdvancedVerboseCrawler().harvest(portalUrl, args)
+            VerboseHarvester().harvest(portalUrl, args)
         }
     }
 

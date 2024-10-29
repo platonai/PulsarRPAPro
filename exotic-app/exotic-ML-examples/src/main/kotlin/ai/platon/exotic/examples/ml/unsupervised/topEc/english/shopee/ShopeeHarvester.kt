@@ -1,6 +1,6 @@
 package ai.platon.exotic.examples.ml.unsupervised.topEc.english.shopee
 
-import ai.platon.exotic.crawl.common.VerboseCrawler1
+import ai.platon.exotic.crawl.common.VerboseHarvester
 
 fun main() {
     val portalUrl = "https://shopee.sg/Laptops-cat.11013247.11013305"
@@ -8,5 +8,5 @@ fun main() {
             " -itemRequireSize 200000 -itemScrollCount 5" +
             " -diagnose -vj"
 
-    VerboseCrawler1().harvest(portalUrl, args)
+    VerboseHarvester().harvest(portalUrl, args)
 }
