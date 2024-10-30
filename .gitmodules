@@ -1,0 +1,6 @@
+[submodule "submodules/pulsar"]
+	path = submodules/pulsar
+	url = https://github.com/platonai/PulsarRPA
+[submodule "submodules/scent"]
+	path = submodules/scent
+	url = https://github.com/galaxyeye/scent
