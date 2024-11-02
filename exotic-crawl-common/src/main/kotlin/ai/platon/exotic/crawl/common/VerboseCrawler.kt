@@ -1,20 +1,18 @@
 package ai.platon.exotic.crawl.common
 
-import ai.platon.pulsar.common.AppPaths
-import ai.platon.pulsar.common.NetUtil
-import ai.platon.pulsar.common.ProcessLauncher
+import ai.platon.pulsar.common.*
 import ai.platon.pulsar.common.browser.Browsers
 import ai.platon.pulsar.common.urls.UrlUtils
-import ai.platon.pulsar.common.warnUnexpected
-import ai.platon.pulsar.skeleton.context.PulsarContext
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.skeleton.common.options.LoadOptions
+import ai.platon.pulsar.skeleton.context.PulsarContext
 import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.entities.HarvestResult
 import org.slf4j.LoggerFactory
 import java.net.URL
+import java.nio.file.Path
 import java.util.concurrent.atomic.AtomicBoolean
 
 open class VerboseCrawler(
@@ -96,10 +94,12 @@ open class VerboseCrawler(
         }
     }
     
-    fun openBrowser() {
-        val path = AppPaths.REPORT_DIR.resolve("harvest/corpus/last-page-tables.json")
-        val baseDir = path.parent
-        openBrowser(baseDir.toString())
+    fun openExplorer(path: Path) {
+        Runtimes.exec("explorer.exe $path")
+    }
+    
+    fun openBrowser(path: Path) {
+        openBrowser(path.toString())
     }
     
     fun openBrowser(url: String) {

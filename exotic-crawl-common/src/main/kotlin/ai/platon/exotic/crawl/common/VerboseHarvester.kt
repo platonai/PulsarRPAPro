@@ -24,28 +24,35 @@ open class VerboseHarvester(
 ): VerboseCrawler(context) {
     private val logger = LoggerFactory.getLogger(VerboseHarvester::class.java)
     private val closed = AtomicBoolean()
-
+    
     val sqlContext get() = context as ScentSQLContext
-
+    
     override val session = sqlContext.createSession()
-
+    
     fun copy(projectId: String, htmlFiles: List<Path>) {
-        logger.info("Copying {} files to harvest, use VerboseHarvester.harvest({}) to learn and output data",
-            htmlFiles.size, projectId)
+        logger.info(
+            "Copying {} files to harvest, use .harvest({}) to learn and output web data",
+            htmlFiles.size,
+            projectId
+        )
         val project = EncodeProject(projectId, EncodeProject.Type.TRAINING)
         htmlFiles.forEach { path ->
             Files.copy(path, project.htmlBaseDir.resolve(path.fileName))
         }
+        logger.info("Copied {} files, use .harvest({}) to learn and output web data", htmlFiles.size, projectId)
     }
-
+    
     fun export(projectId: String, urls: List<String>) {
-        logger.info("Exporting {} pages to harvest, use VerboseHarvester.harvest({}) to learn and output data",
-            urls.size, projectId)
+        logger.info(
+            "Exporting {} pages to harvest, use VerboseHarvester.harvest({}) to learn and output data",
+            urls.size, projectId
+        )
         val project = EncodeProject(projectId, EncodeProject.Type.TRAINING)
         urls.forEach { url ->
             val page = session.load(url)
             session.exportTo(page, project.htmlBaseDir)
         }
+        logger.info("Exported {} pages, use .harvest({}) to learn and output web data", urls.size, projectId)
     }
     
     fun arrangeDocument(portalUrl: String, args: String): AnchorGroup? {
@@ -69,17 +76,18 @@ open class VerboseHarvester(
         return anchorGroups.firstOrNull()
     }
     
-    fun harvest(projectId: String, start: Int = 0, limit: Int = Int.MAX_VALUE) {
-        val args2 = "-projectId $projectId -diagnose -vj -trustSamples"
-//        val args2 = "$args -vj -trustSamples"
+    fun harvest(project: EncodeProject, start: Int = 0, limit: Int = Int.MAX_VALUE) {
+        val args2 = "-projectId ${project.id} -diagnose -vj -trustSamples"
         val options = session.options(args2)
-        
-        val encodeProject = EncodeProject(projectId, EncodeProject.Type.TRAINING)
-        val documents = loadDocuments(encodeProject.htmlBaseDir, start, limit)
+        val documents = loadDocuments(project.htmlBaseDir, start, limit)
         
         documents.chunked(200).forEach { chunk ->
             harvest1(chunk.asSequence(), options)
         }
+    }
+    
+    fun harvest(projectId: String, start: Int = 0, limit: Int = Int.MAX_VALUE) {
+        harvest(EncodeProject(projectId, EncodeProject.Type.TRAINING), start, limit)
     }
     
     fun harvest(portalUrl: String, args: String) = harvest(portalUrl, session.options(args))
@@ -125,7 +133,7 @@ open class VerboseHarvester(
             logger.warn("Too few samples, might not generate a good result")
         }
         
-        val documents = htmlBaseDir.listDirectoryEntries("*.htm")
+        val documents = htmlBaseDir.listDirectoryEntries("*.html")
             .asSequence()
             .drop(start)
             .take(limit)

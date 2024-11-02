@@ -133,7 +133,6 @@
 
     <root level="INFO">
         <appender-ref ref="Console"/>
-        <appender-ref ref="DRFA"/>
     </root>
 
     <logger name="ai.platon.scent" level="INFO">
