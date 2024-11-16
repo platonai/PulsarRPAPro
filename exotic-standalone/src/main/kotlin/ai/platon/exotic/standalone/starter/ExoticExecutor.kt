@@ -14,6 +14,7 @@ import ai.platon.pulsar.skeleton.common.options.LoadOptions
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import ai.platon.scent.dom.HarvestOptions
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
+import ai.platon.scent.tools.HarvesterProjectRunner
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.runBlocking
 import org.springframework.boot.builder.SpringApplicationBuilder
@@ -215,19 +216,19 @@ class ExoticExecutor(val argv: Array<String>) {
     }
 
     internal fun harvest() {
-        println("......................... harvest .....................")
-        
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
 
-        // TODO: harvest HTML files in local directory
-
         runBlocking {
             VerboseHarvester().harvest(portalUrl, args)
         }
+    }
+
+    internal fun harvest(jsonConfig: String) {
+        HarvesterProjectRunner.harvest(jsonConfig)
     }
 
     internal fun harvestInProcess() {
