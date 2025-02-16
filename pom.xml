@@ -2,10 +2,17 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
+
+<!--	<parent>-->
+<!--		<groupId>ai.platon</groupId>-->
+<!--		<artifactId>platon</artifactId>-->
+<!--		<version>4.0.1</version>-->
+<!--	</parent>-->
+
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.1</version>
+		<version>3.3.8</version>
 		<relativePath/>
 	</parent>
 
@@ -305,13 +312,12 @@
 
 		<platon.version>4.0.1</platon.version>
 		<!-- https://mvnrepository.com/artifact/ai.platon.pulsar -->
-		<platon-pulsar.version>2.0.4</platon-pulsar.version>
+		<platon-pulsar.version>2.1.1</platon-pulsar.version>
 		<!-- http://static.platonic.fun/repo/ai/platon/scent/ -->
-		<scent.version>2.1.0</scent.version>
+		<scent.version>2.1.1</scent.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 
 		<spring-boot-plugin.version>3.3.1</spring-boot-plugin.version>
-		<hibernate.version>6.5.3.Final</hibernate.version>
 
 		<cron-utils.version>9.1.6</cron-utils.version>
 		<embed.mongo.version>4.17.0</embed.mongo.version>
