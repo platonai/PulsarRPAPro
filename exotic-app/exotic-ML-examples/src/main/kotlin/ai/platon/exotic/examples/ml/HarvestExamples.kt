@@ -4,7 +4,7 @@ import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.browser.common.BrowserSettings
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.proxy.ProxyPoolManager
-import ai.platon.scent.ScentContext
+import ai.platon.scent.skeleton.ScentContext
 import ai.platon.scent.ql.h2.context.ScentSQLContexts
 
 class HarvestExamples(context: ScentContext) : VerboseHarvester(context) {

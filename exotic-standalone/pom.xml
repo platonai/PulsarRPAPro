@@ -81,6 +81,13 @@
 			<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<mainClass>ai.platon.exotic.standalone.starter.ExoticStandaloneStarterKt</mainClass>
 					<finalName>PulsarRPAPro</finalName>

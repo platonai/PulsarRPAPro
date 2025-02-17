@@ -3,18 +3,18 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-<!--	<parent>-->
-<!--		<groupId>ai.platon</groupId>-->
-<!--		<artifactId>platon</artifactId>-->
-<!--		<version>4.0.1</version>-->
-<!--	</parent>-->
-
 	<parent>
-		<groupId>org.springframework.boot</groupId>
-		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>3.3.8</version>
-		<relativePath/>
+		<groupId>ai.platon</groupId>
+		<artifactId>platon</artifactId>
+		<version>4.0.1</version>
 	</parent>
+
+<!--	<parent>-->
+<!--		<groupId>org.springframework.boot</groupId>-->
+<!--		<artifactId>spring-boot-starter-parent</artifactId>-->
+<!--		<version>3.3.8</version>-->
+<!--		<relativePath/>-->
+<!--	</parent>-->
 
 	<groupId>ai.platon.exotic</groupId>
 	<artifactId>exotic</artifactId>
@@ -22,7 +22,7 @@
 
 	<packaging>pom</packaging>
 
-	<name>Exotic</name>
+	<name>Pulsar RPA Pro</name>
 	<description>The Professional Version of PulsarRPA</description>
 
 	<licenses>

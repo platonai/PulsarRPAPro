@@ -84,10 +84,6 @@ class Twitter {
     private suspend fun loginIfNecessary(page: WebPage, driver: WebDriver) {
         // login
         if (page.url.contains("login")) {
-//            driver.findElementByCssSelector("input[name='session[username_or_email]']").sendKeys("username")
-//            driver.findElementByCssSelector("input[name='session[password]']").sendKeys("password")
-//            driver.findElementByCssSelector("div[data-testid='LoginForm_Login_Button']").click()
-            
             val username = System.getProperty("TWITTER_USERNAME")
             val password = System.getProperty("TWITTER_PASSWORD")
             if (driver.visible("")) {

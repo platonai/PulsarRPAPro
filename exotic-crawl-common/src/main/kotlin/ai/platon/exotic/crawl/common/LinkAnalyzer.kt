@@ -4,8 +4,9 @@ import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.sql.ResultSetFormatter
 import ai.platon.pulsar.common.urls.UrlUtils
+import ai.platon.pulsar.dom.nodes.node.ext.ExportPaths
 import ai.platon.pulsar.dom.nodes.node.ext.canonicalName
-import ai.platon.scent.ScentContext
+import ai.platon.scent.skeleton.ScentContext
 import ai.platon.scent.analysis.corpus.annotateNodes
 import ai.platon.scent.dom.HNormUrl
 import ai.platon.scent.dom.HarvestOptions
@@ -65,7 +66,7 @@ class LinkAnalyzer {
                 .let { session.arrangeDocuments(normUrl, portalPage, it.asSequence()) }
         }
         
-        portalDocument.also { it.annotateNodes(options) }.also { session.export(it, type = "portal") }
+        portalDocument.also { it.annotateNodes(options) }.also { session.export(it, type = ExportPaths.Type.PORTAL) }
     }
     
     fun printAnchorGroups(anchorGroups: Collection<AnchorGroup>, showBestGroups: Boolean = false) {

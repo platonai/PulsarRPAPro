@@ -121,5 +121,5 @@ This command will print the help message and some of the most useful examples.
 
 **Q: How to use proxies?**
 
-**A:** Follow [this guide](bin/tools/proxy/README.adoc) for proxy rotation.
+**A:** Follow [this guide](bin/tools/proxy/README.md) for proxy rotation.
 

@@ -6,7 +6,7 @@ Vincent Zhang <ivincent.zhang@gmail.com>
 
 == Introduction
 
-<em style='color: red'>WAITING FOR UPDATE ...</em>
+<em style='color: red'>PROVIDERS ARE NOT AVAILABLE, WAITING FOR UPDATE ...</em>
 
 == How to use proxy
 
