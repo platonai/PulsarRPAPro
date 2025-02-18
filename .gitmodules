@@ -4,3 +4,6 @@
 [submodule "submodules/scent"]
 	path = submodules/scent
 	url = https://github.com/galaxyeye/scent.git
+[submodule "submodules/platon"]
+	path = submodules/platon
+	url = https://github.com/platonai/platon.git
