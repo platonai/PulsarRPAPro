@@ -6,8 +6,8 @@ import ai.platon.pulsar.driver.utils.SQLTemplate
 import java.nio.file.Files
 
 fun main() {
-    System.setProperty("scrape.server.port", "2718")
-    System.setProperty("scrape.server.servlet.context-path", "/exotic")
+    System.setProperty("scrape.server.port", "8182")
+    System.setProperty("scrape.server.servlet.context-path", "/api")
 
     val crawler = ExoticCrawler()
 
