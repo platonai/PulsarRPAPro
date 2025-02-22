@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>ai.platon</groupId>
 		<artifactId>platon</artifactId>
-		<version>4.0.1</version>
+		<version>4.0.2</version>
 	</parent>
 
 	<groupId>ai.platon.exotic</groupId>
@@ -214,13 +214,7 @@
 
 	<dependencyManagement>
 		<dependencies>
-			<dependency>
-				<groupId>ai.platon</groupId>
-				<artifactId>platon</artifactId>
-				<version>${platon.version}</version>
-				<type>pom</type>
-				<scope>import</scope>
-			</dependency>
+
 			<dependency>
 				<groupId>ai.platon.pulsar</groupId>
 				<artifactId>pulsar-bom</artifactId>
@@ -234,6 +228,14 @@
 				<version>${scent.version}</version>
 				<type>pom</type>
 				<scope>import</scope>
+			</dependency>
+
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${spring-boot.version}</version>
+				<scope>import</scope>
+				<type>pom</type>
 			</dependency>
 
 
@@ -307,7 +309,7 @@
 		<!-- https://mvnrepository.com/artifact/ai.platon.pulsar -->
 		<platon-pulsar.version>2.1.3</platon-pulsar.version>
 		<!-- http://static.platonic.fun/repo/ai/platon/scent/ -->
-		<scent.version>2.1.1</scent.version>
+		<scent.version>2.1.2</scent.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 
 		<spring-boot-plugin.version>3.3.1</spring-boot-plugin.version>
