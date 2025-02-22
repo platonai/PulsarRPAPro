@@ -46,7 +46,7 @@ https://www.walmart.com/browse/cell-phones/apple-iphone/1105910_7551331_1127173?
     responseHandler.emit(BrowserResponseEvents.initHTMLIntegrityChecker, WalmartHtmlChecker())
 
     val options = session.options(args)
-    val seh = options.itemEvent.browseEventHandlers
+    val seh = options.itemEventHandlers.browseEventHandlers
     seh.onWillFetch.addLast { page, driver ->
         // delay(1_000L + Random.nextInt(20_000))
     }

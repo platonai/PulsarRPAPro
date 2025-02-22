@@ -18,7 +18,7 @@ fun main() {
 
     val session = ScentSQLContexts.createSession()
     val options = session.options(args)
-    options.itemEvent.loadEventHandlers.onLoaded.addLast { page ->
+    options.itemEventHandlers.loadEventHandlers.onLoaded.addLast { page ->
         val fileName = AppPaths.fromUri(page.url, "", ".html")
         session.exportTo(page, project.htmlBaseDir.resolve(fileName))
     }
