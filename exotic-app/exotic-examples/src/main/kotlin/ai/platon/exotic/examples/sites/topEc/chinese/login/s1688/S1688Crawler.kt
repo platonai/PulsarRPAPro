@@ -25,7 +25,7 @@ class S1688Crawler(
             loginUrl,
             usernameSelector, username, passwordSelector, password, submitSelector, activateSelector
         )
-        options.event.browseEventHandlers.onBrowserLaunched.addLast(loginHandler)
+        options.eventHandlers.browseEventHandlers.onBrowserLaunched.addLast(loginHandler)
         
         session.loadOutPages(portalUrl, options)
     }

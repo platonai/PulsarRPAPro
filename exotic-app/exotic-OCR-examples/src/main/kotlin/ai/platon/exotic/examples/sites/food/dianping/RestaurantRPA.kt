@@ -21,7 +21,6 @@ import com.fasterxml.jackson.core.JsonProcessingException
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.asFlow
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.flowOn
 import java.io.IOException
 import java.nio.file.Files
@@ -71,18 +70,18 @@ class RestaurantRPA(
         val options = session.options(args)
 
         registerEventHandlers(options)
-        registeritemEventHandlers(options)
+        registerItemEventHandlers(options)
 
         return options
     }
 
     private fun registerEventHandlers(options: LoadOptions) {
-        options.event.loadEventHandlers.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
+        options.eventHandlers.loadEventHandlers.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
             collectPortalUrls(document) }
     }
 
-    private fun registeritemEventHandlers(options: LoadOptions) {
-        val ie = options.itemEvent
+    private fun registerItemEventHandlers(options: LoadOptions) {
+        val ie = options.itemEventHandlers
 
         ie.loadEventHandlers.onWillLoad.addLast {
             it

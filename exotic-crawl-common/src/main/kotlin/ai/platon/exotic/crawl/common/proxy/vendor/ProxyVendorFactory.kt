@@ -25,7 +25,7 @@ class DefaultProxyParser: ProxyParser() {
 object ProxyVendorFactory {
     fun getProxyParser(vendor: String): ProxyParser {
         return when (vendor) {
-            "zm" -> ZMProxyParser()
+            "zm" -> ZMProxyParser() // This provider is not available anymore
             else -> DefaultProxyParser()
         }
     }
