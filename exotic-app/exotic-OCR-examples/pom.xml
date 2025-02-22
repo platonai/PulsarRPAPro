@@ -15,7 +15,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic-app</artifactId>
-        <version>2.0.2-SNAPSHOT</version>
+        <version>2.0.3-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-OCR-examples</artifactId>
