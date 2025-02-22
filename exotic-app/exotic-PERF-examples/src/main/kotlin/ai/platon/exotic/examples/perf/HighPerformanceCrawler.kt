@@ -10,10 +10,10 @@ import ai.platon.pulsar.common.proxy.ProxyPoolManager
 import ai.platon.pulsar.skeleton.common.metrics.MetricsSystem
 import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.skeleton.crawl.common.url.ListenableHyperlink
+import jakarta.annotation.PostConstruct
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.ApplicationContextInitializer
-import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.ComponentScan
 import org.springframework.context.annotation.ImportResource
 import org.springframework.context.support.AbstractApplicationContext
@@ -22,7 +22,7 @@ class HighPerformanceCrawlerInitializer: ApplicationContextInitializer<AbstractA
     override fun initialize(applicationContext: AbstractApplicationContext) {
         System.setProperty(CapabilityTypes.PROXY_POOL_MANAGER_CLASS, ProxyPoolManager::class.java.name)
         System.setProperty(CapabilityTypes.PROXY_LOADER_CLASS, ProxyVendorLoader::class.java.name)
-        BrowserSettings.privacy(4).maxTabs(12)
+        BrowserSettings.maxBrowsers(4).maxOpenTabs(12)
         PulsarContexts.create()
     }
 }
@@ -38,7 +38,7 @@ class HighPerformanceCrawler(
 ) {
     private val session = PulsarContexts.createSession()
 
-    @Bean
+    @PostConstruct
     fun generate() {
         val resource = "seeds/amazon/best-sellers/leaf-categories.txt"
         val args = "-i 10s -ignoreFailure"
@@ -50,7 +50,7 @@ class HighPerformanceCrawler(
         val links = LinkExtractors.fromResource(resource).asSequence()
             .map { ListenableHyperlink(it, "", args = args) }
             .onEach {
-                it.event.browseEventHandlers.onWillNavigate.addLast { page, driver ->
+                it.eventHandlers.browseEventHandlers.onWillNavigate.addLast { page, driver ->
                     // This is a temporary solution to override InteractSettings, will be improved in the future
                     page.setVar("InteractSettings", interactSettings)
                     driver.addBlockedURLs(blockingUrls)
