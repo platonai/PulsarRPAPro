@@ -118,7 +118,6 @@
 						<dependency>
 							<groupId>org.jetbrains.kotlin</groupId>
 							<artifactId>kotlin-maven-allopen</artifactId>
-							<version>${kotlin.version}</version>
 						</dependency>
 						<dependency>
 							<groupId>org.jetbrains.kotlin</groupId>
@@ -182,7 +181,6 @@
 			<plugin>
 				<groupId>org.jetbrains.kotlin</groupId>
 				<artifactId>kotlin-maven-plugin</artifactId>
-				<version>${kotlin.version}</version>
 				<executions>
 					<execution>
 						<id>compile</id>
@@ -301,7 +299,6 @@
 
 	<properties>
 		<javac.target.version>17</javac.target.version>
-		<kotlin.version>1.9.24</kotlin.version>
 
 		<version.maven-release-plugin>3.1.1</version.maven-release-plugin>
 

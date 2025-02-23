@@ -48,8 +48,11 @@ Download the latest executable jar:
 
 ```bash
 wget http://static.platonic.fun/repo/ai/platon/exotic/PulsarRPAPro.jar
-# start MongoDB
-docker-compose -f docker/docker-compose.yaml up
+
+# MAKE sure MongoDB is started at port 27017 without authentication
+# It is recommended to use docker-compose to start MongoDB
+# docker-compose -f docker/docker-compose.yaml up
+
 java -jar PulsarRPAPro.jar
 java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ```
