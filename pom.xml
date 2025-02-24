@@ -270,6 +270,7 @@
 <!--				<version>${embed.mongo.version}</version>-->
 <!--			</dependency>-->
 
+			<!-- TODO: check the dependency tree -->
 			<dependency>
 				<groupId>org.hibernate</groupId>
 				<artifactId>hibernate-core</artifactId>
