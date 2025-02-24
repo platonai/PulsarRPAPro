@@ -9,11 +9,12 @@ import ai.platon.pulsar.ql.context.SQLContext
 import ai.platon.pulsar.ql.context.SQLContexts
 import ai.platon.pulsar.ql.h2.utils.ResultSetUtils
 import ai.platon.scent.ql.h2.context.ScentSQLContext
+import ai.platon.scent.ql.h2.context.ScentSQLContexts
 import java.sql.ResultSet
 import java.util.*
 
 open class VerboseSQLExecutor(
-    context: SQLContext = SQLContexts.create(),
+    context: SQLContext = ScentSQLContexts.create(),
 ) : VerboseCrawler(context) {
     private val logger = getLogger(this)
     
