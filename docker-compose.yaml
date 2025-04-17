@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: 'mongo:latest'
+    container_name: 'mongodb'
+    environment:
+      - 'MONGO_INITDB_DATABASE=scent'
+    ports:
+      - '27017:27017'
+    command: ["--bind_ip_all"]
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - app_network
+
+  pulsar_rpa_pro:
+    image: 'pulsar-rpa-pro:latest'
+    container_name: 'pulsar-rpa-pro'
+    depends_on:
+      - 'mongodb'
+    environment:
+      - 'A_TEST=a'
+    ports:
+      - '8182:8182'
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8182/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  app_network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
