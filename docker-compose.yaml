@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   mongodb:
     image: 'mongo:latest'
@@ -21,6 +19,8 @@ services:
       - 'mongodb'
     environment:
       - 'A_TEST=a'
+      - 'gora.mongodb.servers=mongo:27017'
+      - 'browser.display.mode=HEADLESS'
     ports:
       - '8182:8182'
     networks:

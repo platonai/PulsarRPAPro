@@ -164,7 +164,7 @@ class DOMEvaluator(
 fun main() {
     val modelPath = Paths.get("/tmp/dom_decision_tree.pmml")
     if (!Files.exists(modelPath)) {
-        val modelURL = URL("http://platonic.fun/s/model/dom_decision_tree_bidding.0.0.1.pmml")
+        val modelURL = URL("http://platonai.cn/s/model/dom_decision_tree_bidding.0.0.1.pmml")
         FileUtils.copyURLToFile(modelURL, modelPath.toFile())
     }
     

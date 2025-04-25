@@ -27,7 +27,7 @@ Bilibili:
 下载最新的可执行jar包：
 
 ```bash
-wget http://static.platonic.fun/repo/ai/platon/exotic/PulsarRPAPro.jar
+wget http://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
 ```
 
 ### 环境要求
