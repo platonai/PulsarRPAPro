@@ -8,6 +8,7 @@ import ai.platon.pulsar.dom.Documents
 import ai.platon.pulsar.dom.FeaturedDocument
 import ai.platon.pulsar.dom.nodes.node.ext.*
 import ai.platon.pulsar.dom.select.collectIf
+import ai.platon.pulsar.skeleton.PulsarSettings
 import ai.platon.scent.common.message.ScentMiscMessageWriter
 import ai.platon.scent.common.mlLabels
 import ai.platon.scent.common.normUrl
@@ -161,7 +162,7 @@ class DOMClassifier {
     }
 
     private fun prepareAnnotationTasks(ident: Int) {
-        BrowserSettings.privacy(2).maxTabs(8).withSPA()
+        PulsarSettings().maxBrowsers(2).maxOpenTabs(8).withSPA()
 
         val baseDir = ExportPaths.BASE_DIR.resolve("annotated")
         val exportPath = baseDir.resolve("$ident")

@@ -131,7 +131,7 @@ open class CommonRPA {
             driver.waitForNavigation()
             driver.waitForSelector("body")
             randomDelay(15_000, 10_000)
-            driver.scrollToMiddle(0.25f)
+            driver.scrollToMiddle(0.25)
         }
     }
 

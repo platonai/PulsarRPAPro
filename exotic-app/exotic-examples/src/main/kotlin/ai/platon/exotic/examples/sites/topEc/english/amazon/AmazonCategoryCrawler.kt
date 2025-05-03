@@ -2,13 +2,13 @@ package ai.platon.exotic.examples.sites.topEc.english.amazon
 
 import ai.platon.exotic.crawl.common.VerboseCrawler
 import ai.platon.pulsar.common.ResourceLoader
-import ai.platon.pulsar.context.PulsarContext
-import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.dom.Documents
+import ai.platon.pulsar.skeleton.context.PulsarContext
+import ai.platon.pulsar.skeleton.context.PulsarContexts
 
 class AmazonCategoryCrawler(
     context: PulsarContext = PulsarContexts.create()
-): VerboseCrawler(context) {
+) : VerboseCrawler(context) {
     private val url = "https://www.amazon.com/"
     private val siteDirectory = "https://www.amazon.com/gp/site-directory?ref_=nav_em_T1_0_2_2_35__fullstore"
     private val loadOptions = session.options("-i 1s")
@@ -20,12 +20,12 @@ class AmazonCategoryCrawler(
         document.absoluteLinks()
         var j = 0
         document.body.select(".fsdDeptBox").forEach {
-            val group = it.selectFirst("h2")?.text()?:""
+            val group = it.selectFirst("h2")?.text() ?: ""
             println()
             println(group)
             it.select("a").forEach {
-                val text = it.text()?:""
-                val href = it.attr("href")?:""
+                val text = it.text() ?: ""
+                val href = it.attr("href") ?: ""
                 println(String.format("%-5d | %20s | %s", ++j, text, href))
             }
         }
@@ -37,8 +37,8 @@ class AmazonCategoryCrawler(
         document.absoluteLinks()
         var i = 0
         document.body.select("ul li").forEach {
-            val title = it.selectFirst("div")?.text()?:""
-            val href = it.selectFirst("a")?.attr("href")?:""
+            val title = it.selectFirst("div")?.text() ?: ""
+            val href = it.selectFirst("a")?.attr("href") ?: ""
             println(String.format("%-5d | %20s | %s", ++i, title, href))
         }
     }
