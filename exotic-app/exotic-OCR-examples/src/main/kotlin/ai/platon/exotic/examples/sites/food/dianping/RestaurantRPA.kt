@@ -7,7 +7,6 @@ import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.serialize.json.prettyPulsarObjectMapper
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.dom.FeaturedDocument
-import ai.platon.pulsar.persist.AbstractWebPage
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
@@ -30,7 +29,7 @@ import java.time.temporal.ChronoUnit
 import java.util.concurrent.atomic.AtomicInteger
 import kotlin.random.Random
 
-class DianPingHtmlChecker: HtmlIntegrityChecker {
+class DianPingHtmlChecker : HtmlIntegrityChecker {
     override fun isRelevant(url: String): Boolean {
         return true
     }
@@ -50,7 +49,7 @@ class DianPingHtmlChecker: HtmlIntegrityChecker {
 
 class RestaurantRPA(
     val session: PulsarSession = ScentContexts.createSession()
-): CommonRPA() {
+) : CommonRPA() {
     private val logger = getLogger(this)
 
     private val context = session.context as AbstractPulsarContext
@@ -78,7 +77,8 @@ class RestaurantRPA(
 
     private fun registerEventHandlers(options: LoadOptions) {
         options.eventHandlers.loadEventHandlers.onHTMLDocumentParsed.addLast { _, document: FeaturedDocument ->
-            collectPortalUrls(document) }
+            collectPortalUrls(document)
+        }
     }
 
     private fun registerItemEventHandlers(options: LoadOptions) {
@@ -153,7 +153,7 @@ class RestaurantRPA(
         }
 
         ie.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
-            require(page is AbstractWebPage)
+
             val fields = page.variables.variables
                 .filterKeys { it.startsWith(Screenshot.OCR) }
                 .mapValues { it.value.toString() }
@@ -192,7 +192,7 @@ class RestaurantRPA(
     }
 
     private fun dumpPageModel(page: WebPage) {
-        require(page is AbstractWebPage)
+
         val fields = page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }
         if (fields.isEmpty()) {
             return

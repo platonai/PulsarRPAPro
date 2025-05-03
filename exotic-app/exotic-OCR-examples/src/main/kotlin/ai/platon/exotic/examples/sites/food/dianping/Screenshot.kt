@@ -1,7 +1,6 @@
 package ai.platon.exotic.examples.sites.food.dianping
 
 import ai.platon.pulsar.common.*
-import ai.platon.pulsar.persist.AbstractWebPage
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriver
 import ai.platon.pulsar.skeleton.crawl.fetch.driver.WebDriverCancellationException
@@ -87,7 +86,7 @@ class Screenshot(
         val image = ImageIO.read(ByteArrayInputStream(bytes))
         val text = tesseract.doOCR(image)
         if (text.isNotBlank()) {
-            require(page is AbstractWebPage)
+            
             page.setVar("$OCR$selector", text)
 
             if (page.id < 1000000) {

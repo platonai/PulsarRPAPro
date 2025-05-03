@@ -2,8 +2,8 @@ package ai.platon.exotic.examples.ml.unsupervised.topEc.english.shopee
 
 import ai.platon.exotic.crawl.common.VerboseHarvester
 import ai.platon.pulsar.common.AppPaths
+import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.persist.gora.FileBackendPageStore
-import ai.platon.pulsar.persist.model.GoraWebPage
 import ai.platon.scent.context.ScentContexts
 import ai.platon.scent.dom.HarvestOptions
 import java.lang.management.ManagementFactory
@@ -35,7 +35,7 @@ object ShopeeScanHarvest {
             .toList()
             .mapNotNull { store.readAvro(it) }
             .take(limit)
-            .map { session.parse(GoraWebPage.box(it.baseUrl.toString(), it, session.sessionConfig.toVolatileConfig())) }
+            .map { session.parse(WebPage.box(it.baseUrl.toString(), it, session.sessionConfig.toVolatileConfig())) }
             .filter { it.selectFirstOrNull(".page-product__breadcrumb") != null }
 
         if (documents.isEmpty()) {
