@@ -8,6 +8,7 @@ import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.proxy.ProxyPoolManager
 import ai.platon.pulsar.persist.AbstractWebPage
+import ai.platon.pulsar.ql.context.SQLContexts
 import ai.platon.pulsar.skeleton.common.metrics.MetricsSystem
 import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.skeleton.crawl.common.url.ListenableHyperlink
@@ -23,8 +24,8 @@ class HighPerformanceCrawlerInitializer: ApplicationContextInitializer<AbstractA
     override fun initialize(applicationContext: AbstractApplicationContext) {
         System.setProperty(CapabilityTypes.PROXY_POOL_MANAGER_CLASS, ProxyPoolManager::class.java.name)
         System.setProperty(CapabilityTypes.PROXY_LOADER_CLASS, ProxyVendorLoader::class.java.name)
-        BrowserSettings.maxBrowsers(4).maxOpenTabs(12)
-        PulsarContexts.create()
+        BrowserSettings.maxBrowsers(4).maxOpenTabs(8).withSequentialBrowsers()
+        PulsarContexts.create(applicationContext)
     }
 }
 
@@ -37,7 +38,7 @@ class HighPerformanceCrawler(
      * */
     private val metricsSystem: MetricsSystem
 ) {
-    private val session = PulsarContexts.createSession()
+    private val session = PulsarContexts.getOrCreateSession()
 
     @PostConstruct
     fun generate() {
@@ -52,8 +53,8 @@ class HighPerformanceCrawler(
             .map { ListenableHyperlink(it, "", args = args) }
             .onEach {
                 it.eventHandlers.browseEventHandlers.onWillNavigate.addLast { page, driver ->
-                    page.putBean(interactSettings)
-                    driver.addBlockedURLs(blockingUrls)
+//                    page.putBean(interactSettings)
+//                    driver.addBlockedURLs(blockingUrls)
                 }
             }.toList()
 
@@ -65,8 +66,6 @@ fun main(args: Array<String>) {
     // NOTE: Enable proxy for best demonstration, you can find the instruction to enable proxy in README.md
 
     runApplication<HighPerformanceCrawler>(*args) {
-        setRegisterShutdownHook(true)
         addInitializers(HighPerformanceCrawlerInitializer())
-        setLogStartupInfo(true)
     }
 }
