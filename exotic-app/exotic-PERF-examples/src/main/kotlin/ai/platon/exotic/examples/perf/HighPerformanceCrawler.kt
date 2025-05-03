@@ -52,7 +52,7 @@ class HighPerformanceCrawler(
             .onEach {
                 it.eventHandlers.browseEventHandlers.onWillNavigate.addLast { page, driver ->
                     // This is a temporary solution to override InteractSettings, will be improved in the future
-                    page.setVar("InteractSettings", interactSettings)
+                    page.putBean(interactSettings)
                     driver.addBlockedURLs(blockingUrls)
                 }
             }.toList()
@@ -65,8 +65,6 @@ fun main(args: Array<String>) {
     // NOTE: Enable proxy for best demonstration, you can find the instruction to enable proxy in README.md
 
     runApplication<HighPerformanceCrawler>(*args) {
-        setRegisterShutdownHook(true)
         addInitializers(HighPerformanceCrawlerInitializer())
-        setLogStartupInfo(true)
     }
 }
