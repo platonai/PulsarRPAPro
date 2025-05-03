@@ -65,7 +65,7 @@ mvn -PREST-war war:war
 
 cd "$APP_HOME" || exit
 
-REMOTE_BASE_DIR=~/platonai.cn/repo/ai/platon/exotic
+REMOTE_BASE_DIR=~/platonic.fun/repo/ai/platon/exotic
 ssh "$HOST" mkdir -p "$REMOTE_BASE_DIR"
 
 scp -r "$APP_HOME"/exotic-services/target/exotic.war "$HOST:$REMOTE_BASE_DIR/"
