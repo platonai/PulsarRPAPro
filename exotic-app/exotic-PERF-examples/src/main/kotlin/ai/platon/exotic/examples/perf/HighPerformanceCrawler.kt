@@ -7,6 +7,7 @@ import ai.platon.pulsar.browser.common.InteractSettings
 import ai.platon.pulsar.common.LinkExtractors
 import ai.platon.pulsar.common.config.CapabilityTypes
 import ai.platon.pulsar.common.proxy.ProxyPoolManager
+import ai.platon.pulsar.persist.AbstractWebPage
 import ai.platon.pulsar.skeleton.common.metrics.MetricsSystem
 import ai.platon.pulsar.skeleton.context.PulsarContexts
 import ai.platon.pulsar.skeleton.crawl.common.url.ListenableHyperlink
@@ -51,8 +52,7 @@ class HighPerformanceCrawler(
             .map { ListenableHyperlink(it, "", args = args) }
             .onEach {
                 it.eventHandlers.browseEventHandlers.onWillNavigate.addLast { page, driver ->
-                    // This is a temporary solution to override InteractSettings, will be improved in the future
-                    page.setVar("InteractSettings", interactSettings)
+                    page.putBean(interactSettings)
                     driver.addBlockedURLs(blockingUrls)
                 }
             }.toList()

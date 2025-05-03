@@ -76,14 +76,15 @@ class EBayTaskGenerator(
         val l = ListenableHyperlink(link.url, link.text, link.order, link.referrer, link.args, link.href)
 
         l.args = "$args -parse -requireSize 500000"
-        l.event.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
+        val le = l.eventHandlers.loadEventHandlers
+        le.onHTMLDocumentParsed.addLast { page, document ->
             val url = page.url
             if (page.protocolStatus.isSuccess && EBayUrls.isProductPage(url)) {
                 val path = project.htmlBaseDir.resolve(AppPaths.fromUri(url, suffix = ".html"))
                 Files.writeString(path, document.outerHtml, Charsets.UTF_8)
             }
         }
-        
+
         return l
     }
 }

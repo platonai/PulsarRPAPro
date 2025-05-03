@@ -9,8 +9,8 @@ import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.skeleton.crawl.common.url.ParsableHyperlink
 
 fun main() {
-    BrowserSettings.privacyContext(2).maxTabs(8)
-        // .headless()
+    BrowserSettings.maxBrowsers(2).maxOpenTabs(8)
+    // .headless()
 
     val context = PulsarContexts.create()
     val parseHandler = { _: WebPage, document: FeaturedDocument ->

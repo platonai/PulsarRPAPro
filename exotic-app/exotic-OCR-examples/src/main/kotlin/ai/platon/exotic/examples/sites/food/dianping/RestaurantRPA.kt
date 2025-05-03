@@ -7,6 +7,7 @@ import ai.platon.pulsar.common.getLogger
 import ai.platon.pulsar.common.serialize.json.prettyPulsarObjectMapper
 import ai.platon.pulsar.common.stringify
 import ai.platon.pulsar.dom.FeaturedDocument
+import ai.platon.pulsar.persist.AbstractWebPage
 import ai.platon.pulsar.persist.PageDatum
 import ai.platon.pulsar.persist.WebPage
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseHandler
@@ -152,6 +153,7 @@ class RestaurantRPA(
         }
 
         ie.loadEventHandlers.onHTMLDocumentParsed.addLast { page, document ->
+            require(page is AbstractWebPage)
             val fields = page.variables.variables
                 .filterKeys { it.startsWith(Screenshot.OCR) }
                 .mapValues { it.value.toString() }
@@ -190,6 +192,7 @@ class RestaurantRPA(
     }
 
     private fun dumpPageModel(page: WebPage) {
+        require(page is AbstractWebPage)
         val fields = page.variables.variables.filterKeys { it.startsWith(Screenshot.OCR) }
         if (fields.isEmpty()) {
             return
