@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+  mongodb:
+    image: 'mongo:latest'
+    container_name: 'mongodb'
+    restart: always
+    ports:
+      - '27017:27017'
+    command: ["--bind_ip_all"]
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongodb_data:

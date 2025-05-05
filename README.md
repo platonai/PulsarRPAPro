@@ -35,7 +35,7 @@ curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/Puls
 Start the MongoDB service:
 ```shell
 # MAKE sure MongoDB is started at port 27017 without authentication
-docker-compose -f docker/docker-compose.yaml up
+docker-compose -f docker/dev/docker-mongo.yaml up -d
 ```
 
 ## Auto Extraction Guide 📚

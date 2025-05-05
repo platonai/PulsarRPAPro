@@ -35,7 +35,7 @@ curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/Puls
 启动MongoDB服务：
 ```shell
 # 确保MongoDB在27017端口启动且无需认证
-docker-compose -f docker/docker-compose.yaml up
+docker-compose -f docker/dev/docker-mongo.yaml up -d
 ```
 
 ## 自动提取指南 📚
