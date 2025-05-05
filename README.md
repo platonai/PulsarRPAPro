@@ -26,8 +26,8 @@ Bilibili:
 
 Download the latest executable jar:
 
-```bash
-wget https://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
+```shell
+curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
 ```
 
 ### Prerequisites
