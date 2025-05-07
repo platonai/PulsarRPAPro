@@ -111,7 +111,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 
 ---
 
-## 🔍 LLM + X-SQL：既简单又精准
+## 🔍 LLM + X-SQL：既简单又强大
 
 ```bash
 curl -X POST "http://localhost:8182/api/x/e" -H "Content-Type: text/plain" -d "
