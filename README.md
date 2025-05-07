@@ -27,7 +27,7 @@
 * 🧠 **Deep Web Understanding** — Intelligent parsing of dynamic, JavaScript-rich pages
 * 📊 **Structured Data APIs** — Extract clean, structured data with minimal effort
 
-![Auto Extraction Result Snapshot](docs/amazon.png)
+![Auto Extraction Result Snapshot](docs/images/amazon.png)
 
 ---
 
@@ -141,9 +141,9 @@ from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
 
 ---
 
-## 🔧 Proxies
+## 🔧 Proxies - Unlock Advanced Capabilities
 
-Proxies are optional. Set the environment variable:
+Set the environment variable:
 
 ```bash
 export PROXY_ROTATION_URL=https://your-proxy-provider.com/rotation-endpoint
