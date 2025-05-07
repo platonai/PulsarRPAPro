@@ -12,9 +12,9 @@
 
 * 👽 **AutoExtract**
 
-  * 🏃‍♂️ Blazing fast performance
-  * 🎯 High-precision data extraction
-  * 🤖 Powered by machine learning agents — no token cost!
+    * 🏃‍♂️ Blazing fast performance
+    * 🎯 High-precision data extraction
+    * 🤖 Powered by machine learning agents — no token cost!
 
 * 🌐 **Web UI** — Intuitive and easy to use
 
