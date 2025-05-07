@@ -8,21 +8,24 @@
 
 ## 🌟 Key Features
 
-PulsarRPAPro:
+**Core Capabilities of PulsarRPAPro:**
 
-* 👽 AutoExtract
-    * 🏃‍♂️ Superfast
-    * 🎯 Accurate
-    * 🤖 Machine Learning-based, no money for tokens!
-* 🌐 Web UI
-* ⌨️ Command Line Interface (CLI)
+* 👽 **AutoExtract**
 
-PulsarRPA Capabilities Included:
+  * 🏃‍♂️ Blazing fast performance
+  * 🎯 High-precision data extraction
+  * 🤖 Powered by machine learning agents — no token cost!
 
-- 🤖 **AI Integration with LLMs** – Smarter automation powered by large language models.
-- ⚡ **Ultra-Fast Automation** – Coroutine-safe browser automation concurrency, spider-level crawling performance.
-- 🧠 **Web Understanding** – Deep comprehension of dynamic web content.
-- 📊 **Data Extraction APIs** – Powerful tools to extract structured data effortlessly.
+* 🌐 **Web UI** — Intuitive and easy to use
+
+* ⌨️ **Command Line Interface (CLI)** — Scriptable and automation-ready
+
+**Advanced Features Included:**
+
+* 🤖 **AI Integration with LLMs** — Smarter automation driven by large language models
+* ⚡ **Ultra-Fast Automation** — Coroutine-safe browser concurrency with spider-grade crawling speed
+* 🧠 **Deep Web Understanding** — Intelligent parsing of dynamic, JavaScript-rich pages
+* 📊 **Structured Data APIs** — Extract clean, structured data with minimal effort
 
 ![Auto Extraction Result Snapshot](docs/amazon.png)
 
