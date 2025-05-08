@@ -14,8 +14,8 @@ services:
       - backend
 
   pulsar-rpa-dev:
-    image: 'pulsar-rpa-dev:latest'
-    container_name: 'pulsar-rpa-dev'
+    image: 'pulsar-rpa-pro-dev:latest'
+    container_name: 'pulsar-rpa-pro-dev'
     depends_on:
       - 'mongodb'
     environment:
@@ -32,7 +32,7 @@ services:
         soft: 65535
         hard: 65535
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8182/api/pulsar-system/hello"]
+      test: ["CMD", "curl", "-f", "http://localhost:8182/health"]
       interval: 30s
       timeout: 10s
       retries: 3
