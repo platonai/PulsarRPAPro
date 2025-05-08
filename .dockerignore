@@ -15,4 +15,4 @@ data
 .dockerignore
 Dockerfile
 
-!docs/docker/maven
+!docs/maven

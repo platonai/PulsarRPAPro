@@ -8,7 +8,7 @@ WORKDIR /build
 COPY . .
 
 # 复制 Maven 配置（包含私有仓库信息）
-COPY docs/docker/maven/settings.xml /root/.m2/settings.xml
+COPY docs/maven/settings.xml /root/.m2/settings.xml
 
 # 构建应用
 RUN mvn -DskipTests

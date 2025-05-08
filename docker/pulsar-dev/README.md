@@ -3,7 +3,7 @@
 Create a docker image for development:
 
 ```shell
-docker build -t pulsar-rpa-pro-dev . -f docker/pulsar-dev/Dockerfile
+docker build -t pulsar-rpa-pro . -f docker/pulsar-dev/Dockerfile
 ```
 
 Run all services:
