@@ -55,9 +55,9 @@ curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/Puls
 
 Make sure MongoDB is running on port 27017 without authentication:
 
-```bash
-docker-compose -f docker/dev/docker-mongo.yaml up -d
-```
+   ```bash
+   docker run -d --name mongodb -p 27017:27017 mongo:latest
+   ```
 
 ---
 

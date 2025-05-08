@@ -55,9 +55,9 @@ curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/Puls
 
 确保 MongoDB 在 27017 端口运行，且**无需认证**：
 
-```bash
-docker-compose -f docker/dev/docker-mongo.yaml up -d
-```
+   ```bash
+   docker run -d --name mongodb -p 27017:27017 mongo:latest
+   ```
 
 ---
 
