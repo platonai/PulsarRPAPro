@@ -1,27 +1,46 @@
-# PowerShell脚本
 # Find the first parent directory containing the VERSION file
-$AppHome=(Get-Item -Path $MyInvocation.MyCommand.Path).Directory
-while ($AppHome -ne $null -and !(Test-Path "$AppHome/VERSION")) {
-  $AppHome=$AppHome.Parent
-}
-cd $AppHome
+$scriptPath = $MyInvocation.MyCommand.Path
+$AppHome = (Get-Item $scriptPath).Directory
 
-$FILES=(Get-ChildItem -Path "$AppHome/exotic-standalone/target/" -Filter "PulsarRPAPro.jar" -Recurse)
-$FILE_COUNT = ($FILES | Measure-Object).Count
-
-if ($FILE_COUNT -eq 0) {
-  &"$AppHome/mvnw" -DskipTests=true
+while ($AppHome -ne $null -and -not (Test-Path (Join-Path $AppHome.FullName "VERSION"))) {
+  $AppHome = $AppHome.Parent
 }
 
-$JAR=(Resolve-Path $FILES[0])
+if ($AppHome -eq $null) {
+  Write-Error "Could not find project root with VERSION file."
+  exit 1
+}
 
+Set-Location $AppHome.FullName
+
+# Locate JAR
+$jarDir = Join-Path $AppHome.FullName "exotic-standalone/target"
+$jarFiles = Get-ChildItem -Path $jarDir -Filter "PulsarRPAPro.jar" -Recurse -ErrorAction SilentlyContinue
+
+if (-not $jarFiles) {
+  Write-Output "No JAR found, building project..."
+  & (Join-Path $AppHome.FullName "mvnw") -DskipTests=true
+  if ($LASTEXITCODE -ne 0) {
+    Write-Error "Build failed."
+    exit 1
+  }
+  $jarFiles = Get-ChildItem -Path $jarDir -Filter "PulsarRPAPro.jar" -Recurse
+}
+
+# Pick latest JAR
+$latestJar = $jarFiles | Sort-Object LastWriteTime -Descending | Select-Object -First 1
+$JAR = Resolve-Path $latestJar.FullName
+
+# Handle command-line arguments
 $URL = $args[0]
-$args = $args[1..($args.Length - 1)]
+$otherArgs = $args[1..($args.Length - 1)]
 
-Write-Output "java $JVM_OPTS -jar $JAR serve $args"
+Write-Output "Starting application: java $JVM_OPTS -jar $JAR serve $otherArgs"
 
+# Run the application
 try {
-  java $JVM_OPTS -jar "$JAR" serve "$args"
+  java $JVM_OPTS -jar "$JAR" serve $otherArgs
 } catch {
   Write-Error "Failed to execute the Java application: $_"
+  exit 1
 }
