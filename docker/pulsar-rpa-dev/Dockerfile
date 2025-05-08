@@ -5,10 +5,12 @@ FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /build
 
 # 复制整个项目
-COPY exotic-standalone/target/PulsarRPAPro.jar .
+COPY . .
+
+RUN ls -l
 
 # 复制 JAR 以便在下一阶段使用
-RUN cp $(find /build -name "*.jar" | grep "PulsarRPAPro") /build/app.jar
+RUN cp $(find . -type f -name PulsarRPA*.jar | head -n 1) /build/app.jar
 
 # 第二阶段：运行阶段
 FROM eclipse-temurin:21-jre-alpine AS runner
