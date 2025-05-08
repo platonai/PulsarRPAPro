@@ -2,7 +2,7 @@
 
 **English** | [简体中文](README-CN.md) | [中国镜像 🇨🇳](https://gitee.com/platonai_galaxyeye/exotic)
 
-💖 **PulsarRPA：AI驱动的极速浏览器自动化新纪元！** 💖
+💖 PulsarRPA: The AI-Powered, Lightning-Fast Browser Automation Solution! 💖
 
 ---
 
