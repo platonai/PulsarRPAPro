@@ -11,14 +11,21 @@ services:
     networks:
       - backend
 
-  pulsar-rpa-pro:
-    image: 'pulsar-rpa-pro:latest'
-    container_name: 'pulsar-rpa-pro'
+  proxy-hub:
+    image: 'proxy-hub:latest'
+    container_name: 'proxy-hub'
+    ports:
+      - '8192:8192'
+    profiles: ["proxy"]  # ✅ Only start when profile=proxy, e.g., docker compose --profile proxy up
+
+  pulsar-rpa:
+    image: 'pulsar-rpa:latest'
+    container_name: 'pulsar-rpa'
     depends_on:
       - 'mongodb'
     environment:
-      gora.mongodb.servers: mongodb:27017
-      spring.data.mongodb.uri: mongodb://mongodb:27017/pulsar-rpa-pro
+      "gora.mongodb.servers": mongodb:27017
+      "spring.data.mongodb.uri": mongodb://mongodb:27017/pulsar-rpa
       BROWSER_DISPLAY_MODE: HEADLESS
       SERVER_PORT: 8182
       SERVER_ADDRESS: 0.0.0.0
@@ -35,7 +42,6 @@ services:
       interval: 30s
       timeout: 10s
       retries: 3
-      start_period: 20s
 
 networks:
   backend:
