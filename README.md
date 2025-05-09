@@ -62,7 +62,7 @@ Find all links containing /dp/.
 
 ## ▶️ Run PulsarRPAPro
 
-### 📦 Run Executable Jar
+### 📦 Run Executable Jar - Enjoy the Best Experience
 
 Executable JAR uses your desktop browser, so you can enjoy the best experience.
 
@@ -78,6 +78,11 @@ Run the JAR for help:
 ```bash
   java -jar PulsarRPAPro.jar
 ```
+
+#### 📦 Download Links
+
+- 🟦 [GitHub Release](https://github.com/platonai/PulsarRPA/releases/download/v3.0.4/PulsarRPAPro.jar)
+- 📦 [Backup Downloads](http://static.platonai.cn/repo/ai/platon/pulsar/)
 
 ### ⚙️ Prerequisites
 
@@ -144,13 +149,11 @@ See a sample extraction result in HTML:
   java -DDEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar PulsarRPAPro.jar serve
 ```
 
-> 🔍 **Note:** You can still access all NON-LLM features without setting `DEEPSEEK_API_KEY`.
-
 ---
 
 # 🧠 LLM Capabilities: Just Text, No Code!
 
-Send natural language instructions to control the browser:
+Use the `ai/command` API to perform actions and extract data using natural language instructions.
 
 ```bash
 curl -X POST "http://localhost:8182/api/ai/command" \
@@ -167,6 +170,8 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ---
 
 # 🔍 LLM + X-SQL: Simple & Powerful
+
+Use the `x/e` API to achieve the most precise and flexible data extraction.
 
 ```bash
 curl -X POST "http://localhost:8182/api/x/e" -H "Content-Type: text/plain" -d "
