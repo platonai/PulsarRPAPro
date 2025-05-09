@@ -19,7 +19,7 @@ data
 .dockerignore
 Dockerfile
 
-!docs/maven
+!docs/development/maven
 
 */target/**
 

@@ -80,7 +80,6 @@
 
     <root level="${log.level:-INFO}">
         <appender-ref ref="DRFA"/>
-        <appender-ref ref="Console"/>
     </root>
 
     <logger name="ch.qos.logback" level="WARN"/>
