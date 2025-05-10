@@ -39,7 +39,9 @@ ENV CHROME_BIN=/usr/bin/chromium-browser \
 COPY --from=builder /build/app.jar app.jar
 
 # Expose port (documentation only)
+# H2database, TCP
 EXPOSE 8082
+# PulsarRPA REST API Server, HTTP
 EXPOSE 8182
 
 # Create non-root user and set directory permissions
