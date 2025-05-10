@@ -1,20 +1,14 @@
-# 🐳 Docker for Development
+# 🐳 Docker Guide
 
-## 🛠️ Build Local Development Image
-
-```bash
-docker build -t pulsar-rpa-pro-dev .
-````
-
-## 🏠 Run Local Docker Image
+## ⚙️ Run with Docker Compose
 
 ```bash
-docker run -p 8182:8182 \
-  -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} \
-  pulsar-rpa-pro-dev:latest
+export DEEPSEEK_API_KEY=your-api-key
+# export PROXY_ROTATION_URL=https://your-proxy-provider.com/rotation-endpoint
+docker compose up -d
 ```
 
-> 💡 Please make sure you have set `DEEPSEEK_API_KEY` environment.
+> 💡 Make sure DEEPSEEK_API_KEY is set in your environment
 
 ## ✅ Test PulsarRPA API
 
@@ -29,22 +23,6 @@ curl -X POST "http://localhost:8182/api/ai/command" \
     Extract: product name, price, ratings.
     Find all links containing /dp/.
   '
-```
-
-## 🚀 Run Hosted Docker Image
-
-```bash
-docker run -d -p 8182:8182 \
-  -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} \
-  galaxyeye88/pulsar-rpa-pro:latest
-```
-
-## ⚙️ Run with Docker Compose
-
-```bash
-export DEEPSEEK_API_KEY=your-api-key
-# export PROXY_ROTATION_URL=https://your-proxy-provider.com/rotation-endpoint
-docker compose up -d
 ```
 
 ## 🌐 Run Docker Compose with Proxy Profile
