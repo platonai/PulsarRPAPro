@@ -64,7 +64,7 @@ Find all links containing /dp/.
 
 ### 📦 Run Executable Jar - Enjoy the Best Experience
 
-Executable JAR uses your desktop browser, so you can enjoy the best experience.
+Executable JAR uses your desktop browser, you can enjoy the best experience.
 
 Download:
 
