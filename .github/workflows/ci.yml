@@ -40,10 +40,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Maven build and deploy to local repo
-        run: ./mvnw clean install -DskipTests -Pall-modules
+        run: ./mvnw clean install -DskipTests
 
       - name: Run Tests
-        run: ./mvnw test -Pall-modules
+        run: ./mvnw test
 
       - name: Build Docker image
         run: |
