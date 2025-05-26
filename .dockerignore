@@ -1,12 +1,16 @@
 .idea
 .vscode
 .github
+
 docs
 docker
 logs
 submodules
 extracted
 data
+
+.git
+.gradle
 
 *.xlsx
 *.db
@@ -15,4 +19,8 @@ data
 .dockerignore
 Dockerfile
 
-!docs/maven
+!docs/development/maven
+
+*/target/**
+
+!exotic-standalone/target/PulsarRPAPro.jar
