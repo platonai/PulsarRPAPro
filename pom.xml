@@ -306,7 +306,7 @@
 
 		<platon.version>4.0.1</platon.version>
 		<!-- https://mvnrepository.com/artifact/ai.platon.pulsar -->
-		<platon-pulsar.version>3.0.4</platon-pulsar.version>
+		<platon-pulsar.version>3.0.7</platon-pulsar.version>
 		<!-- http://static.platonai.cn/repo/ai/platon/scent/ -->
 		<scent.version>3.0.1</scent.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
