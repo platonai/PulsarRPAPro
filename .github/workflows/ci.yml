@@ -40,7 +40,7 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Maven build and deploy to local repo
-        run: ./mvnw clean install -DskipTests
+        run: chmod +x ./mvnw && ./mvnw clean install -DskipTests
 
       - name: Run Tests
         run: ./mvnw test
