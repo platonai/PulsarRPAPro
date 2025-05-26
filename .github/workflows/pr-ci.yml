@@ -46,11 +46,11 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t pulsar-rpa-test:${{ github.sha }} -f Dockerfile .
+          docker build -t pulsar-rpa-pro-test:${{ github.sha }} -f Dockerfile .
 
       - name: Start Docker container for integration tests
         run: |
-          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 pulsar-rpa-test:${{ github.sha }}
+          docker run -d --rm --name pulsar-rpa-pro-test -p 8182:8182 pulsar-rpa-pro-test:${{ github.sha }}
           sleep 10  # Wait for Spring Boot to start
 
       - name: Run curl integration tests
@@ -61,4 +61,4 @@ jobs:
 
       - name: Stop Docker container
         if: always()
-        run: docker stop pulsar-rpa-test || true 
+        run: docker stop pulsar-rpa-pro-test || true 
