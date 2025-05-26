@@ -39,10 +39,10 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: ./mvnw clean package -DskipTests -Pall-modules
+        run: ./mvnw clean package -DskipTests
 
       - name: Run Tests
-        run: ./mvnw test -Pall-modules
+        run: ./mvnw test
 
       - name: Build Docker image
         run: |
