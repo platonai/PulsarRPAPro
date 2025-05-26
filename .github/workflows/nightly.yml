@@ -37,7 +37,11 @@ jobs:
           restore-keys: ${{ runner.os }}-m2
 
       - name: Build with Maven
-        run: chmod +x ./mvnw && ./mvnw clean install
+        run: |
+          mkdir -p ~/.m2
+          cp docs/development/maven/settings.xml ~/.m2/settings.xml
+          chmod +x ./mvnw
+          ./mvnw clean install -DskipTests
 
       - name: Build Docker image
         run: |
