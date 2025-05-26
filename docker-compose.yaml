@@ -1,0 +1,65 @@
+services:
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    ports:
+      - "27017:27017"
+    command: ["--bind_ip_all"]
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - backend
+
+  redis:
+    image: redis:latest
+    container_name: redis
+    restart: unless-stopped
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - backend
+
+  proxy-hub:
+    image: proxy-hub:latest
+    container_name: proxy-hub
+    ports:
+      - "8192:8192"
+    profiles: ["proxy"]  # ✅ 启动 profile 为 proxy 时才启动此服务
+
+  pulsar-rpa-pro:
+    image: pulsar-rpa-pro:latest
+    container_name: pulsar-rpa-pro
+    depends_on:
+      - mongodb
+    environment:
+      "gora.mongodb.servers": mongodb:27017
+      SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/pulsar-rpa
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: 6379
+      BROWSER_DISPLAY_MODE: HEADLESS
+      SERVER_PORT: 8182
+      SERVER_ADDRESS: 0.0.0.0
+    ports:
+      - "8182:8182"
+    networks:
+      - backend
+    ulimits:
+      nofile:
+        soft: 65535
+        hard: 65535
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:8182/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+networks:
+  backend:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  redis_data:

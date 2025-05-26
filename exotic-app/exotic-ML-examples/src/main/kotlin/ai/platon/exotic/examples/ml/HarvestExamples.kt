@@ -117,7 +117,6 @@ class HarvestExamples(context: ScentContext) : VerboseHarvester(context) {
 }
 
 fun main() {
-    ProxyPoolManager.enableDefaultProviders()
     BrowserSettings.maxBrowsers(4).maxOpenTabs(5)
 //    HarvestExamples().arrangeDocuments()
     val context = ScentSQLContexts.create()

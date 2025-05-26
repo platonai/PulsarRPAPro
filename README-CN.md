@@ -27,7 +27,7 @@ PulsarRPA 内建能力：
 * 🧠 **网页理解能力** —— 深度解析动态内容
 * 📊 **数据提取 API** —— 轻松提取结构化数据
 
-![自动提取结果快照](docs/images/amazon.png)
+![自动提取结果快照](docs/assets/images/amazon.png)
 
 ---
 
@@ -81,7 +81,7 @@ java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -d
 ### 📄 示例结果
 
 查看 HTML 格式的示例提取结果：
-[Amazon 自动提取结果](docs/amazon-harvest-result.html)
+[Amazon 自动提取结果](docs/assets/amazon-harvest-result.html)
 
 ---
 
@@ -162,5 +162,5 @@ export PROXY_ROTATION_URL=https://your-proxy-provider.com/rotation-endpoint
 * 🌍 **官网**：[platon.ai](https://platon.ai)
 
 <div style="display: flex;">
-  <img src="docs/images/wechat-author.png" width="300" height="365" alt="微信二维码" />
+  <img src="docs/assets/images/wechat-author.png" width="300" height="365" alt="微信二维码" />
 </div>

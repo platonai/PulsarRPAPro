@@ -16,7 +16,7 @@
     <parent>
         <groupId>ai.platon.exotic</groupId>
         <artifactId>exotic</artifactId>
-        <version>3.0.1-SNAPSHOT</version>
+        <version>3.1.0-SNAPSHOT</version>
     </parent>
 
     <artifactId>exotic-app</artifactId>
@@ -27,6 +27,5 @@
         <module>exotic-examples</module>
         <module>exotic-ML-examples</module>
         <module>exotic-OCR-examples</module>
-        <module>exotic-PERF-examples</module>
     </modules>
 </project>

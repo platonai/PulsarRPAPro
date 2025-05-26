@@ -99,7 +99,7 @@ class ExoticExecutor(val argv: Array<String>) {
             println(lastHelpMessage)
         }
     }
-    
+
     private fun printMainHelp() {
         System.err.println(MAIN_HELP)
     }
@@ -113,7 +113,7 @@ class ExoticExecutor(val argv: Array<String>) {
         var i = 0
         while (i < argv0.size) {
             val arg = argv0[i].lowercase()
-            
+
             when (arg) {
                 "scrape" -> scrape = true
                 "harvest" -> harvest = true
@@ -135,15 +135,19 @@ class ExoticExecutor(val argv: Array<String>) {
             scrape -> {
                 lastHelpMessage = formatOptionHelp(scrapeOptions())
             }
+
             arrange -> {
                 lastHelpMessage = "Detect the url groups"
             }
+
             harvest -> {
                 lastHelpMessage = formatOptionHelp(harvestOptions())
             }
+
             sql == "help" -> {
                 lastHelpMessage = formatXSQLHelp(xsqlHelp())
             }
+
             server -> lastHelpMessage = "Run the Exotic server and web console"
             else -> lastHelpMessage = MAIN_HELP
         }
@@ -202,14 +206,14 @@ class ExoticExecutor(val argv: Array<String>) {
             analyzer.printAllAnchorGroups(groups)
         }
     }
-    
+
     internal fun predict() {
         val (portalUrl, args) = UrlUtils.splitUrlArgs(configuredUrl)
         if (!UrlUtils.isStandard(portalUrl)) {
             System.err.println("The portal url is invalid")
             return
         }
-        
+
         runBlocking {
             VerboseHarvester().harvest(portalUrl, args)
         }
@@ -237,7 +241,7 @@ class ExoticExecutor(val argv: Array<String>) {
             System.err.println("The portal url is invalid")
             return
         }
-        
+
         val agent = UberJars.runUberJar(listOf("harvest", configuredUrl))
         sleepSeconds(20)
         val exitCode = agent.waitFor()
@@ -285,12 +289,11 @@ class ExoticExecutor(val argv: Array<String>) {
                     criticalHelp = true
                     break
                 }
-                
+
                 harvestInProcess = true
                 configuredUrl = argv.drop(i + 1).joinToString(" ")
                 break
-            }
-            else if (arg == "arrange") {
+            } else if (arg == "arrange") {
                 if (isLastArg) {
                     criticalHelp = true
                     break
@@ -438,7 +441,7 @@ $option:
     }
 
     companion object {
-        val MAIN_HELP = ResourceLoader.readString("help/main.txt")  +
+        val MAIN_HELP = ResourceLoader.readString("help/main.txt") +
                 "\n\n" + ResourceLoader.readString("help/examples.txt")
     }
 }
