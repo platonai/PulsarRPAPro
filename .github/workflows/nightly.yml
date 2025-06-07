@@ -24,20 +24,6 @@ jobs:
           cache: maven
 
 
-      - name: Configure Maven settings.xml if missing
-        run: |
-          mkdir -p ~/.m2
-          cp docs/development/maven/settings.xml ~/.m2/settings.xml
-          cat ~/.m2/settings.xml
-          echo "Checking if scent-bom can be downloaded..."
-          cd /tmp
-          if ! curl --fail --silent --show-error https://static.platonai.cn/repo/ai/platon/scent/scent-bom/3.0.3/scent-bom-3.0.3.pom; then
-            echo "Failed to download scent-bom-3.0.3.pom" && exit 1
-          fi
-          cd -
-
-
-
       - name: Read VERSION
         id: version
         run: |
@@ -76,19 +62,29 @@ jobs:
           echo "Building image pulsar-rpa-pro-nightly:${{ env.VERSION }}"
           docker build -t pulsar-rpa-pro-nightly:${{ env.VERSION }} -f Dockerfile .
 
+
       - name: Start Docker container
         run: |
-          docker run -d --rm --name pulsar-rpa-pro-nightly -p 8182:8182 pulsar-rpa-pro-nightly:${{ env.VERSION }}
+          # Start container
+          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
           sleep 10  # Wait for Spring Boot to start
+        env:
+          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Run curl integration tests
         run: |
+          # Run integration tests
           find bin/ -name "*.sh" -exec chmod +x {} \;
-          ./bin/run-integration-test.sh || (echo "Integration test failed" && exit 1)
+          if ! ./bin/run-integration-test.sh; then
+            echo "Integration test failed"
+            docker logs pulsar-rpa-test
+            docker stop pulsar-rpa-test || true
+            exit 1
+          fi
 
       - name: Stop Docker container
         if: always()
-        run: docker stop pulsar-rpa-pro-nightly || true
+        run: docker stop pulsar-rpa-pro-test || true
 
 
 

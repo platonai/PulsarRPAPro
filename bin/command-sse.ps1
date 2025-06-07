@@ -26,8 +26,6 @@ try {
     Write-Host "Failed to send command: $_"
 }
 
-exit 0
-
 $COMMAND_ID = Invoke-RestMethod -Uri $COMMAND_ENDPOINT -Method Post -ContentType "text/plain" -Body $COMMAND
 
 if ([string]::IsNullOrWhiteSpace($COMMAND_ID)) {
