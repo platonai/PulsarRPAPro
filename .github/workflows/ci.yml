@@ -30,6 +30,11 @@ jobs:
         run: |
           mkdir -p ~/.m2
           cp docs/development/maven/settings.xml ~/.m2/settings.xml
+          cat ~/.m2/settings.xml
+          # Check scent-bom can be downloaded
+          if ! curl --fail --silent --show-error http://static.platonai.cn/repo/ai/platon/scent/scent-bom/3.0.3/scent-bom-3.0.3.pom; then
+            echo "Failed to download scent-bom-3.0.3.pom" && exit 1
+          fi
 
       - name: Read VERSION
         id: version
