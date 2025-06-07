@@ -63,7 +63,7 @@
 下载：
 
 ```bash
-curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
+curl -L -o PulsarRPAPro.jar https://platonai.cn/pub/repo/ai/platon/exotic/PulsarRPAPro.jar
 ```
 
 运行：
@@ -76,7 +76,7 @@ java -jar PulsarRPAPro.jar
 <summary>📂 相关资料</summary>
 
 * 🟦 [GitHub Release Download](https://github.com/platonai/PulsarRPA/releases/download/v3.1.0/PulsarRPA.jar)
-* 📁 [Mirror / Backup Download](http://static.platonai.cn/repo/ai/platon/pulsar/)
+* 📁 [Mirror / Backup Download](https://platonai.cn/pub/repo/ai/platon/pulsar/)
 * 🛠️ [LLM Configuration Guide](docs/config/llm/llm-config.md)
 * 🛠️ [Configuration Guide](docs/config.md)
 
