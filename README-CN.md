@@ -1,91 +1,116 @@
 # 🚀 PulsarRPAPro
 
-**English** | [简体中文](README-CN.md) | [中国镜像 🇨🇳](https://gitee.com/platonai_galaxyeye/exotic)
+**简体中文** | [English](README.md) | [中国镜像 🇨🇳](https://gitee.com/platonai_galaxyeye/exotic)
 
-*全自动网页数据提取 —— 无需规则，只要结果！✨*
-
----
-
-## 🌟 核心特性
-
-PulsarRPAPro 提供：
-
-* 👽 自动提取（AutoExtract）
-
-    * 🏃‍♂️ 极速处理
-    * 🎯 高精度识别
-    * 🤖 基于机器学习，无需购买 Token！
-
-* 🌐 网页界面（Web UI）
-
-* ⌨️ 命令行界面（CLI）
-
-PulsarRPA 内建能力：
-
-* 🤖 **LLM 集成** —— 强大的大语言模型赋能自动化
-* ⚡ **超高速执行** —— 协程安全浏览器控制，媲美爬虫性能
-* 🧠 **网页理解能力** —— 深度解析动态内容
-* 📊 **数据提取 API** —— 轻松提取结构化数据
-
-![自动提取结果快照](docs/assets/images/amazon.png)
+💖 PulsarRPAPro：AI驱动的极速浏览器自动化解决方案！💖
 
 ---
 
-## 🎥 演示视频
+# 🌟 主要特性
 
-* **YouTube**：
-  [![观看视频](https://img.youtube.com/vi/qoXbnL4wdtc/0.jpg)](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+**PulsarRPAPro 核心能力：**
 
-* **哔哩哔哩**：
-  [https://www.bilibili.com/video/BV1Qg4y1d7kA](https://www.bilibili.com/video/BV1Qg4y1d7kA)
+* 👽 **自动抽取**
+  * 🤖 机器学习智能体驱动，无需Token费用！
+  * 🎯 高精度数据抽取
+  * 🏃‍♂️ 极速性能
+
+* 🌐 **Web UI** — 简单易用
+
+* ⌨️ **命令行界面（CLI）** — 可脚本化，自动化友好
+
+**高级特性：**
+
+* 🤖 **LLM集成** — 大模型驱动更智能的自动化
+* ⚡ **超快自动化** — 协程安全的浏览器并发，爬虫级速度
+* 🧠 **深度网页理解** — 智能解析动态、JS丰富页面
+* 📊 **结构化数据API** — 轻松提取干净结构化数据
 
 ---
 
-## 🚀 快速开始
+🤖 只需文本即可大规模自动化浏览器并抽取数据：
 
-### 📦 下载程序
+```text
+访问 https://www.amazon.com/dp/B0C1H26C46
+页面加载后：滚动到中间。
 
-下载最新的可执行 JAR 文件：
+总结该商品。
+提取：商品名称、价格、评分。
+找出所有包含 /dp/ 的链接。
+```
+
+---
+
+👽 机器学习智能体自动抽取数据：
+
+![自动抽取结果快照](docs/assets/images/amazon.png)
+
+---
+
+# 🎥 演示视频
+
+* **YouTube**：[观看视频](https://www.youtube.com/watch?v=qoXbnL4wdtc)
+* **Bilibili**：[https://www.bilibili.com/video/BV1Qg4y1d7kA](https://www.bilibili.com/video/BV1Qg4y1d7kA)
+
+---
+
+# 🚀 快速开始
+
+## ▶️ 运行 PulsarRPAPro
+
+### 📦 运行可执行Jar
+
+下载：
 
 ```bash
 curl -L -o PulsarRPAPro.jar http://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
 ```
 
-### ⚙️ 运行前准备
+运行：
 
-确保 MongoDB 在 27017 端口运行，且**无需认证**：
+```bash
+java -jar PulsarRPAPro.jar
+```
 
-   ```bash
-   docker run -d --name mongodb -p 27017:27017 mongo:latest
-   ```
+<details>
+<summary>📂 相关资料</summary>
+
+* 🟦 [GitHub Release Download](https://github.com/platonai/PulsarRPA/releases/download/v3.1.0/PulsarRPA.jar)
+* 📁 [Mirror / Backup Download](http://static.platonai.cn/repo/ai/platon/pulsar/)
+* 🛠️ [LLM Configuration Guide](docs/config/llm/llm-config.md)
+* 🛠️ [Configuration Guide](docs/config.md)
+
+</details>
+
+### ⚙️ 依赖
+
+MongoDB需运行在27017端口，无需认证：
+
+```bash
+docker run -d --name mongodb -p 27017:27017 mongo:latest
+```
+
+### 🐳 Docker用户
+
+直接运行Docker镜像：
+
+```shell
+docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:latest
+```
 
 ---
 
-## 📚 自动提取指南：结构化数据，无需编码，无需 Token！
+# 📚 自动抽取指南：只要结构化数据！无需代码，无需Token！
 
-使用 `harvest` 命令对商品列表页面进行无监督学习式的数据提取：
+使用`harvest`命令自动抽取商品列表数据：
 
 ```bash
 java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ```
 
-> 💡 网址必须是入口页面，例如商品分类页或列表页。
-
-工具将自动执行以下流程：
-
-1. 访问入口页面
-2. 识别最佳的商品详情页链接
-3. 抓取这些页面
-4. 自动进行分析提取
-
-### 📄 示例结果
-
-查看 HTML 格式的示例提取结果：
-[Amazon 自动提取结果](docs/assets/amazon-harvest-result.html)
-
 ---
 
-## 🖥️ 启动 PulsarRPAPro 服务
+# 🖥️ 运行PulsarRPAPro服务端
 
 ```bash
 java -DDEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar PulsarRPAPro.jar serve
@@ -93,16 +118,16 @@ java -DDEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar PulsarRPAPro.jar serve
 
 ---
 
-## 🧠 LLM 智能操作：只需文字，无需代码！
+# 🧠 LLM能力：只需文本，无需代码！
 
-直接用自然语言控制浏览器行为：
+使用`ai/command` API通过自然语言指令执行操作和抽取数据。
 
 ```bash
 curl -X POST "http://localhost:8182/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     访问 https://www.amazon.com/dp/B0C1H26C46
-    总结该商品信息。
+    总结该商品。
     提取：商品名称、价格、评分。
     找出所有包含 /dp/ 的链接。
     页面加载后：点击 #title，然后滚动到中间。
@@ -111,7 +136,9 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 
 ---
 
-## 🔍 LLM + X-SQL：既简单又强大
+# 🔍 LLM + X-SQL：精准、灵活、强大
+
+利用`x/e` API实现高精度、灵活、智能的数据抽取。
 
 ```bash
 curl -X POST "http://localhost:8182/api/x/e" -H "Content-Type: text/plain" -d "
@@ -141,19 +168,19 @@ from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
 
 ---
 
-## 🔧 代理设置
+# 🔧 代理设置
 
-代理为**可选配置**。设置环境变量：
+设置环境变量：
 
 ```bash
 export PROXY_ROTATION_URL=https://your-proxy-provider.com/rotation-endpoint
 ```
 
-此 URL 每次访问应返回一个或多个新的代理 IP。
+此URL应返回新的代理IP。
 
 ---
 
-## 📞 联系我们
+# 📞 联系我们
 
 * 💬 **微信**：galaxyeye
 * 🌐 **微博**：[galaxyeye](https://weibo.com/galaxyeye)

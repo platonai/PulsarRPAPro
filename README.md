@@ -79,10 +79,15 @@ Run the JAR for help:
   java -jar PulsarRPAPro.jar
 ```
 
-#### 📦 Download Links
+<details>
+<summary>📂 Resources</summary>
 
-- 🟦 [GitHub Release](https://github.com/platonai/PulsarRPAPro/releases/download/v3.0.0/PulsarRPAPro.jar)
-- 📦 [Backup Downloads](http://static.platonai.cn/repo/ai/platon/exotic/)
+* 🟦 [GitHub Release Download](https://github.com/platonai/PulsarRPA/releases/download/v3.1.0/PulsarRPA.jar)
+* 📁 [Mirror / Backup Download](http://static.platonai.cn/repo/ai/platon/pulsar/)
+* 🛠️ [LLM Configuration Guide](docs/config/llm/llm-config.md)
+* 🛠️ [Configuration Guide](docs/config.md)
+
+</details>
 
 ### ⚙️ Prerequisites
 
