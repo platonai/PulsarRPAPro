@@ -38,10 +38,8 @@ jobs:
 
       - name: Build with Maven
         run: |
-          mkdir -p ~/.m2
-          cp docs/development/maven/settings.xml ~/.m2/settings.xml
           chmod +x ./mvnw
-          ./mvnw clean install -DskipTests
+          ./mvnw clean install -Pall-modules
 
       - name: Build Docker image
         run: |
@@ -56,7 +54,7 @@ jobs:
       - name: Run curl integration tests
         run: |
           find bin/ -name "*.sh" -exec chmod +x {} \;
-          ./bin/test.sh || (echo "Integration test failed" && exit 1)
+          ./bin/run-integration-test.sh || (echo "Integration test failed" && exit 1)
 
       - name: Stop Docker container
         if: always()

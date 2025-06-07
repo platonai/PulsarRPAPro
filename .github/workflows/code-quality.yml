@@ -43,7 +43,7 @@ jobs:
 
       # Compile the codebase to allow CodeQL to perform analysis
       - name: Build with Maven
-        run: chmod +x ./mvnw && ./mvnw install -DskipTests
+        run: ./mvnw install -DskipTests -Pall-modules
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v2

@@ -1,0 +1,34 @@
+name: Build & Release JAR
+
+on:
+  push:
+    tags:
+      - 'v*.*.*' # 仅在打 tag 时触发
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Build JAR
+        run: ./mvnw package -DskipTests -Pall-modules
+
+      - name: Get JAR file name
+        id: get_jar
+        run: |
+          JAR_FILE=$(ls target/*.jar | head -1)
+          echo "jarfile=$JAR_FILE" >> $GITHUB_OUTPUT
+
+      - name: Upload JAR to GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: ${{ steps.get_jar.outputs.jarfile }}
