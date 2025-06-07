@@ -20,6 +20,7 @@ hs_err_pid*
 
 # IntelliJ project files
 .idea
+.idea/*
 *.iml
 out
 gen### Eclipse template
@@ -82,17 +83,41 @@ pom.xml.next
 release.properties
 dependency-reduced-pom.xml
 buildNumber.properties
+.mvn/timing.properties
+
+# Exclude maven wrapper
+!/.mvn/wrapper/maven-wrapper.jar
 
 #.idea/markdown-navigator/
 logs/
 lib/
 repo/
-pulsar-ql/data/
 derby.log
 *.mv.db
 *.trace.db
+/.idea/httpRequests/
+.flattened-pom.xml
+
+pulsar-ql/data/
 *.private.env.json
 /.TEST/
 /.jpb/jpb-settings.xml
 .pulsar/
 .private/
+
+# a source directory is "target"
+!*/**/src/main/java/com/github/kklisura/cdt/protocol/v2023/types/target
+!*/**/src/**/target
+/cron.log
+/.vscode/settings.json
+/user-data-dir-0/
+/user-data-dir-1/
+/user-data-dir-2/
+/user-data-dir-3/
+/user-data-dir-4/
+
+/**/application-private.yml
+application-private.yml
+/**/application-private.properties
+application-private.properties
+

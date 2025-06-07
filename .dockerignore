@@ -1,20 +1,32 @@
-.idea
-.vscode
-.github
+# 忽略所有 .git 目录
+**/.git/
+# 忽略所有 .idea 目录
+**/.idea/
+# 忽略所有 .vscode 目录
+**/.vscode/
+# 忽略所有 .mvn 目录
+**/.mvn/
+# 忽略所有 node_modules 目录
+**/node_modules/
+# 忽略所有日志文件
+**/*.log
+# 忽略所有临时文件
+**/*.tmp
+**/*.temp
+**/*.bak
+**/target
 
+*.xlsx
+*.db
+*.iml
+
+.idea
+.github
 docs
 docker
 logs
 submodules
 extracted
-data
-
-.git
-.gradle
-
-*.xlsx
-*.db
-*.iml
 
 .dockerignore
 Dockerfile
@@ -23,4 +35,10 @@ Dockerfile
 
 */target/**
 
+**/application-private.yml
+application-private.yml
+
+docker/pulsar-rpas/Dockerfile
+
+!pulsar-app/pulsar-master/target/PulsarRPA.jar
 !exotic-standalone/target/PulsarRPAPro.jar
