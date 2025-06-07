@@ -19,6 +19,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
+      - name: Configure Maven settings.xml if missing
+        run: |
+          mkdir -p ~/.m2
+          cp docs/development/maven/settings.xml ~/.m2/settings.xml
+
       - name: Build JAR
         run: ./mvnw package -DskipTests -Pall-modules
 
