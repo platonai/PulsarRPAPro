@@ -81,8 +81,8 @@ Run the JAR for help:
 
 #### 📦 Download Links
 
-- 🟦 [GitHub Release](https://github.com/platonai/PulsarRPA/releases/download/v3.0.4/PulsarRPAPro.jar)
-- 📦 [Backup Downloads](http://static.platonai.cn/repo/ai/platon/pulsar/)
+- 🟦 [GitHub Release](https://github.com/platonai/PulsarRPAPro/releases/download/v3.0.0/PulsarRPAPro.jar)
+- 📦 [Backup Downloads](http://static.platonai.cn/repo/ai/platon/exotic/)
 
 ### ⚙️ Prerequisites
 
