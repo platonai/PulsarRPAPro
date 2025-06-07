@@ -127,10 +127,10 @@
     </root>
 
 
-    <logger name="ai.platon.exotic" level="INFO">
+    <logger name="ai.platon.exotic" level="WARN">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.exotic.driver" level="INFO">
+    <logger name="ai.platon.exotic.driver" level="WARN">
         <appender-ref ref="Console"/>
     </logger>
     <logger name="ai.platon.exotic.crawl.common.VerboseCrawler" level="INFO">
@@ -140,7 +140,7 @@
         <appender-ref ref="Console"/>
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.scent.analysis" level="INFO" additivity="true">
+    <logger name="ai.platon.scent.analysis" level="WARN" additivity="true">
         <appender-ref ref="Console"/>
     </logger>
     <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
