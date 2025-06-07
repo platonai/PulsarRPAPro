@@ -126,6 +126,29 @@
         <appender-ref ref="DRFA"/>
     </root>
 
+
+    <logger name="ai.platon.exotic" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.exotic.driver" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.exotic.crawl.common.VerboseCrawler" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.pulsar.skeleton.crawl.component.LoadComponent.Task" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+        <appender-ref ref="PAGES"/>
+    </logger>
+    <logger name="ai.platon.scent.analysis" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
+        <appender-ref ref="Console"/>
+    </logger>
+
+
+
     <logger name="ai.platon.scent" level="WARN">
         <appender-ref ref="SERVER"/>
     </logger>
@@ -164,12 +187,6 @@
         <appender-ref ref="PAGES"/>
     </logger>
 
-    <logger name="ai.platon.scent.analysis" level="INFO" additivity="true">
-        <appender-ref ref="Console"/>
-    </logger>
-    <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
-        <appender-ref ref="Console"/>
-    </logger>
     <logger name="ai.platon.scent.analysis.corpus.AnalysablePageCorpus.Task" level="INFO" additivity="false">
         <appender-ref ref="HARVEST"/>
     </logger>
@@ -195,10 +212,6 @@
     </logger>
 
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler.Task" level="INFO" additivity="false">
-        <appender-ref ref="PAGES"/>
-    </logger>
-    <logger name="ai.platon.pulsar.crawl.component.LoadComponent.Task" level="INFO" additivity="true">
-        <appender-ref ref="Console"/>
         <appender-ref ref="PAGES"/>
     </logger>
     <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulator.Task" level="INFO" additivity="false">
@@ -227,13 +240,6 @@
     </logger>
     <logger name="ai.platon.pulsar.common.collect" level="WARN" additivity="false">
         <appender-ref ref="COLLECT"/>
-    </logger>
-
-    <logger name="ai.platon.exotic" level="INFO">
-        <appender-ref ref="Console"/>
-    </logger>
-    <logger name="ai.platon.exotic.driver" level="INFO">
-        <appender-ref ref="Console"/>
     </logger>
 
     <logger name="ch.qos.logback.classic" level="WARN"/>

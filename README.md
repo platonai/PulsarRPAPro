@@ -125,7 +125,7 @@ Docker user can run the Docker image directly:
 Use the `harvest` command to extract data from a product listing using unsupervised ML:
 
 ```bash
-  java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
+java -jar PulsarRPAPro.jar harvest "https://www.amazon.com/b?node=1292115011" -diagnose -refresh
 ```
 
 <details>
