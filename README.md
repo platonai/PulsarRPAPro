@@ -70,7 +70,7 @@ Download:
 
 ```bash
 # Linux/macOS and Windows (if curl is available)
-curl -L -o PulsarRPAPro.jar https://platonai.cn/pub/repo/ai/platon/exotic/PulsarRPAPro.jar
+curl -L -o PulsarRPAPro.jar https://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
 ```
 
 Run the JAR for help:
@@ -83,7 +83,7 @@ Run the JAR for help:
 <summary>📂 Resources</summary>
 
 * 🟦 [GitHub Release Download](https://github.com/platonai/PulsarRPA/releases/download/v3.1.0/PulsarRPA.jar)
-* 📁 [Mirror / Backup Download](https://platonai.cn/pub/repo/ai/platon/pulsar/)
+* 📁 [Mirror / Backup Download](https://static.platonai.cn/repo/ai/platon/pulsar/)
 * 🛠️ [LLM Configuration Guide](docs/config/llm/llm-config.md)
 * 🛠️ [Configuration Guide](docs/config.md)
 

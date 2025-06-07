@@ -35,7 +35,7 @@ jobs:
           cat ~/.m2/settings.xml
           echo "Checking if scent-bom can be downloaded..."
           cd /tmp
-          if ! curl --fail --silent --show-error https://platonai.cn/pub/repo/ai/platon/scent/scent-bom/3.0.3/scent-bom-3.0.3.pom; then
+          if ! curl --fail --silent --show-error https://static.platonai.cn/repo/ai/platon/scent/scent-bom/3.0.3/scent-bom-3.0.3.pom; then
             echo "Failed to download scent-bom-3.0.3.pom" && exit 1
           fi
           cd -

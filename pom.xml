@@ -49,7 +49,7 @@
 
 		<repository>
 			<id>platon.ai</id>
-			<url>https://platonai.cn/pub/repo/</url>
+			<url>https://static.platonai.cn/repo/</url>
 			<releases>
 				<enabled>true</enabled>
 				<checksumPolicy>ignore</checksumPolicy>
@@ -307,7 +307,7 @@
 		<platon.version>4.0.1</platon.version>
 		<!-- https://mvnrepository.com/artifact/ai.platon.pulsar -->
 		<platon-pulsar.version>3.0.8</platon-pulsar.version>
-		<!-- https://platonai.cn/pub/repo/ai/platon/scent/ -->
+		<!-- https://static.platonai.cn/repo/ai/platon/scent/ -->
 		<scent.version>3.0.3</scent.version>
 		<pulsar.kotlin.driver.version>1.6.14</pulsar.kotlin.driver.version>
 
