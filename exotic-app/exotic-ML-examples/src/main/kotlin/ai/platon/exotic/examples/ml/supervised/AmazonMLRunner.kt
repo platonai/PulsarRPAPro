@@ -102,7 +102,7 @@ class AmazonMLRunner(
 
 fun main(args: Array<String>) {
     // Keep consistent with spring environment
-//    System.setProperty(CapabilityTypes.STORAGE_CRAWL_ID, "pulsar_rpa_tmp")
+//    System.setProperty(CapabilityTypes.STORAGE_CRAWL_ID, "pulsar_rpa_pro")
 
     var task = "check"
     var start = 0
