@@ -18,7 +18,17 @@ $COMMAND_ENDPOINT = "$API_BASE/api/commands/plain?mode=async"
 
 # Send command
 Write-Host "Sending command to server..."
-$COMMAND_ID = Invoke-RestMethod -Uri $COMMAND_ENDPOINT -Method Post -Body $COMMAND -ContentType "text/plain"
+
+try {
+    $RESPONSE = Invoke-RestMethod -Uri $COMMAND_ENDPOINT -Method Post -ContentType "text/plain" -Body $COMMAND
+    Write-Host "Command submitted. ID: $($RESPONSE.id)"
+} catch {
+    Write-Host "Failed to send command: $_"
+}
+
+exit 0
+
+$COMMAND_ID = Invoke-RestMethod -Uri $COMMAND_ENDPOINT -Method Post -ContentType "text/plain" -Body $COMMAND
 
 if ([string]::IsNullOrWhiteSpace($COMMAND_ID)) {
   Write-Host "Error: Failed to get command ID from server."
