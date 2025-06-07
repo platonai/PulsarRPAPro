@@ -65,9 +65,6 @@ class AmazonHtmlIntegrityChecker(
                 // There is nothing in <body> tag
                 // Blank body can be caused by anti-spider
                 HtmlUtils.isBlankBody(pageSource) -> HtmlIntegrity.BLANK_BODY
-                // example: https://www.amazon.com/dp/B0BBBBB
-                // the page size is 2k
-                isNotFound(pageSource, pageDatum) -> HtmlIntegrity.NOT_FOUND
                 // robot check
                 isRobotCheck(pageSource, pageDatum) -> HtmlIntegrity.ROBOT_CHECK
                 // too small

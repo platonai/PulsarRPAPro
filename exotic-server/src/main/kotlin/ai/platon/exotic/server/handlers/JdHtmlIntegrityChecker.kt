@@ -52,8 +52,6 @@ class JdHtmlIntegrityChecker(
                 HtmlUtils.isBlankBody(pageSource) -> HtmlIntegrity.BLANK_BODY
                 // robot check
                 isRobotCheck(pageSource, pageDatum) -> HtmlIntegrity.ROBOT_CHECK
-                // the page size is 2k
-                isNotFound(pageSource, pageDatum) -> HtmlIntegrity.NOT_FOUND
                 else -> integrity
             }
         }
