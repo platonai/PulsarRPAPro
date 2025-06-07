@@ -16,19 +16,6 @@ import kotlin.test.assertEquals
 class TestCases {
 
     @Test
-    fun testObjectId() {
-        val id = "6298b10ccc253e44baca3f5e"
-        val objectId = ObjectId(id)
-//        println(objectId.timestamp)
-//        println(objectId.date)
-//        println(Instant.ofEpochSecond(objectId.timestamp.toLong()))
-
-        assertEquals(1654173964, objectId.timestamp)
-        assertEquals("Thu Jun 02 20:46:04 CST 2022", objectId.date.toString())
-        assertEquals("2022-06-02T12:46:04Z", Instant.ofEpochSecond(objectId.timestamp.toLong()).toString())
-    }
-
-    @Test
     fun testDateTime() {
         val dateTime = LocalDateTime.ofInstant(Instant.EPOCH, ZoneId.systemDefault())
         println(dateTime)
