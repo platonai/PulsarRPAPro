@@ -74,7 +74,7 @@ class ExoticServerApplication(
         return CommandLineRunner { args ->
             val beans = ctx.beanDefinitionNames.sorted()
             val s = beans.joinToString("\n") { it }
-            val path = AppPaths.getTmp("spring-beans.txt")
+            val path = AppPaths.getTmpDirectory("spring-beans.txt")
             AppFiles.saveTo(s, path)
         }
     }
