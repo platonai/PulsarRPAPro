@@ -43,6 +43,21 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
+
+
+
+      - name: Start MongoDB container
+        run: |
+          docker compose up mongodb -d
+          sleep 5 # Wait for MongoDB to start
+
+      - name: Check MongoDB container status
+        run: |
+          if [ "$(docker inspect -f '{{.State.Running}}' mongodb)" != "true" ]; then
+            echo "MongoDB container is not running!" && exit 1
+          fi
+
+
       - name: Maven build and deploy to local repo
         run: |
           chmod +x ./mvnw
@@ -68,3 +83,10 @@ jobs:
       - name: Stop Docker container
         if: always()
         run: docker stop pulsar-rpa-pro-test || true
+
+
+
+      - name: Stop MongoDB container
+        if: always()
+        run: |
+          docker compose down || true
