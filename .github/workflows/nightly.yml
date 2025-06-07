@@ -84,7 +84,7 @@ jobs:
 
       - name: Stop Docker container
         if: always()
-        run: docker stop pulsar-rpa-pro-test || true
+        run: docker stop pulsar-rpa-test || true
 
 
 
