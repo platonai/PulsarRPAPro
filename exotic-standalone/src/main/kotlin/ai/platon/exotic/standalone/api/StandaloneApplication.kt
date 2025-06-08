@@ -12,6 +12,7 @@ import org.springframework.context.annotation.ImportResource
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.springframework.scheduling.annotation.EnableScheduling
+import javax.ws.rs.core.UriBuilder
 
 @SpringBootApplication(
     scanBasePackages = [
@@ -40,9 +41,13 @@ class StandaloneApplication {
 
     @PostConstruct
     fun showHelp() {
+        val baseURL = "http://localhost:$port"
+        val frontendURL = baseURL + "/" + "$contextPath/crawl/rules/".trimStart('/')
+        val backendURL = baseURL + "/" + "$contextPath/api/hello/whoami".trimStart('/')
+
         val help = """
-frontend: http://localhost:$port$contextPath/crawl/rules/
-backend: http://localhost:$port$contextPath/api/pr/hello/whoami
+frontend: $frontendURL
+backend: $backendURL
 
         """.trimIndent()
 
@@ -52,7 +57,7 @@ backend: http://localhost:$port$contextPath/api/pr/hello/whoami
 
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()
-    
+
     val addProfiles = mutableListOf("hsqldb")
     runApplication<StandaloneApplication> {
         setAdditionalProfiles(*addProfiles.toTypedArray())

@@ -15,19 +15,19 @@ import org.springframework.stereotype.Component
 class StandaloneScheduler {
     
     @Value("\${server.port}")
-    private val serverPort: Int = 0
+    private val port: Int = 0
 
     @Value("\${server.servlet.context-path}")
-    private val serverContextPath: String = "/exotic"
+    private val contextPath: String = "/"
 
     @Scheduled(initialDelay = 10 * MILLIS_PER_SECOND, fixedDelay = 1000 * MILLIS_PER_DAY)
     fun openWebConsole() {
-        val contextPath = serverContextPath.removePrefix("/")
-        val url = "http://localhost:$serverPort/$contextPath/crawl/rules/"
+        val baseURL = "http://localhost:$port"
+        val url = baseURL + "/" + "$contextPath/api/hello/whoami".trimStart('/')
 
         ExoticUtils.openBrowser(url)
     }
-    
+
     @Scheduled(initialDelay = 10 * MILLIS_PER_SECOND, fixedDelay = 10 * MILLIS_PER_SECOND)
     fun monitorAgents() {
         runCatchingWarnUnexpected { UberJars.monitor() }

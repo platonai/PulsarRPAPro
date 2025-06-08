@@ -28,7 +28,7 @@ class ExoticCrawler(val env: Environment? = null): AutoCloseable {
     val scrapeServerContextPath: String
         get() = env?.getProperty("scrape.server.servlet.context-path")
             ?: System.getProperty("scrape.server.servlet.context-path")
-            ?: "/api"
+            ?: "/"
     val authToken: String
         get() = env?.getProperty("scrape.authToken")
             ?: System.getProperty("scrape.authToken")
