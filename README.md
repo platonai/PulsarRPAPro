@@ -108,7 +108,7 @@ Docker user can run the Docker image directly:
 <details>
 
 ```shell
-  docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:latest
+docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:latest
 ```
 
 </details>

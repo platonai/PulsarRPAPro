@@ -5,12 +5,12 @@ FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /build
 
 # Copy project, use .dockerignore to control which files to copy
-COPY exotic-standalone .
+COPY . .
 
 RUN ls -l
 
 # Copy JAR for use in the next stage
-RUN cp $(find . -type f -name PulsarRPA*.jar | head -n 1) /build/app.jar
+RUN cp $(find . -type f -name exotic-server*.jar | head -n 1) /build/app.jar
 
 # Stage 2: Run stage
 FROM eclipse-temurin:21-jre-alpine AS runner
@@ -26,7 +26,10 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN apk add --no-cache curl chromium nss freetype freetype-dev harfbuzz ca-certificates ttf-freefont
 
 # Set Chromium environment variables
-ENV JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC" \
+ENV CHROME_BIN=/usr/bin/chromium-browser \
+    CHROME_PATH=/usr/lib/chromium/ \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser \
+    JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC" \
     BROWSER_CONTEXT_MODE=SEQUENTIAL \
     BROWSER_CONTEXT_NUMBER=2 \
     BROWSER_MAX_OPEN_TABS=8 \

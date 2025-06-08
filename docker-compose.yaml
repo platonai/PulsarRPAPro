@@ -35,6 +35,9 @@ services:
     depends_on:
       - mongodb
     environment:
+      DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
+      PROXY_ROTATION_URL: ${PROXY_ROTATION_URL}
+
       "gora.mongodb.servers": mongodb:27017
       SPRING_DATA_MONGODB_URI: mongodb://mongodb:27017/pulsar-rpa
       SPRING_DATA_REDIS_HOST: redis

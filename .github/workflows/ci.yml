@@ -69,7 +69,8 @@ jobs:
         run: |
           # Start container
           docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
-          sleep 10  # Wait for Spring Boot to start
+          # docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
+          sleep 15  # Wait for Spring Boot to start
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
@@ -77,6 +78,7 @@ jobs:
         run: |
           # Run integration tests
           find bin/ -name "*.sh" -exec chmod +x {} \;
+
           if ! ./bin/run-integration-test.sh; then
             echo "Integration test failed"
             docker logs pulsar-rpa-test

@@ -122,28 +122,31 @@
         </encoder>
     </appender>
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="DRFA"/>
     </root>
 
 
-    <logger name="ai.platon.exotic" level="WARN">
+    <logger name="ai.platon.exotic" level="WARN" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.exotic.driver" level="INFO">
+    <logger name="ai.platon.exotic.driver" level="INFO" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.exotic.crawl.common.VerboseCrawler" level="INFO">
+    <logger name="ai.platon.exotic.crawl.common.VerboseCrawler" level="INFO" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.pulsar.skeleton.crawl.component.LoadComponent.Task" level="INFO" additivity="true">
+    <logger name="ai.platon.exotic.standalone" level="INFO" additivity="false">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.pulsar.skeleton.crawl.component.LoadComponent.Task" level="INFO" additivity="false">
         <appender-ref ref="Console"/>
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.scent.analysis" level="WARN" additivity="true">
+    <logger name="ai.platon.scent.analysis" level="WARN" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.scent.ml" level="INFO" additivity="true">
+    <logger name="ai.platon.scent.ml" level="INFO" additivity="false">
         <appender-ref ref="Console"/>
     </logger>
 

@@ -5,12 +5,12 @@ FROM maven:3.9.9-eclipse-temurin-21-alpine AS builder
 WORKDIR /build
 
 # Copy project, use .dockerignore to control which files to copy
-COPY exotic-standalone .
+COPY . .
 
 RUN ls -l
 
 # Copy JAR for use in the next stage
-RUN cp $(find . -type f -name PulsarRPA*.jar | head -n 1) /build/app.jar
+RUN cp $(find . -type f -name exotic-services*.jar | head -n 1) /build/app.jar
 
 # Stage 2: Run stage
 FROM eclipse-temurin:21-jre-alpine AS runner
@@ -27,19 +27,14 @@ RUN apk add --no-cache curl chromium nss freetype freetype-dev harfbuzz ca-certi
 
 # Set Chromium environment variables
 ENV JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC" \
-    BROWSER_CONTEXT_MODE=SEQUENTIAL \
-    BROWSER_CONTEXT_NUMBER=2 \
-    BROWSER_MAX_OPEN_TABS=8 \
+    BROWSER_CONTEXT_MODE=SYSTEM_DEFAULT \
     BROWSER_DISPLAY_MODE=HEADLESS
 
 # Copy build artifact
 COPY --from=builder /build/app.jar app.jar
 
-# Expose port (documentation only)
-# H2database, TCP
-EXPOSE 8082
-# PulsarRPA REST API Server, HTTP
-EXPOSE 8182
+# PulsarRPAPro Web Server, HTTP
+EXPOSE 2718
 
 # Create non-root user and set directory permissions
 RUN addgroup --system --gid 1001 appuser && \
@@ -54,4 +49,4 @@ LABEL maintainer="Vincent Zhang <ivincent.zhang@gmail.com>" \
       description="PulsarRPA: An AI-Enabled, Super-Fast, Thread-Safe Browser Automation Solution! 💖"
 
 # Startup command with dynamic port configuration
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar serve"]
+ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar app.jar"]
