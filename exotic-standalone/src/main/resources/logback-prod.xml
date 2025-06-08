@@ -130,10 +130,13 @@
     <logger name="ai.platon.exotic" level="WARN">
         <appender-ref ref="Console"/>
     </logger>
-    <logger name="ai.platon.exotic.driver" level="WARN">
+    <logger name="ai.platon.exotic.driver" level="INFO">
         <appender-ref ref="Console"/>
     </logger>
     <logger name="ai.platon.exotic.crawl.common.VerboseCrawler" level="INFO">
+        <appender-ref ref="Console"/>
+    </logger>
+    <logger name="ai.platon.exotic.standalone" level="INFO">
         <appender-ref ref="Console"/>
     </logger>
     <logger name="ai.platon.pulsar.skeleton.crawl.component.LoadComponent.Task" level="INFO" additivity="true">

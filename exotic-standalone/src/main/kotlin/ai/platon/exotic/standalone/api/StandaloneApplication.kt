@@ -1,7 +1,10 @@
 package ai.platon.exotic.standalone.api
 
 import ai.platon.exotic.common.ExoticUtils
+import ai.platon.pulsar.common.getLogger
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
+import jakarta.annotation.PostConstruct
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.autoconfigure.domain.EntityScan
 import org.springframework.boot.runApplication
@@ -26,7 +29,26 @@ import org.springframework.scheduling.annotation.EnableScheduling
 @EnableJpaRepositories("ai.platon.exotic.services.api.persist")
 @EnableMongoRepositories("ai.platon.scent.boot.autoconfigure.persist")
 @EnableScheduling
-class StandaloneApplication
+class StandaloneApplication {
+    private val logger = getLogger(this::class)
+
+    @Value("\${server.port}")
+    var port: Int = 2718
+
+    @Value("\${server.servlet.context-path}")
+    lateinit var contextPath: String
+
+    @PostConstruct
+    fun showHelp() {
+        val help = """
+frontend: http://localhost:$port$contextPath/crawl/rules/
+backend: http://localhost:$port$contextPath/api/pr/hello/whoami
+
+        """.trimIndent()
+
+        logger.info("Endpoint: \n{}", help)
+    }
+}
 
 fun main(argv: Array<String>) {
     ExoticUtils.prepareDatabaseOrFail()
