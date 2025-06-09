@@ -97,8 +97,6 @@ jobs:
 
             echo "Waiting for service to be available..."
             # Show logs for debugging
-            curl -s http://localhost:8182/actuator/health
-            curl -s http://localhost:8182/api/hello/whoami
             docker logs --tail 100 pulsar-rpa-test || true
             sleep 3
           done
