@@ -3,8 +3,18 @@ name: Code Quality
 on:
   pull_request:
     branches: [ main, master ]
+    paths-ignore:
+      - 'bin/**'
+      - 'docs/**'
+      - 'docker/**'
+      - '**.md'
   push:
     branches: [ main ]
+    paths-ignore:
+      - 'bin/**'
+      - 'docs/**'
+      - 'docker/**'
+      - '**.md'
   # Allow manual workflow runs
   workflow_dispatch:
 
