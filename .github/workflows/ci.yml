@@ -86,13 +86,20 @@ jobs:
 
       - name: Wait for Service Available
         run: |
-          # 等待服务可用，超时则失败
+          echo "Waiting for service to be available..."
+          sleep 10  # Wait for Spring Boot to start
+
           for i in {1..30}; do
             if curl -s http://localhost:8182/actuator/health | grep '"status":"UP"'; then
               echo "Service is up!"
               exit 0
             fi
+
             echo "Waiting for service to be available..."
+            # Show logs for debugging
+            curl -s http://localhost:8182/actuator/health
+            curl -s http://localhost:8182/api/hello/whoami
+            docker logs --tail 100 pulsar-rpa-test || true
             sleep 3
           done
           echo "Service did not become available in time."
