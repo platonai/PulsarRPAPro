@@ -66,7 +66,7 @@ jobs:
       - name: Start Docker container
         run: |
           # Start container
-          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
+          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} pulsar-rpa-pro-nightly:${{ env.VERSION }}
           sleep 10  # Wait for Spring Boot to start
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
