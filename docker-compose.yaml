@@ -34,6 +34,7 @@ services:
     container_name: pulsar-rpa-pro
     depends_on:
       - mongodb
+      - redis
     environment:
       DEEPSEEK_API_KEY: ${DEEPSEEK_API_KEY}
       PROXY_ROTATION_URL: ${PROXY_ROTATION_URL}
