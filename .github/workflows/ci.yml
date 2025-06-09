@@ -3,7 +3,13 @@ name: CI
 on:
   push:
     branches:
+      - master
       - main
+    paths-ignore:
+      - 'bin/**'
+      - 'docs/**'
+      - 'docker/**'
+      - '**.md'
   # Allow manual workflow runs
   workflow_dispatch:
 
@@ -38,20 +44,25 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-
-
-
-      - name: Start MongoDB container
+      - name: Start dependencies
         run: |
           docker compose up mongodb -d
-          sleep 5 # Wait for MongoDB to start
+          docker compose up redis -d
 
       - name: Check MongoDB container status
         run: |
+          sleep 5
+          for i in {1..5}; do
+            if [ "$(docker inspect -f '{{.State.Running}}' mongodb)" = "true" ]; then
+              echo "MongoDB container is running!"
+              break
+            fi
+            echo "Waiting for MongoDB container to start..."
+            sleep 3
+          done
           if [ "$(docker inspect -f '{{.State.Running}}' mongodb)" != "true" ]; then
             echo "MongoDB container is not running!" && exit 1
           fi
-
 
       - name: Maven build and deploy to local repo
         run: |
