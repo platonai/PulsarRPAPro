@@ -80,21 +80,22 @@ jobs:
         run: |
           # Start container
           docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
-          # docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
       - name: Wait for Service Available
         run: |
-          # Wait for the service to be available
+          # 等待服务可用，超时则失败
           for i in {1..30}; do
             if curl -s http://localhost:8182/actuator/health | grep '"status":"UP"'; then
               echo "Service is up!"
-              break
+              exit 0
             fi
             echo "Waiting for service to be available..."
-            sleep 2
+            sleep 3
           done
+          echo "Service did not become available in time."
+          exit 1
 
       - name: Run curl integration tests
         run: |
