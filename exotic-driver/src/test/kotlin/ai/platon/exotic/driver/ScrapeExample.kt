@@ -7,7 +7,7 @@ import java.nio.file.Files
 
 fun main() {
     System.setProperty("scrape.server.port", "8182")
-    System.setProperty("scrape.server.servlet.context-path", "/api")
+    System.setProperty("scrape.server.servlet.context-path", "/")
 
     val crawler = ExoticCrawler()
 

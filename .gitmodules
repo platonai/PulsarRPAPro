@@ -7,3 +7,9 @@
 [submodule "submodules/platon"]
 	path = submodules/platon
 	url = https://github.com/platonai/platon.git
+[submodule "bin/submodules/pulsar-kotlin-driver"]
+	path = bin/submodules/pulsar-kotlin-driver
+	url = https://github.com/platonai/pulsar-kotlin-driver.git
+[submodule "submodules/pulsar-kotlin-driver"]
+	path = submodules/pulsar-kotlin-driver
+	url = https://github.com/platonai/pulsar-kotlin-driver.git

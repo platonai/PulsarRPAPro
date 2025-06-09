@@ -122,31 +122,32 @@
         </encoder>
     </appender>
 
-    <root level="WARN">
+    <root level="INFO">
         <appender-ref ref="DRFA"/>
+        <appender-ref ref="Console"/>
     </root>
 
-    <logger name="ai.platon.scent" level="WARN">
+    <logger name="ai.platon.scent" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
-    <logger name="ai.platon.scent.proxy" level="WARN">
+    <logger name="ai.platon.scent.proxy" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
-    <logger name="ai.platon.scent.crawl.parser" level="WARN">
+    <logger name="ai.platon.scent.crawl.parser" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
     <logger name="ai.platon.scent.analysis" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
 
-    <logger name="ai.platon.scent.ql.h2.context" level="WARN">
+    <logger name="ai.platon.scent.ql.h2.context" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
 
-    <logger name="ai.platon.scent.rest.api.schedule" level="WARN">
+    <logger name="ai.platon.scent.rest.api.schedule" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
-    <logger name="ai.platon.scent.rest.api.service.scrape" level="WARN">
+    <logger name="ai.platon.scent.rest.api.service.scrape" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
 
@@ -177,7 +178,7 @@
         <appender-ref ref="HARVEST"/>
     </logger>
 
-    <logger name="ai.platon.pulsar" level="WARN">
+    <logger name="ai.platon.pulsar" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
     <logger name="ai.platon.pulsar.crawl.StreamingCrawler" level="INFO">
@@ -186,11 +187,11 @@
     <logger name="ai.platon.pulsar.crawl.component" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="WARN">
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.BrowserEmulateEventHandler" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
 
-    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="WARN">
+    <logger name="ai.platon.pulsar.protocol.browser.emulator.context" level="INFO">
         <appender-ref ref="SERVER"/>
     </logger>
 
@@ -210,7 +211,7 @@
     <logger name="ai.platon.pulsar.common.collect.FatLinkExtractor" level="WARN" additivity="false">
         <appender-ref ref="PAGES"/>
     </logger>
-    <logger name="ai.platon.pulsar.browser" level="WARN" additivity="false">
+    <logger name="ai.platon.pulsar.browser" level="INFO" additivity="false">
         <appender-ref ref="BROWSER"/>
     </logger>
     <logger name="ai.platon.pulsar.common.metrics.AppMetrics" level="WARN" additivity="false">

@@ -40,10 +40,11 @@ jobs:
 
 
 
-      - name: Start MongoDB container
+      - name: Start Dependencies
         run: |
           docker compose up mongodb -d
-          sleep 5 # Wait for MongoDB to start
+          docker compose up redis -d
+          sleep 5 # Wait for dependencies to start
 
       - name: Check MongoDB container status
         run: |
@@ -62,11 +63,10 @@ jobs:
           echo "Building image pulsar-rpa-pro-nightly:${{ env.VERSION }}"
           docker build -t pulsar-rpa-pro-nightly:${{ env.VERSION }} -f Dockerfile .
 
-
       - name: Start Docker container
         run: |
           # Start container
-          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
+          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} pulsar-rpa-pro-nightly:${{ env.VERSION }}
           sleep 10  # Wait for Spring Boot to start
         env:
           DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
@@ -88,7 +88,7 @@ jobs:
 
 
 
-      - name: Stop MongoDB container
+      - name: Stop dependencies
         if: always()
         run: |
           docker compose down || true
@@ -97,12 +97,12 @@ jobs:
 
 
 
-      - name: Slack Notification
-        if: success()
-        uses: rtCamp/action-slack-notify@v2
-        env:
-          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
-          SLACK_CHANNEL: ci-builds
-          SLACK_COLOR: ${{ job.status }}
-          SLACK_TITLE: Nightly Build Result
-          SLACK_MESSAGE: 'Build status: ${{ job.status }}'
+#      - name: Slack Notification
+#        if: success()
+#        uses: rtCamp/action-slack-notify@v2
+#        env:
+#          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+#          SLACK_CHANNEL: ci-builds
+#          SLACK_COLOR: ${{ job.status }}
+#          SLACK_TITLE: Nightly Build Result
+#          SLACK_MESSAGE: 'Build status: ${{ job.status }}'

@@ -3,7 +3,13 @@ name: CI
 on:
   push:
     branches:
+      - master
       - main
+    paths-ignore:
+      - 'bin/**'
+      - 'docs/**'
+      - 'docker/**'
+      - '**.md'
   # Allow manual workflow runs
   workflow_dispatch:
 
