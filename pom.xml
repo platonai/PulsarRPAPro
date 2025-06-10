@@ -208,6 +208,7 @@
 				<artifactId>maven-dependency-plugin</artifactId>
 				<version>3.6.0</version>
 			</plugin>
+
 		</plugins>
 	</build>
 
@@ -263,12 +264,6 @@
 				<artifactId>exotic-services</artifactId>
 				<version>${project.version}</version>
 			</dependency>
-
-<!--			<dependency>-->
-<!--				<groupId>de.flapdoodle.embed</groupId>-->
-<!--				<artifactId>de.flapdoodle.embed.mongo</artifactId>-->
-<!--				<version>${embed.mongo.version}</version>-->
-<!--			</dependency>-->
 
 			<!-- TODO: check the dependency tree -->
 			<dependency>

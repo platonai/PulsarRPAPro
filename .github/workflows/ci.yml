@@ -16,12 +16,12 @@ on:
       skip_tests:
         description: 'Skip tests'
         required: false
-        default: true
+        default: false
         type: boolean
       debug_mode:
         description: 'Enable debug mode'
         required: false
-        default: true
+        default: false
         type: boolean
 
 env:
