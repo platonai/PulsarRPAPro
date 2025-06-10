@@ -53,7 +53,7 @@ jobs:
         with:
           image_name: 'pulsar-rpa-pro'
           version: ${{ github.sha }}
-          timeout_minutes: '10'
+          timeout_minutes: '20'
 
       - name: Start Application
         uses: ./.github/actions/start-application

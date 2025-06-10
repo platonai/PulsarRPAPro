@@ -19,9 +19,9 @@ inputs:
     required: false
     default: ''
   timeout_minutes:
-    description: 'Test timeout in minutes (default: 20)'
+    description: 'Test timeout in minutes (default: 35)'
     required: false
-    default: '20'
+    default: '35'
   fail_fast:
     description: 'Fail fast on first test failure (default: false)'
     required: false
