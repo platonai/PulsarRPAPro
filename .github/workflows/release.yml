@@ -75,7 +75,7 @@ jobs:
           echo "::endgroup::"
 
       - name: Run Common Workflow Steps
-        uses: ./.github/actions/build-test
+        uses: ./.github/actions/complete-ci-cd-pipeline
         with:
           image_name: galaxyeye88/pulsar-rpa-pro
           version: ${{ env.CLEAN_VERSION }}
