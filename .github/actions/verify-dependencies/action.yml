@@ -104,11 +104,6 @@ runs:
         
         echo "✅ Compose file found: ${{ inputs.compose_file }}"
         
-        # Show available profiles
-        echo ""
-        echo "📋 Available profiles in compose file:"
-        docker compose -f "${{ inputs.compose_file }}" config --profiles 2>/dev/null || echo "No profiles defined"
-        
         # Record start time
         echo "SERVICES_START_TIME=$(date +%s)" >> $GITHUB_ENV
         
@@ -122,7 +117,7 @@ runs:
         echo "📋 Starting services from ${{ inputs.compose_file }}..."
         
         # Start services with better error handling
-        if docker compose -f "${{ inputs.compose_file }}" --profile infra up -d; then
+        if docker compose -f "${{ inputs.compose_file }}" up -d mongodb redis; then
           echo "✅ Docker Compose services started successfully"
         else
           echo "❌ Failed to start Docker Compose services"
