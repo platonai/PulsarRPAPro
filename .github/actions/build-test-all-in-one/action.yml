@@ -261,10 +261,10 @@ runs:
         echo "🚀 Starting application container..."
         
         # Remove any existing test container
-        docker rm -f pulsar-rpa-vs-test 2>/dev/null || true
+        docker rm -f pulsar-rpa-pro-test 2>/dev/null || true
         
         # Start the container
-        docker run -d --name pulsar-rpa-vs-test --network scent_backend \
+        docker run -d --name pulsar-rpa-pro-test --network scent_backend \
           -p ${{ inputs.service_port }}:${{ inputs.service_port }} \
           -e DEEPSEEK_API_KEY="${{ inputs.deepseek_api_key }}" \
           -e PROXY_ROTATION_URL="${{ inputs.proxy_rotation_url }}" \
@@ -278,7 +278,7 @@ runs:
           ${{ inputs.image_name }}:${{ inputs.version }}
         
         echo "✅ Container started successfully"
-        echo "Container ID: $(docker ps --filter name=pulsar-rpa-vs-test --format '{{.ID}}')"
+        echo "Container ID: $(docker ps --filter name=pulsar-rpa-pro-test --format '{{.ID}}')"
         
         # Initial wait
         echo "⏳ Initial startup wait (10 seconds)..."
@@ -358,10 +358,10 @@ runs:
             echo ""
             echo "::group::Container Status (attempt $attempt)"
             echo "Container status:"
-            docker ps --filter name=pulsar-rpa-vs-test --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+            docker ps --filter name=pulsar-rpa-pro-test --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
             echo ""
             echo "Recent container logs:"
-            docker logs --tail 20 pulsar-rpa-vs-test 2>&1 || true
+            docker logs --tail 20 pulsar-rpa-pro-test 2>&1 || true
             echo "::endgroup::"
           fi
         
@@ -374,10 +374,10 @@ runs:
         echo ""
         echo "::group::Final Diagnostics"
         echo "Container status:"
-        docker ps -a --filter name=pulsar-rpa-vs-test
+        docker ps -a --filter name=pulsar-rpa-pro-test
         echo ""
         echo "Full container logs:"
-        docker logs pulsar-rpa-vs-test 2>&1 || true
+        docker logs pulsar-rpa-pro-test 2>&1 || true
         echo ""
         echo "Network connectivity test:"
         curl -v "http://localhost:${{ inputs.service_port }}/" 2>&1 || true
@@ -392,7 +392,7 @@ runs:
         echo "::group::Performance Metrics"
         
         echo "📊 Container resource usage:"
-        docker stats --no-stream pulsar-rpa-vs-test 2>/dev/null || true
+        docker stats --no-stream pulsar-rpa-pro-test 2>/dev/null || true
         
         echo ""
         echo "💾 System memory usage:"
@@ -439,10 +439,10 @@ runs:
         echo "::group::Cleanup Resources"
         
         # Stop and remove test container
-        if docker ps -q -f name=pulsar-rpa-vs-test | grep -q .; then
+        if docker ps -q -f name=pulsar-rpa-pro-test | grep -q .; then
           echo "🧹 Stopping test container..."
-          docker stop pulsar-rpa-vs-test || true
-          docker rm pulsar-rpa-vs-test || true
+          docker stop pulsar-rpa-pro-test || true
+          docker rm pulsar-rpa-pro-test || true
           echo "✅ Test container cleaned up"
         fi
         
