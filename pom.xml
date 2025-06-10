@@ -21,7 +21,7 @@
 	<licenses>
 		<license>
 			<name>The Apache Software License, Version 2.0</name>
-			<url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+			<url>https://www.apache.org/licenses/LICENSE-2.0.txt</url>
 		</license>
 	</licenses>
 
@@ -304,7 +304,7 @@
 		<platon-pulsar.version>3.0.8</platon-pulsar.version>
 		<!-- https://static.platonai.cn/repo/ai/platon/scent/ -->
 		<scent.version>3.0.3</scent.version>
-		<pulsar.kotlin.driver.version>1.7.0</pulsar.kotlin.driver.version>
+		<pulsar.kotlin.driver.version>1.7.4</pulsar.kotlin.driver.version>
 
 		<spring-boot-plugin.version>3.3.1</spring-boot-plugin.version>
 
