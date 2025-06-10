@@ -38,7 +38,7 @@ Dockerfile
 **/application-private.yml
 application-private.yml
 
-docker/pulsar-rpas/Dockerfile
+docker/pulsar-rpa-pro/Dockerfile
 
 !pulsar-app/pulsar-master/target/PulsarRPA.jar
 !exotic-standalone/target/PulsarRPAPro.jar

@@ -11,13 +11,67 @@ jobs:
   nightly-build:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
-      - name: Run Common Workflow Steps - Build and Test
-        uses: ./.github/actions/build-test
+      - name: Setup Environment
+        uses: ./.github/actions/setup-environment
         with:
-          image_name: galaxyeye88/pulsar-rpa-pro
-          version: ${{ env.VERSION }}
+          java_version: '17'
+
+      - name: Verify Dependencies
+        uses: ./.github/actions/verify-dependencies
+        with:
+          network_name: 'scent_backend'
+
+      - name: Maven Build
+        uses: ./.github/actions/maven-build
+        with:
+          maven_profiles: 'all-modules'
+          skip_tests: 'true'
+          timeout_minutes: '15'
+
+      - name: Run Tests
+        uses: ./.github/actions/run-tests
+        with:
+          maven_profiles: 'all-modules'
+          test_excludes: '**ai/platon/scent/rest/api/integration**'
+          timeout_minutes: '20'
+
+      - name: Build Docker Image
+        uses: ./.github/actions/docker-build
+        with:
+          image_name: 'pulsar-rpa-pro'
+          version: ${{ github.sha }}
+          timeout_minutes: '10'
+
+      - name: Start Application
+        uses: ./.github/actions/start-application
+        with:
+          image_name: 'pulsar-rpa-pro'
+          version: ${{ github.sha }}
+          container_name: 'pulsar-rpa-test'
           deepseek_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           proxy_rotation_url: ${{ secrets.PROXY_ROTATION_URL }}
+
+      - name: Health Check
+        uses: ./.github/actions/health-check
+        with:
+          service_port: '8182'
+          timeout_minutes: '5'
+          container_name: 'pulsar-rpa-test'
+
+      - name: Run Integration Tests
+        shell: bash
+        run: |
+          if [ -f "./bin/run-integration-test.sh" ]; then
+            chmod +x ./bin/run-integration-test.sh
+            timeout 600 ./bin/run-integration-test.sh
+          else
+            echo "Integration test script not found, skipping..."
+          fi
+
+      - name: Cleanup Resources
+        if: always()
+        uses: ./.github/actions/cleanup-resources
+        with:
+          container_name: 'pulsar-rpa-test'
+          cleanup_compose: 'true'
+          cleanup_volumes: 'true'

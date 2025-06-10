@@ -1,0 +1,217 @@
+name: Verify Dependencies
+description: Start and verify MongoDB and Redis services using Docker Compose
+author: platonai
+branding:
+  icon: 'check-circle'
+  color: 'green'
+
+inputs:
+  network_name:
+    description: 'Docker network name (default: scent_backend)'
+    required: false
+    default: 'scent_backend'
+  compose_file:
+    description: 'Docker compose file path (default: docker-compose.yml)'
+    required: false
+    default: 'docker-compose.yml'
+  mongodb_container:
+    description: 'MongoDB container name (default: mongodb)'
+    required: false
+    default: 'mongodb'
+  redis_container:
+    description: 'Redis container name (default: redis)'
+    required: false
+    default: 'redis'
+  startup_timeout:
+    description: 'Service startup timeout in seconds (default: 120)'
+    required: false
+    default: '120'
+
+outputs:
+  mongodb_status:
+    description: 'MongoDB service status'
+    value: ${{ steps.mongodb-check.outputs.status }}
+  redis_status:
+    description: 'Redis service status'
+    value: ${{ steps.redis-check.outputs.status }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Start Dependencies
+      shell: bash
+      run: |
+        echo "::group::Starting Dependencies"
+        
+        if [ ! -f "${{ inputs.compose_file }}" ]; then
+          echo "❌ Docker compose file not found: ${{ inputs.compose_file }}"
+          exit 1
+        fi
+        
+        echo "📋 Starting services from ${{ inputs.compose_file }}..."
+        docker compose -f ${{ inputs.compose_file }} up -d
+        
+        echo "⏳ Initial wait for services to initialize..."
+        sleep 10
+        
+        echo "::endgroup::"
+
+    - name: Verify Docker Environment
+      shell: bash
+      run: |
+        echo "::group::Docker Environment"
+        
+        echo "📋 Running containers:"
+        docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}"
+        
+        echo ""
+        echo "🌐 Docker networks:"
+        docker network ls --format "table {{.Name}}\t{{.Driver}}\t{{.Scope}}"
+        
+        # Check if our network exists
+        if docker network inspect ${{ inputs.network_name }} > /dev/null 2>&1; then
+          echo ""
+          echo "🔗 Network '${{ inputs.network_name }}' details:"
+          docker network inspect ${{ inputs.network_name }} --format '{{json .}}' | \
+            jq '{Name: .Name, Driver: .Driver, Containers: (.Containers | keys)}'
+        else
+          echo "⚠️ Network '${{ inputs.network_name }}' not found"
+        fi
+        
+        echo "::endgroup::"
+
+    - name: Wait for MongoDB
+      id: mongodb-check
+      shell: bash
+      run: |
+        echo "::group::MongoDB Verification"
+        
+        # Check if container exists and is running
+        if ! docker ps --filter "name=${{ inputs.mongodb_container }}" --filter "status=running" | grep -q ${{ inputs.mongodb_container }}; then
+          echo "❌ MongoDB container '${{ inputs.mongodb_container }}' is not running"
+          echo "Container status:"
+          docker ps -a --filter "name=${{ inputs.mongodb_container }}"
+          echo "Container logs:"
+          docker logs --tail 100 ${{ inputs.mongodb_container }} || true
+          echo "status=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+        
+        echo "✅ MongoDB container is running"
+        
+        # Wait for MongoDB to be ready
+        echo "⏳ Waiting for MongoDB to accept connections..."
+        timeout_seconds=${{ inputs.startup_timeout }}
+        attempt=1
+        max_attempts=$((timeout_seconds / 2))
+        
+        while [ $attempt -le $max_attempts ]; do
+          if timeout 10 docker exec ${{ inputs.mongodb_container }} mongosh --eval "db.adminCommand('ping')" > /dev/null 2>&1; then
+            echo "✅ MongoDB is ready and accepting connections"
+            
+            # Get MongoDB version and status
+            mongo_version=$(docker exec ${{ inputs.mongodb_container }} mongosh --eval "db.version()" --quiet 2>/dev/null || echo "unknown")
+            echo "📊 MongoDB Version: $mongo_version"
+            
+            echo "status=ready" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+          
+          echo "⏳ MongoDB not ready yet... (attempt $attempt/$max_attempts)"
+          
+          # Show logs every 10 attempts
+          if [ $((attempt % 10)) -eq 0 ]; then
+            echo "Recent MongoDB logs:"
+            docker logs --tail 10 ${{ inputs.mongodb_container }} 2>&1 || true
+          fi
+          
+          sleep 2
+          ((attempt++))
+        done
+        
+        echo "❌ MongoDB failed to become ready within $timeout_seconds seconds"
+        echo "Final MongoDB logs:"
+        docker logs --tail 50 ${{ inputs.mongodb_container }}
+        echo "status=timeout" >> $GITHUB_OUTPUT
+        exit 1
+
+    - name: Wait for Redis
+      id: redis-check
+      shell: bash
+      run: |
+        echo "::group::Redis Verification"
+        
+        # Check if container exists and is running
+        if ! docker ps --filter "name=${{ inputs.redis_container }}" --filter "status=running" | grep -q ${{ inputs.redis_container }}; then
+          echo "❌ Redis container '${{ inputs.redis_container }}' is not running"
+          echo "Container status:"
+          docker ps -a --filter "name=${{ inputs.redis_container }}"
+          echo "Container logs:"
+          docker logs --tail 100 ${{ inputs.redis_container }} || true
+          echo "status=failed" >> $GITHUB_OUTPUT
+          exit 1
+        fi
+        
+        echo "✅ Redis container is running"
+        
+        # Wait for Redis to be ready
+        echo "⏳ Waiting for Redis to accept connections..."
+        timeout_seconds=${{ inputs.startup_timeout }}
+        attempt=1
+        max_attempts=$((timeout_seconds / 1))
+        
+        while [ $attempt -le $max_attempts ]; do
+          if timeout 5 docker exec ${{ inputs.redis_container }} redis-cli ping 2>/dev/null | grep -q PONG; then
+            echo "✅ Redis is ready and accepting connections"
+            
+            # Get Redis info
+            redis_version=$(docker exec ${{ inputs.redis_container }} redis-cli info server 2>/dev/null | grep "redis_version:" | cut -d: -f2 | tr -d '\r' || echo "unknown")
+            redis_memory=$(docker exec ${{ inputs.redis_container }} redis-cli info memory 2>/dev/null | grep "used_memory_human:" | cut -d: -f2 | tr -d '\r' || echo "unknown")
+            
+            echo "📊 Redis Version: $redis_version"
+            echo "📊 Redis Memory Usage: $redis_memory"
+            
+            echo "status=ready" >> $GITHUB_OUTPUT
+            echo "::endgroup::"
+            exit 0
+          fi
+          
+          echo "⏳ Redis not ready yet... (attempt $attempt/$max_attempts)"
+          
+          # Show logs every 20 attempts
+          if [ $((attempt % 20)) -eq 0 ]; then
+            echo "Recent Redis logs:"
+            docker logs --tail 10 ${{ inputs.redis_container }} 2>&1 || true
+          fi
+          
+          sleep 1
+          ((attempt++))
+        done
+        
+        echo "❌ Redis failed to become ready within $timeout_seconds seconds"
+        echo "Final Redis logs:"
+        docker logs --tail 50 ${{ inputs.redis_container }}
+        echo "status=timeout" >> $GITHUB_OUTPUT
+        exit 1
+
+    - name: Connection Test
+      shell: bash
+      run: |
+        echo "::group::Service Connection Test"
+        
+        # Test MongoDB connection from another container
+        echo "🔍 Testing MongoDB network connectivity..."
+        docker run --rm --network ${{ inputs.network_name }} mongo:latest \
+          mongosh --host ${{ inputs.mongodb_container }}:27017 --eval "db.adminCommand('ping')" > /dev/null 2>&1 && \
+          echo "✅ MongoDB network connectivity verified" || \
+          echo "⚠️ MongoDB network connectivity test failed"
+        
+        # Test Redis connection from another container
+        echo "🔍 Testing Redis network connectivity..."
+        docker run --rm --network ${{ inputs.network_name }} redis:latest \
+          redis-cli -h ${{ inputs.redis_container }} -p 6379 ping > /dev/null 2>&1 && \
+          echo "✅ Redis network connectivity verified" || \
+          echo "⚠️ Redis network connectivity test failed"
+        
+        echo "::endgroup::"

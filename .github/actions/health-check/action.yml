@@ -1,0 +1,182 @@
+name: Health Check
+description: Comprehensive health check with retry logic and detailed reporting
+author: platonai
+branding:
+  icon: 'heart'
+  color: 'red'
+
+inputs:
+  service_port:
+    description: 'Service port (default: 8182)'
+    required: false
+    default: '8182'
+  health_endpoint:
+    description: 'Health check endpoint (default: /actuator/health)'
+    required: false
+    default: '/actuator/health'
+  timeout_minutes:
+    description: 'Health check timeout in minutes (default: 5)'
+    required: false
+    default: '5'
+  container_name:
+    description: 'Container name for logging (default: app-test-container)'
+    required: false
+    default: 'app-test-container'
+  expected_status:
+    description: 'Expected health status (default: UP)'
+    required: false
+    default: 'UP'
+  retry_interval:
+    description: 'Retry interval in seconds (default: 3)'
+    required: false
+    default: '3'
+  warm_up_time:
+    description: 'Initial warm-up time in seconds (default: 10)'
+    required: false
+    default: '10'
+
+outputs:
+  health_status:
+    description: 'Final health status'
+    value: ${{ steps.health-check-loop.outputs.status }}
+  response_time:
+    description: 'Average response time in ms'
+    value: ${{ steps.health-check-loop.outputs.avg_response_time }}
+  total_attempts:
+    description: 'Total number of health check attempts'
+    value: ${{ steps.health-check-loop.outputs.attempts }}
+
+runs:
+  using: "composite"
+  steps:
+    - name: Initial Warm-up
+      shell: bash
+      run: |
+        echo "::group::Initial Warm-up"
+        
+        warm_up_seconds=${{ inputs.warm_up_time }}
+        
+        echo "⏳ Initial warm-up period: ${warm_up_seconds} seconds"
+        echo "This allows the application time to initialize before health checks begin."
+        
+        sleep $warm_up_seconds
+        
+        echo "✅ Warm-up period completed"
+        echo "::endgroup::"
+
+    - name: Health Check Setup
+      shell: bash
+      run: |
+        echo "::group::Health Check Setup"
+        
+        echo "📋 Health Check Configuration:"
+        echo "  - Service Port: ${{ inputs.service_port }}"
+        echo "  - Health Endpoint: ${{ inputs.health_endpoint }}"
+        echo "  - Expected Status: ${{ inputs.expected_status }}"
+        echo "  - Timeout: ${{ inputs.timeout_minutes }} minutes"
+        echo "  - Retry Interval: ${{ inputs.retry_interval }} seconds"
+        echo "  - Container: ${{ inputs.container_name }}"
+        
+        # Verify container is running
+        if ! docker ps --filter "name=${{ inputs.container_name }}" --filter "status=running" | grep -q "${{ inputs.container_name }}"; then
+          echo "❌ Container '${{ inputs.container_name }}' is not running"
+          echo "Container status:"
+          docker ps -a --filter "name=${{ inputs.container_name }}"
+          exit 1
+        fi
+        
+        echo "✅ Container is running"
+        
+        # Test basic connectivity
+        health_url="http://localhost:${{ inputs.service_port }}${{ inputs.health_endpoint }}"
+        echo "🔍 Health Check URL: $health_url"
+        
+        echo "::endgroup::"
+
+    - name: Health Check Loop
+      id: health-check-loop
+      shell: bash
+      run: |
+        echo "::group::Health Check Execution"
+        
+        # Health check function
+        check_health() {
+          local temp_file=$(mktemp)
+          local response_time_file=$(mktemp)
+          local http_code
+          local response_time
+          
+          # Perform health check with timing
+          {
+            time_output=$(curl -w "@-" -s -o "$temp_file" \
+              --connect-timeout 5 \
+              --max-time 10 \
+              "http://localhost:${{ inputs.service_port }}${{ inputs.health_endpoint }}" \
+              --write-out '%{http_code}|%{time_total}' 2>/dev/null)
+          } 2>"$response_time_file"
+          
+          http_code=$(echo "$time_output" | cut -d'|' -f1)
+          response_time=$(echo "$time_output" | cut -d'|' -f2)
+          
+          # Convert response time to milliseconds
+          response_time_ms=$(echo "$response_time * 1000" | bc -l 2>/dev/null | cut -d'.' -f1 || echo "0")
+          
+          echo "📊 HTTP $http_code (${response_time_ms}ms)"
+          
+          if [[ "$http_code" == "200" ]]; then
+            # Check if response is valid JSON
+            if jq . "$temp_file" > /dev/null 2>&1; then
+              # Check status field
+              status=$(jq -r '.status // empty' "$temp_file" 2>/dev/null)
+              
+              if [[ "$status" == "${{ inputs.expected_status }}" ]]; then
+                echo "✅ Health check successful!"
+                echo "📋 Health Response:"
+                cat "$temp_file" | jq '.' 2>/dev/null || cat "$temp_file"
+                rm -f "$temp_file" "$response_time_file"
+                echo "$response_time_ms"
+                return 0
+              else
+                echo "⚠️ Unexpected status: '$status' (expected: '${{ inputs.expected_status }}')"
+                echo "📋 Response:"
+                cat "$temp_file" | jq '.' 2>/dev/null || cat "$temp_file"
+              fi
+            else
+              echo "⚠️ Invalid JSON response"
+              echo "📋 Response:"
+              cat "$temp_file" | head -5
+            fi
+          else
+            echo "❌ HTTP $http_code"
+            if [[ -s "$temp_file" ]]; then
+              echo "📋 Response body:"
+              cat "$temp_file" | head -10
+            fi
+          fi
+          
+          rm -f "$temp_file" "$response_time_file"
+          echo "$response_time_ms"
+          return 1
+        }
+        
+        # Main health check loop
+        timeout_seconds=$(( ${{ fromJSON(inputs.timeout_minutes) }} * 60 ))
+        retry_interval=${{ inputs.retry_interval }}
+        max_attempts=$((timeout_seconds / retry_interval))
+        attempt=1
+        total_response_time=0
+        successful_attempts=0
+        
+        echo "🔍 Starting health checks"
+        echo "📊 Max attempts: $max_attempts over ${{ inputs.timeout_minutes }} minutes"
+        echo ""
+        
+        start_time=$(date +%s)
+        
+        while [ $attempt -le $max_attempts ]; do
+          current_time=$(date +%s)
+          elapsed_time=$((current_time - start_time))
+          
+          # Check overall timeout
+          if [ $elapsed_time -ge $timeout_seconds ]; then
+            echo "❌

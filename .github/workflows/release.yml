@@ -15,7 +15,7 @@ jobs:
       - name: Run Common Workflow Steps
         uses: ./.github/actions/build-test
         with:
-          image_name: galaxyeye88/pulsar-rpa-pro
+          image_name: galaxyeye88/pulsar-rpa-vs
           version: ${{ env.VERSION }}
           deepseek_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           proxy_rotation_url: ${{ secrets.PROXY_ROTATION_URL }}
