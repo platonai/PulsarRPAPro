@@ -23,7 +23,7 @@ cd PulsarRPAPro
 cd PulsarRPAPro/target/
 
 # Don't forget to start MongoDB
-docker-compose -f docker/docker-compose.yaml up
+docker-compose -f docker/docker-compose.yml up
 ```
 
 For Chinese developers, we strongly suggest following [this](https://github.com/platonai/pulsarr/blob/master/bin/tools/maven/maven-settings.adoc) guide to accelerate the build process.

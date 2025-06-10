@@ -10,7 +10,7 @@ on:
       - 'docker/**'
       - '**.md'
   push:
-    branches: [ main ]
+    branches: [ main, master ]
     paths-ignore:
       - '.github/**'
       - 'bin/**'
