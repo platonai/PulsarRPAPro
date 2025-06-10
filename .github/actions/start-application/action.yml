@@ -12,14 +12,13 @@ inputs:
   version:
     description: 'Image version/tag (required)'
     required: true
+  network_name:
+    description: 'Docker network name'
+    required: true
   container_name:
     description: 'Container name (default: app-test-container)'
     required: false
     default: 'app-test-container'
-  network_name:
-    description: 'Docker network name (default: auto-detect)'
-    required: false
-    default: 'auto-detect'
   service_port:
     description: 'Service port (default: 8182)'
     required: false

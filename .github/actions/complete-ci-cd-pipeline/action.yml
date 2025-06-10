@@ -35,6 +35,9 @@ inputs:
     default: '**ai/platon/scent/rest/api/integration**'
 
   # Docker Configuration
+  network_name:
+    description: 'Docker network name'
+    required: true
   image_name:
     description: 'Docker image name (without registry/tag)'
     required: true
@@ -56,10 +59,6 @@ inputs:
     description: 'Application container name'
     required: false
     default: 'app-test-container'
-  network_name:
-    description: 'Docker network name'
-    required: false
-    default: 'app_backend_network'
   service_port:
     description: 'Application service port'
     required: false

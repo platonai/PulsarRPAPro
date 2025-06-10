@@ -19,6 +19,7 @@ on:
 env:
   # Extract version from tag or input
   VERSION: ${{ github.ref_name || inputs.tag }}
+  NETWORK_NAME: 'pulsarrpapro_backend'
   MAVEN_OPTS: '-Dmaven.repo.local=.m2/repository -Xmx1g -XX:+TieredCompilation -XX:TieredStopAtLevel=1'
 
 jobs:
@@ -78,7 +79,8 @@ jobs:
         uses: ./.github/actions/complete-ci-cd-pipeline
         with:
           image_name: galaxyeye88/pulsar-rpa-pro
-          version: ${{ env.CLEAN_VERSION }}
+          network_name: ${{ env.NETWORK_NAME }}
+          image_version: ${{ env.CLEAN_VERSION }}
           deepseek_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           proxy_rotation_url: ${{ secrets.PROXY_ROTATION_URL }}
 
