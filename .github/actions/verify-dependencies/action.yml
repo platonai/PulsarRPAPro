@@ -144,10 +144,6 @@ runs:
         echo "📋 Running containers:"
         docker ps -a --format "table {{.Names}}\t{{.Status}}\t{{.Ports}}\t{{.Networks}}"
         
-        echo ""
-        echo "🌐 Docker networks:"
-        docker network ls --format "table {{.Name}}\t{{.Driver}}\t{{.Scope}}\t{{.Created}}"
-        
         # Check network details with containers
         echo ""
         echo "🔗 Network '${{ inputs.network_name }}' details:"
