@@ -17,9 +17,9 @@ inputs:
     required: false
     default: 'app-test-container'
   network_name:
-    description: 'Docker network name (default: scent_backend)'
+    description: 'Docker network name (default: auto-detect)'
     required: false
-    default: 'scent_backend'
+    default: 'auto-detect'
   service_port:
     description: 'Service port (default: 8182)'
     required: false

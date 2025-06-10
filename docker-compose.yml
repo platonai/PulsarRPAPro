@@ -1,4 +1,4 @@
-services:
+infra:
   mongodb:
     image: 'mongo:latest'
     container_name: 'mongodb'
@@ -11,7 +11,13 @@ services:
       - mongodb_data:/data/db
     networks:
       - backend
-
+    profiles: ["default", "infra"] # ✅ 启动 profile 为 default 或 infra 时才启动此服务
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
   redis:
     image: redis:latest
     container_name: redis
@@ -22,7 +28,13 @@ services:
       - redis_data:/data
     networks:
       - backend
-
+    profiles: ["default", "infra"] # ✅ 启动 profile 为 default 或 infra 时才启动此服务
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      
   proxy-hub:
     image: proxy-hub:latest
     container_name: proxy-hub
