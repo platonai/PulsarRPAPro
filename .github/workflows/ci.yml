@@ -18,7 +18,7 @@ env:
   IMAGE_NAME: galaxyeye88/pulsar-rpa-pro
 
 jobs:
-  test-and-build:
+  ci-build:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout repository
