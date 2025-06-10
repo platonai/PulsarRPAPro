@@ -7,74 +7,143 @@ on:
   # Allow manual workflow runs
   workflow_dispatch:
 
+env:
+  IMAGE_NAME: galaxyeye88/pulsar-rpa-pro
+  NETWORK_NAME: 'pulsarrpapro_backend'
+  CONTAINER_NAME: 'pulsar-rpa-test'
+
 jobs:
   nightly-build:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
 
       - name: Setup Environment
+        id: setup
         uses: ./.github/actions/setup-environment
         with:
           java_version: '17'
 
       - name: Verify Dependencies
+        id: deps
         uses: ./.github/actions/verify-dependencies
         with:
-          network_name: 'scent_backend'
+          network_name: ${{ env.NETWORK_NAME }}
+          startup_timeout: '120'
+          verify_network_connectivity: 'true'
 
       - name: Maven Build
+        id: build-maven
         uses: ./.github/actions/maven-build
         with:
           maven_profiles: 'all-modules'
-          skip_tests: 'true'
+          skip_tests: ${{ inputs.skip_tests || 'true' }}
           timeout_minutes: '15'
 
       - name: Run Tests
+        id: tests
+        if: inputs.skip_tests != true
         uses: ./.github/actions/run-tests
         with:
           maven_profiles: 'all-modules'
           test_excludes: '**ai/platon/scent/rest/api/integration**'
-          timeout_minutes: '20'
+          timeout_minutes: '35'
 
       - name: Build Docker Image
+        id: build
         uses: ./.github/actions/docker-build
         with:
           image_name: 'pulsar-rpa-pro'
           version: ${{ github.sha }}
-          timeout_minutes: '10'
+          timeout_minutes: '20'
 
       - name: Start Application
+        id: app
         uses: ./.github/actions/start-application
         with:
           image_name: 'pulsar-rpa-pro'
           version: ${{ github.sha }}
-          container_name: 'pulsar-rpa-test'
+          container_name: ${{ env.CONTAINER_NAME }}
+          network_name: ${{ env.NETWORK_NAME }}
           deepseek_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           proxy_rotation_url: ${{ secrets.PROXY_ROTATION_URL }}
 
       - name: Health Check
+        id: health
         uses: ./.github/actions/health-check
         with:
           service_port: '8182'
           timeout_minutes: '5'
-          container_name: 'pulsar-rpa-test'
+          container_name: ${{ env.CONTAINER_NAME }}
 
       - name: Run Integration Tests
+        id: integration-tests
         shell: bash
         run: |
+          echo "::group::🧪 Integration Tests"
+          
           if [ -f "./bin/run-integration-test.sh" ]; then
+            echo "✅ Found integration test script"
             chmod +x ./bin/run-integration-test.sh
-            timeout 600 ./bin/run-integration-test.sh
+          
+            echo "🚀 Running integration tests..."
+            echo "Application URL: http://localhost:8182"
+            echo "Network: ${{ env.NETWORK_NAME }}"
+            echo "Container: ${{ env.CONTAINER_NAME }}"
+          
+            if timeout 600 ./bin/run-integration-test.sh; then
+              echo "✅ Integration tests passed"
+              echo "integration_status=success" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Integration tests failed"
+              echo "integration_status=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
           else
-            echo "Integration test script not found, skipping..."
+            echo "⚠️ Integration test script not found: ./bin/run-integration-test.sh"
+            echo "Skipping integration tests..."
+            echo "integration_status=skipped" >> $GITHUB_OUTPUT
           fi
+          
+          echo "::endgroup::"
+
+      - name: Pipeline Summary
+        if: always()
+        shell: bash
+        run: |
+          echo "::group::📊 Pipeline Summary"
+          
+          echo "🎯 Pipeline Results:"
+          echo "  - Setup: ${{ steps.setup.outcome }}"
+          echo "  - Dependencies: ${{ steps.deps.outcome }}"
+          echo "  - Maven Build: ${{ steps.build-maven.outcome }}"
+          echo "  - Tests: ${{ steps.tests.outcome || 'skipped' }}"
+          echo "  - Docker Build: ${{ steps.build.outcome }}"
+          echo "  - Application: ${{ steps.app.outcome }}"
+          echo "  - Health Check: ${{ steps.health.outcome }}"
+          echo "  - Integration Tests: ${{ steps.integration-tests.outcome || 'skipped' }}"
+          
+          echo ""
+          echo "🌐 Infrastructure:"
+          echo "  - Network: ${{ env.NETWORK_NAME }}"
+          echo "  - Container: ${{ env.CONTAINER_NAME }}"
+          echo "  - Image: pulsar-rpa-pro:${{ github.sha }}"
+          echo "  - MongoDB: ${{ steps.deps.outputs.mongodb_status }}"
+          echo "  - Redis: ${{ steps.deps.outputs.redis_status }}"
+          
+          echo ""
+          echo "📅 Completed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo "🌟 Commit: ${{ github.sha }}"
+          
+          echo "::endgroup::"
 
       - name: Cleanup Resources
         if: always()
         uses: ./.github/actions/cleanup-resources
         with:
-          container_name: 'pulsar-rpa-test'
+          container_name: ${{ env.CONTAINER_NAME }}
           cleanup_compose: 'true'
           cleanup_volumes: 'true'
