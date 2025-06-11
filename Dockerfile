@@ -27,10 +27,10 @@ RUN apk add --no-cache curl chromium nss freetype freetype-dev harfbuzz ca-certi
 
 # Set Chromium environment variables
 ENV JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC" \
-    BROWSER_CONTEXT_MODE=SEQUENTIAL \
-    BROWSER_CONTEXT_NUMBER=2 \
-    BROWSER_MAX_OPEN_TABS=8 \
-    BROWSER_DISPLAY_MODE=HEADLESS
+    BROWSER_CONTEXT_MODE=${BROWSER_CONTEXT_MODE:-SEQUENTIAL} \
+    BROWSER_CONTEXT_NUMBER=${BROWSER_CONTEXT_NUMBER:-2} \
+    BROWSER_MAX_OPEN_TABS=${BROWSER_MAX_OPEN_TABS:-8} \
+    BROWSER_DISPLAY_MODE=${BROWSER_DISPLAY_MODE:-HEADLESS}
 
 # Copy build artifact
 COPY --from=builder /build/app.jar app.jar
