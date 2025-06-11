@@ -18,7 +18,7 @@ services:
       retries: 3
 
   redis:
-    image: redis:latest
+    image: 'redis:latest'
     container_name: redis
     restart: unless-stopped
     ports:
@@ -34,14 +34,14 @@ services:
       retries: 3
       
   proxy-hub:
-    image: proxy-hub:latest
+    image: 'galaxyeye88/proxy-hub:latest'
     container_name: proxy-hub
     ports:
       - "8192:8192"
     profiles: ["proxy"]  # ✅ 启动 profile 为 proxy 时才启动此服务
 
   pulsar-rpa-pro:
-    image: galaxyeye88/pulsar-rpa-pro:latest
+    image: 'galaxyeye88/pulsar-rpa-pro:latest'
     container_name: pulsar-rpa-pro
     depends_on:
       - mongodb
