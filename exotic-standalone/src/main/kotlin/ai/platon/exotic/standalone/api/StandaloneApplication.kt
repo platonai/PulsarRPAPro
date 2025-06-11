@@ -1,6 +1,7 @@
 package ai.platon.exotic.standalone.api
 
 import ai.platon.exotic.common.ExoticUtils
+import ai.platon.exotic.common.ScentURLUtils
 import ai.platon.pulsar.common.getLogger
 import ai.platon.scent.boot.autoconfigure.ScentContextInitializer
 import jakarta.annotation.PostConstruct
@@ -33,17 +34,20 @@ import javax.ws.rs.core.UriBuilder
 class StandaloneApplication {
     private val logger = getLogger(this::class)
 
+    val hostname get() = "127.0.0.1"
+
     @Value("\${server.port}")
     var port: Int = 2718
 
     @Value("\${server.servlet.context-path}")
     lateinit var contextPath: String
 
+    val baseUri get() = ScentURLUtils.buildServerUrl(hostname, port, contextPath, "api")
+
     @PostConstruct
     fun showHelp() {
-        val baseURL = "http://localhost:$port"
-        val frontendURL = baseURL + "/" + "$contextPath/crawl/rules/".trimStart('/')
-        val backendURL = baseURL + "/" + "$contextPath/api/hello/whoami".trimStart('/')
+        val frontendURL = "$baseUri/crawl/rules/"
+        val backendURL = "$baseUri/api/hello/whoami"
 
         val help = """
 frontend: $frontendURL
