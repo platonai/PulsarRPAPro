@@ -47,7 +47,7 @@ class StandaloneApplication {
     @PostConstruct
     fun showHelp() {
         val frontendURL = "$baseUri/crawl/rules/"
-        val backendURL = "$baseUri/api/hello/whoami"
+        val backendURL = "$baseUri/api/hello/whoami".replace("/api/api/", "/api/") // Ensure the URL is correct even if the API is upgraded
 
         val help = """
 frontend: $frontendURL
