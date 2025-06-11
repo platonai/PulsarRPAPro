@@ -42,7 +42,7 @@ class StandaloneApplication {
     @Value("\${server.servlet.context-path}")
     lateinit var contextPath: String
 
-    val baseUri get() = ScentURLUtils.buildServerUrl(hostname, port, contextPath, "api")
+    val baseUri get() = ScentURLUtils.buildServerUrl(hostname, port, contextPath)
 
     @PostConstruct
     fun showHelp() {
