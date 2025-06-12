@@ -1,16 +1,29 @@
 #!/usr/bin/env pwsh
 
+# Find the first parent directory containing the VERSION file
+$AppHome=(Get-Item -Path $MyInvocation.MyCommand.Path).Directory
+while ($AppHome -ne $null -and !(Test-Path "$AppHome/VERSION")) {
+  $AppHome = Split-Path -Parent $AppHome
+}
+Set-Location $AppHome
+
 # 设置错误处理
 $ErrorActionPreference = "Stop"
 
 # 自然语言命令内容
 $COMMAND = @'
-Go to https://www.amazon.com/dp/B0C1H26C46
-After page load: scroll to the middle.
+    Go to https://www.amazon.com/dp/B0C1H26C46
 
-Summarize the product.
-Extract: product name, price, ratings.
-Find all links containing /dp/.
+    After browser launch:
+      - clear browser cookies
+      - go to https://www.amazon.com/
+      - wait for 5 seconds
+      - click the first product link
+    After page load: scroll to the middle.
+
+    Summarize the product.
+    Extract: product name, price, ratings.
+    Find all links containing /dp/.
 '@
 
 # API 接口

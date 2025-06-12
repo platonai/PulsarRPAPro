@@ -25,8 +25,8 @@ Set-Location $AppHome
 
 # Default configuration with validation
 $DOCKERFILE = if ($Dockerfile) { $Dockerfile } else { "docker/pulsar-rpa-prod/Dockerfile" }
-$IMAGE_NAME = if ($ImageName) { $ImageName } else { "pulsar-rpa-test" }
-$CONTAINER_NAME = if ($ContainerName) { $ContainerName } else { "pulsar-rpa-test" }
+$IMAGE_NAME = if ($ImageName) { $ImageName } else { "pulsar-rpa-pro-test" }
+$CONTAINER_NAME = if ($ContainerName) { $ContainerName } else { "pulsar-rpa-pro-test" }
 $PORT = if ($Port -gt 0) { $Port } else { 8182 }
 $HEALTH_CHECK_TIMEOUT = if ($HealthCheckTimeout -gt 0) { $HealthCheckTimeout } else { 60 }
 

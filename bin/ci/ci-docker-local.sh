@@ -9,8 +9,8 @@ cd "$AppHome" || exit 1
 
 # Configuration parameters
 DOCKERFILE="${DOCKERFILE:-docker/pulsar-rpa-prod/Dockerfile}"
-IMAGE_NAME="${IMAGE_NAME:-pulsar-rpa-test}"
-CONTAINER_NAME="${CONTAINER_NAME:-pulsar-rpa-test}"
+IMAGE_NAME="${IMAGE_NAME:-pulsar-rpa-pro-test}"
+CONTAINER_NAME="${CONTAINER_NAME:-pulsar-rpa-pro-test}"
 PORT="${PORT:-8182}"
 HEALTH_CHECK_TIMEOUT="${HEALTH_CHECK_TIMEOUT:-60}"
 

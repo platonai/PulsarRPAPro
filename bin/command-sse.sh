@@ -4,12 +4,14 @@ set -e
 
 # 自然语言命令内容
 COMMAND='
-Go to https://www.amazon.com/dp/B0C1H26C46
-After page load: scroll to the middle.
+    Go to https://www.amazon.com/dp/B0C1H26C46
 
-Summarize the product.
-Extract: product name, price, ratings.
-Find all links containing /dp/.
+    After browser launch: clear browser cookies.
+    After page load: scroll to the middle.
+
+    Summarize the product.
+    Extract: product name, price, ratings.
+    Find all links containing /dp/.
 '
 
 # API 接口
@@ -30,37 +32,8 @@ if [[ -z "$COMMAND_ID" ]]; then
 fi
 echo "Command ID: $COMMAND_ID"
 
-# SSE 监听地址和结果地址
+# SSE 监听地址
 SSE_URL="$API_BASE/api/commands/$COMMAND_ID/stream"
-RESULT_URL="$API_BASE/api/commands/$COMMAND_ID/result"
-
-# 获取最终结果的函数
-get_final_result() {
-  echo ""
-  echo "=== FETCHING FINAL RESULT ==="
-
-  # 等待一下确保结果已准备好
-  sleep 2
-
-  local result=$(curl -s -X GET "$RESULT_URL" 2>/dev/null)
-
-  if [[ -n "$result" ]]; then
-    echo ""
-    echo "=== FINAL RESULT ==="
-    echo "Command ID: $COMMAND_ID"
-    echo "Timestamp: $(date -u '+%Y-%m-%d %H:%M:%S') UTC"
-    echo "Status: COMPLETED"
-    echo ""
-    echo "Result:"
-    echo "$result" | jq . 2>/dev/null || echo "$result"
-    echo ""
-    echo "=== END OF RESULT ==="
-  else
-    echo "Warning: Failed to fetch final result"
-    echo "You can manually check the result at: $RESULT_URL"
-  fi
-}
-
 SSE_FIFO=$(mktemp -u)
 mkfifo "$SSE_FIFO"
 
@@ -79,8 +52,6 @@ trap cleanup EXIT INT TERM
 
 # SSE 主循环
 isDone=0
-last_update=""
-
 while read -r line; do
   # 跳过空行或注释
   if [[ -z "$line" || "$line" == :* ]]; then
@@ -91,31 +62,21 @@ while read -r line; do
   if [[ "$line" == data:* ]]; then
     data="${line#data:}"
     data="${data#"${data%%[![:space:]]*}"}"  # 去除前导空白
-
-    # 避免重复打印相同的更新
-    if [[ "$data" != "$last_update" ]]; then
-      echo "SSE update: $data"
-      last_update="$data"
-    fi
+    echo "SSE update: $data"
 
     # 检查是否已完成
     if [[ "$data" =~ \"isDone\"[[:space:]]*:[[:space:]]*true ]]; then
       isDone=1
-      echo ""
-      echo "Task completed! Fetching final result..."
-
-      # 获取并打印最终结果
-      get_final_result
-      break
+      sleep 1 # 等待一秒以确保所有数据都已接收
     fi
+  fi
+
+  if [[ $isDone -eq 1 && ( "$line" =~ \} || -z "$line" ) ]]; then
+    echo "Task completed. Breaking the loop."
+    break
   fi
 done < "$SSE_FIFO"
 
-if [[ $isDone -eq 0 ]]; then
-  echo "Warning: SSE stream ended but task may not be completed."
-  echo "Attempting to fetch result anyway..."
-  get_final_result
-fi
+sleep 1 # 确保所有数据都已处理完毕
 
-echo ""
 echo "Finished command-sse.sh script."
