@@ -10,7 +10,6 @@ $AppHome = (Get-Item -Path $MyInvocation.MyCommand.Path).Directory
 while ($null -ne $AppHome -and !(Test-Path "$AppHome/VERSION")) {
     $AppHome = $AppHome.Parent
 }
-
 Set-Location $AppHome
 
 # Configuration
