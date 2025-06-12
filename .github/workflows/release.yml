@@ -3,7 +3,8 @@ name: Build & Release JAR
 on:
   push:
     tags:
-      - 'v*.*.*'
+      - 'v[0-9]+.[0-9]+.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+'
   workflow_dispatch:
     inputs:
       tag:
@@ -19,7 +20,7 @@ on:
 env:
   # Extract version from tag or input
   VERSION: ${{ github.ref_name || inputs.tag }}
-  NETWORK_NAME: 'pulsarrpapro_backend'
+  NETWORK_NAME: 'pulsarrpa_backend'
   MAVEN_OPTS: '-Dmaven.repo.local=.m2/repository -Xmx1g -XX:+TieredCompilation -XX:TieredStopAtLevel=1'
 
 jobs:
@@ -83,6 +84,7 @@ jobs:
           image_version: ${{ env.CLEAN_VERSION }}
           deepseek_api_key: ${{ secrets.DEEPSEEK_API_KEY }}
           proxy_rotation_url: ${{ secrets.PROXY_ROTATION_URL }}
+          services_to_start: 'mongodb,redis'
 
       - name: Build Production JAR
         run: |

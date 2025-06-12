@@ -50,7 +50,7 @@ services:
       - DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY}
       - PROXY_ROTATION_URL=${PROXY_ROTATION_URL}
       - gora.mongodb.servers=mongodb:27017
-      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/pulsar-rpa
+      - SPRING_DATA_MONGODB_URI=mongodb://mongodb:27017/pulsar-rpa-pro
       - SPRING_DATA_REDIS_HOST=redis
       - SPRING_DATA_REDIS_PORT=6379
       - BROWSER_DISPLAY_MODE=HEADLESS
@@ -73,7 +73,7 @@ services:
 networks:
   backend:
     driver: bridge
-    name: pulsarrpapro_backend
+    name: pulsarrpa_backend
 
 volumes:
   mongodb_data:

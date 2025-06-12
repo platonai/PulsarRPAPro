@@ -6,13 +6,10 @@ on:
       - master
       - main
     tags:
-        - 'v[0-9]+.[0-9]+.[0-9]+-ci.[0-9]+'
-    paths-ignore:
-      - '.github/**'
-      - 'bin/**'
-      - 'docs/**'
-      - 'docker/**'
-      - '**.md'
+      - 'v[0-9]+.[0-9]+.[0-9]+-ci.[0-9]+'
+    paths:
+      - '*.java'
+      - '*.kt'
   workflow_dispatch:
     inputs:
       skip_tests:
@@ -27,9 +24,9 @@ on:
         type: boolean
 
 env:
-  IMAGE_NAME: galaxyeye88/pulsar-rpa-pro
-  NETWORK_NAME: 'pulsarrpapro_backend'
-  CONTAINER_NAME: 'pulsar-rpa-test'
+  IMAGE_NAME: pulsar-rpa-pro
+  NETWORK_NAME: 'pulsarrpa_backend'
+  CONTAINER_NAME: 'pulsar-rpa-pro-test'
 
 jobs:
   ci-build:
@@ -54,6 +51,7 @@ jobs:
         uses: ./.github/actions/verify-dependencies
         with:
           network_name: ${{ env.NETWORK_NAME }}
+          services_to_start: 'mongodb,redis'
           startup_timeout: '120'
           verify_network_connectivity: 'true'
 

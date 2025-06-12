@@ -86,7 +86,7 @@ docker run -d -p 8182:8182 \
   -e BROWSER_CONTEXT_NUMBER=2 \
   -e BROWSER_MAX_OPEN_TABS=8 \
   -e BROWSER_DISPLAY_MODE=HEADLESS \
-  galaxyeye88/pulsar-rpa:latest
+  galaxyeye88/pulsar-rpa-pro:latest
 ```
 
 **Windows (PowerShell):**
@@ -99,7 +99,7 @@ docker run -d -p 8182:8182 `
   -e BROWSER_CONTEXT_NUMBER=2 `
   -e BROWSER_MAX_OPEN_TABS=8 `
   -e BROWSER_DISPLAY_MODE=HEADLESS `
-  galaxyeye88/pulsar-rpa:latest
+  galaxyeye88/pulsar-rpa-pro:latest
 ```
 
 > ⚠️ **Note**: Docker users may need to warm up the before crawling to avoid bot detection, 
