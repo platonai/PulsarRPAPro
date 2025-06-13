@@ -103,8 +103,6 @@ if ($prevTag) {
     git log --oneline --no-merges -5 | ForEach-Object { Write-Host "  • $_" }
 }
 
-exit 0
-
 # Confirm creation
 Write-Host ""
 $confirm = Read-Host "Create and push tag '$newTag'? (y/n)"
