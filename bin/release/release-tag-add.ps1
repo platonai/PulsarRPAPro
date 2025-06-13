@@ -86,8 +86,10 @@ if ($existingTag) {
 }
 
 # Get previous tag for release notes
-# $prevTag = git describe --tags --abbrev=0 2>$null
-$prevTag = git tag --list "v[0-9]*.[0-9]*.[0-9]*" | Sort-Object { [version]($_ -replace '^v','') } -Descending | Select-Object -First 1
+$prevTag = git tag --list | Where-Object { $_ -match '^v\d+\.\d+\.\d+$' } |
+        Sort-Object { [version]($_ -replace '^v','') } -Descending |
+        Select-Object -First 1
+
 if ($prevTag) {
     Write-Host "`nChanges since $prevTag :"
     $changes = git log --oneline --no-merges "$prevTag..HEAD"
@@ -100,6 +102,8 @@ if ($prevTag) {
     Write-Host "`nRecent commits:"
     git log --oneline --no-merges -5 | ForEach-Object { Write-Host "  • $_" }
 }
+
+exit 0
 
 # Confirm creation
 Write-Host ""
