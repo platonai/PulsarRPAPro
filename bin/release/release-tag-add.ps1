@@ -83,8 +83,6 @@ if ($existingTag) {
         Write-Error "Failed to delete existing tag: $_"
         exit 1
     }
-
-    exit 0
 }
 
 # Get previous tag for release notes
