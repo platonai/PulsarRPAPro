@@ -76,7 +76,7 @@ if ($existingTag) {
 # Get previous tag for release notes
 $prevTag = git describe --tags --abbrev=0 2>$null
 if ($prevTag) {
-    Write-Host "`nChanges since $prevTag:"
+    Write-Host "`nChanges since $prevTag :"
     $changes = git log --oneline --no-merges "$prevTag..HEAD"
     if ($changes) {
         $changes | ForEach-Object { Write-Host "  • $_" }
