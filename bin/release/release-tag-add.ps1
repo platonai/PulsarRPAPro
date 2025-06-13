@@ -70,11 +70,26 @@ $newTag = "v$version"
 $existingTag = git tag -l $newTag
 if ($existingTag) {
     Write-Host "Tag '$newTag' already exists"
+
+    $confirm = Read-Host "Do you want to overwrite it? (y/n)"
+    if ($confirm -ne 'y') {
+        Write-Host "Cancelled"
+        exit 0
+    }
+    try {
+        git tag -d $newTag
+        Write-Host "Deleted existing tag: $newTag"
+    } catch {
+        Write-Error "Failed to delete existing tag: $_"
+        exit 1
+    }
+
     exit 0
 }
 
 # Get previous tag for release notes
-$prevTag = git describe --tags --abbrev=0 2>$null
+# $prevTag = git describe --tags --abbrev=0 2>$null
+$prevTag = git tag --list "v[0-9]*.[0-9]*.[0-9]*" | Sort-Object { [version]($_ -replace '^v','') } -Descending | Select-Object -First 1
 if ($prevTag) {
     Write-Host "`nChanges since $prevTag :"
     $changes = git log --oneline --no-merges "$prevTag..HEAD"
