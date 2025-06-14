@@ -5,7 +5,7 @@
 # Author: Auto-generated for platonai
 # Date: 2025-06-14 08:00:37
 
-set -euo pipefail
+# set -euo pipefail
 IFS=$'\n\t'
 
 # =========================
