@@ -36,4 +36,4 @@ java -jar PulsarRPAPro.jar serve
 
 If PulsarRPAPro is running in GUI mode, the web console should open within a few seconds, or you can open it manually at:
 
-[http://localhost:2718/exotic/crawl/](http://localhost:2718/exotic/crawl/)
+[http://localhost:2718/crawl/](http://localhost:2718/crawl/)
