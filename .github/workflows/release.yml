@@ -19,12 +19,15 @@ on:
 
 env:
   IMAGE_NAME: galaxyeye88/pulsar-rpa
-  PRODUCTION_JAR_MODULE_NAME: 'pulsar-master'
-  PRODUCTION_JAR_MODULE_PATH: 'pulsar-app/pulsar-master'
-  PRODUCTION_JAR_NAME: 'PulsarRPA.jar'
-  PRODUCTION_JAR_PATH: 'pulsar-app/pulsar-master/target/PulsarRPA.jar'
+  MAVEN_OPTS: '-Dmaven.repo.local=.m2/repository -Xmx1g -XX:+TieredCompilation -XX:TieredStopAtLevel=1'
+
+  PRODUCTION_JAR_MODULE_NAME: 'exotic-standalone'
+  PRODUCTION_JAR_MODULE_PATH: 'exotic-standalone'
+  PRODUCTION_JAR_NAME: 'PulsarRPAPro.jar'
+  PRODUCTION_JAR_PATH: 'exotic-standalone/target/PulsarRPAPro.jar'
   DRAFT: true
   PRERELEASE: true
+  DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
 
 jobs:
   build-and-release:
@@ -63,34 +66,59 @@ jobs:
           key: ${{ runner.os }}-m2-${{ hashFiles('**/pom.xml') }}
           restore-keys: ${{ runner.os }}-m2
 
-      - name: Maven Build
-        run: |
-          ./mvnw clean install -DskipTests -Pall-modules
-
       - name: Build Docker image
         run: |
           docker build -t $IMAGE_NAME:$VERSION -t $IMAGE_NAME:latest -f Dockerfile .
 
-      - name: Test Docker container
-        if: success()
+      - name: Start Docker Containers
         run: |
-          # Start container
-          docker run -d --rm --name pulsar-rpa-test -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} $IMAGE_NAME:$VERSION
-          sleep 10  # Wait for Spring Boot to start
+          docker compose -f docker-compose.yml up -d
 
-          # Run integration tests
-          find bin/ -name "*.sh" -exec chmod +x {} \;
-          if ! ./bin/run-integration-test.sh; then
-            echo "Integration test failed"
-            docker logs pulsar-rpa-test
-            docker stop pulsar-rpa-test || true
-            exit 1
+      - name: Wait for MongoDB and Redis
+        run: |
+          echo "Waiting for MongoDB and Redis to be ready..."
+          docker compose -f docker-compose.yml wait mongodb redis pulsar-rpa-pro
+
+      - name: Run Integration Tests
+        id: integration-tests
+        shell: bash
+        run: |
+          echo "::group::🧪 Integration Tests"
+          
+          if [ -f "./bin/run-integration-test.sh" ]; then
+            echo "✅ Found integration test script"
+          
+            echo "🚀 Running integration tests..."
+            echo "Application URL: http://localhost:8182"
+            echo "Network: ${{ env.NETWORK_NAME }}"
+            echo "Container: ${{ env.CONTAINER_NAME }}"
+          
+            if timeout 600 ./bin/run-integration-test.sh; then
+              echo "✅ Integration tests passed"
+              echo "integration_status=success" >> $GITHUB_OUTPUT
+            else
+              echo "❌ Integration tests failed"
+              echo "integration_status=failed" >> $GITHUB_OUTPUT
+              exit 1
+            fi
+          else
+            echo "⚠️ Integration test script not found: ./bin/run-integration-test.sh"
+            echo "Skipping integration tests..."
+            echo "integration_status=skipped" >> $GITHUB_OUTPUT
           fi
+          
+          echo "::endgroup::"
 
-          # Clean up
+      - name: Clean up Docker containers
+        if: always()
+        run: |
           docker stop pulsar-rpa-test || true
-        env:
-          DEEPSEEK_API_KEY: ${{ secrets.DEEPSEEK_API_KEY }}
+          docker compose -f docker-compose.yml down --remove-orphans
+          docker container prune -f
+
+      - name: Maven Build
+        run: |
+          ./mvnw clean install -DskipTests -Pall-modules
 
       - name: Build PulsarRPA JAR
         if: success()
@@ -135,3 +163,42 @@ jobs:
         if: success()
         run: |
           bin/release/update-documentation.sh
+
+      - name: Pipeline Summary
+        if: always()
+        shell: bash
+        run: |
+          echo "::group::📊 Pipeline Summary"
+          
+          echo "🎯 Pipeline Results:"
+          echo "  - Setup: ${{ steps.setup.outcome }}"
+          echo "  - Dependencies: ${{ steps.deps.outcome }}"
+          echo "  - Maven Build: ${{ steps.build-maven.outcome }}"
+          echo "  - Tests: ${{ steps.tests.outcome || 'skipped' }}"
+          echo "  - Docker Build: ${{ steps.build.outcome }}"
+          echo "  - Application: ${{ steps.app.outcome }}"
+          echo "  - Health Check: ${{ steps.health.outcome }}"
+          echo "  - Integration Tests: ${{ steps.integration-tests.outcome || 'skipped' }}"
+          
+          echo ""
+          echo "🌐 Infrastructure:"
+          echo "  - Network: ${{ env.NETWORK_NAME }}"
+          echo "  - Container: ${{ env.CONTAINER_NAME }}"
+          echo "  - Image: pulsar-rpa:${{ github.sha }}"
+          echo "  - MongoDB: ${{ steps.deps.outputs.mongodb_status }}"
+          echo "  - Redis: ${{ steps.deps.outputs.redis_status }}"
+          
+          echo ""
+          echo "📅 Completed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+          echo "👤 Triggered by: ${{ github.actor }}"
+          echo "🌟 Commit: ${{ github.sha }}"
+          
+          echo "::endgroup::"
+
+      - name: Cleanup Resources
+        if: always()
+        uses: ./.github/actions/cleanup-resources
+        with:
+          container_name: ${{ env.CONTAINER_NAME }}
+          cleanup_compose: 'true'
+          cleanup_volumes: 'true'
