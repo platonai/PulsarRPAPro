@@ -11,15 +11,10 @@ COPY .mvn ./.mvn
 COPY bin ./bin
 COPY . .
 
-RUN ls -la
+RUN ls -la && find . -name "*.sh" -exec chmod +x {} \;
 
 # Build the application with Maven cache mount
-RUN --mount=type=cache,target=/root/.m2 \
-    if [ -f "./bin/build.sh" ]; then \
-        chmod +x ./bin/build.sh && ./bin/build.sh; \
-    else \
-        mvn clean package -DskipTests -Dmaven.javadoc.skip=true; \
-    fi
+RUN --mount=type=cache,target=/root/.m2 bin/build.sh
 
 # Copy JAR for use in the next stage with better error handling
 RUN JAR_FILE=$(find . -name "PulsarRPA*.jar" -type f | head -n 1) && \
