@@ -2,11 +2,7 @@
 
 ## ci-local.ps1, ci-local.sh
 
-Run CI/CD scripts without docker locally to test changes.
-
-## ci-docker-local.ps1, ci-docker-local.sh
-
-Run CI/CD scripts with docker locally to test changes.
+Run CI/CD scripts locally to test changes.
 
 ## ci-tag-add.ps1
 
