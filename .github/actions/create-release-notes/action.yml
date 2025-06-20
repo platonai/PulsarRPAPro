@@ -104,18 +104,18 @@ runs:
         Linux/MacOS:
         ```bash
         echo $DEEPSEEK_API_KEY # make sure LLM api key is set
-        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa:${{ inputs.version }}
+        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:${{ inputs.version }}
         ```
 
         Windows:
         ```powershell
         echo $env:DEEPSEEK_API_KEY # make sure LLM api key is set
-        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=$env:DEEPSEEK_API_KEY galaxyeye88/pulsar-rpa:${{ inputs.version }}
+        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=$env:DEEPSEEK_API_KEY galaxyeye88/pulsar-rpa-pro:${{ inputs.version }}
         ```
 
         GitHub Container Registry:
         ```bash
-        docker pull ghcr.io/${{ github.repository_owner }}/pulsar-rpa:${{ inputs.version }}
+        docker pull ghcr.io/${{ github.repository_owner }}/pulsar-rpa-pro:${{ inputs.version }}
         ```
         ---
 
