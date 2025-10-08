@@ -31,7 +31,7 @@
 🤖 只需文本即可大规模自动化浏览器并抽取数据：
 
 ```text
-访问 https://www.amazon.com/dp/B0C1H26C46
+访问 https://www.amazon.com/dp/B08PP5MSVB
 页面加载后：滚动到中间。
 
 总结该商品。
@@ -126,7 +126,7 @@ java -DDEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar PulsarRPAPro.jar serve
 curl -X POST "http://localhost:8182/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
-    访问 https://www.amazon.com/dp/B0C1H26C46
+    访问 https://www.amazon.com/dp/B08PP5MSVB
     总结该商品。
     提取：商品名称、价格、评分。
     找出所有包含 /dp/ 的链接。
@@ -147,7 +147,7 @@ select
   dom_base_uri(dom) as url,
   dom_first_text(dom, '#productTitle') as title,
   dom_first_slim_html(dom, 'img:expr(width > 400)') as img
-from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
+from load_and_select('https://www.amazon.com/dp/B08PP5MSVB', 'body');
 "
 ```
 
@@ -160,7 +160,7 @@ from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
     "price": "$1,199.00",
     "ratings": "4.5 out of 5 stars"
   },
-  "url": "https://www.amazon.com/dp/B0C1H26C46",
+  "url": "https://www.amazon.com/dp/B08PP5MSVB",
   "title": "Apple iPhone 15 Pro Max",
   "img": "<img src=\"https://example.com/image.jpg\" />"
 }

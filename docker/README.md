@@ -16,7 +16,7 @@ docker compose up -d
 curl -X POST "http://localhost:8182/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
-    Go to https://www.amazon.com/dp/B0C1H26C46
+    Go to https://www.amazon.com/dp/B08PP5MSVB
     After page load: click #title, then scroll to the middle.
 
     Summarize the product.

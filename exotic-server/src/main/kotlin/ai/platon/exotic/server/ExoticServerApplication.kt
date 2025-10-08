@@ -145,7 +145,7 @@ class ExoticServerApplication(
                 """
             ```shell
             curl -X POST "$commandEndpoint" -H "Content-Type: text/plain" -d "
-                Go to https://www.amazon.com/dp/B0C1H26C46
+                Go to https://www.amazon.com/dp/B08PP5MSVB
 
                 After browser launch: clear browser cookies.
                 After page load: scroll to the middle.
@@ -168,7 +168,7 @@ class ExoticServerApplication(
               dom_base_uri(dom) as url,
               dom_first_text(dom, '#productTitle') as title,
               dom_first_slim_html(dom, 'img:expr(width > 400)') as img
-            from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
+            from load_and_select('https://www.amazon.com/dp/B08PP5MSVB', 'body');
             "
             ```
             """.trimIndent()

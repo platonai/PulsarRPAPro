@@ -32,7 +32,7 @@
 🤖 Automate the browser and extract data at scale with simple text:
 
 ```text
-Go to https://www.amazon.com/dp/B0C1H26C46
+Go to https://www.amazon.com/dp/B08PP5MSVB
 After page load: scroll to the middle.
 
 Summarize the product.
@@ -164,7 +164,7 @@ Use the `ai/command` API to perform actions and extract data using natural langu
 curl -X POST "http://localhost:8182/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
-    Visit https://www.amazon.com/dp/B0C1H26C46
+    Visit https://www.amazon.com/dp/B08PP5MSVB
     Summarize the product.
     Extract: product name, price, ratings.
     Find all links containing /dp/.
@@ -185,7 +185,7 @@ select
   dom_base_uri(dom) as url,
   dom_first_text(dom, '#productTitle') as title,
   dom_first_slim_html(dom, 'img:expr(width > 400)') as img
-from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
+from load_and_select('https://www.amazon.com/dp/B08PP5MSVB', 'body');
 "
 ```
 
@@ -198,7 +198,7 @@ from load_and_select('https://www.amazon.com/dp/B0C1H26C46', 'body');
     "price": "$1,199.00",
     "ratings": "4.5 out of 5 stars"
   },
-  "url": "https://www.amazon.com/dp/B0C1H26C46",
+  "url": "https://www.amazon.com/dp/B08PP5MSVB",
   "title": "Apple iPhone 15 Pro Max",
   "img": "<img src=\"https://example.com/image.jpg\" />"
 }

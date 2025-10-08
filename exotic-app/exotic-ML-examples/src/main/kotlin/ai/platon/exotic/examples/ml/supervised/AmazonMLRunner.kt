@@ -107,7 +107,7 @@ fun main(args: Array<String>) {
     var task = "check"
     var start = 0
     var limit = 30000
-    var url = "https://www.amazon.com/dp/B0C1H26C46"
+    var url = "https://www.amazon.com/dp/B08PP5MSVB"
 
     var i = 0
     val remainders = mutableListOf<String>()
