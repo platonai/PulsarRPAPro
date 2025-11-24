@@ -69,8 +69,7 @@ Executable JAR uses your desktop browser, you can enjoy the best experience.
 Download:
 
 ```bash
-# Linux/macOS and Windows (if curl is available)
-curl -L -o PulsarRPAPro.jar https://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
+curl -L -o PulsarRPAPro.jar https://github.com/platonai/PulsarRPAPro/releases/download/v3.0.0/PulsarRPAPro.jar
 ```
 
 Run the JAR for help:

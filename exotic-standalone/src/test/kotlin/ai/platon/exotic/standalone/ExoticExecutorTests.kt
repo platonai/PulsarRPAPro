@@ -66,7 +66,7 @@ class ExoticExecutorTests {
 
     @Test
     fun testScraping() {
-        val cmdLine = "scrape https://www.amazon.com/dp/B09V3KXJPB -requireSize 20000" +
+        val cmdLine = "scrape https://www.amazon.com/dp/B08PP5MSVB -requireSize 20000" +
                 " -field #productTitle" +
                 " -field #acrPopover -field #acrCustomerReviewText -field #askATFLink"
         val executor = ExoticExecutor(cmdLine)
@@ -88,7 +88,7 @@ class ExoticExecutorTests {
 
     @Test
     fun testScrapeOutPages() {
-        val cmdLine = "scrape https://www.amazon.com/dp/B09V3KXJPB " +
+        val cmdLine = "scrape https://www.amazon.com/dp/B08PP5MSVB " +
                 " -requireSize 20000" +
                 " -outLink a[href~=/dp/]" +
                 " -topLinks 5" +

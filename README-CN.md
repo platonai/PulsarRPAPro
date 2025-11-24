@@ -63,7 +63,7 @@
 下载：
 
 ```bash
-curl -L -o PulsarRPAPro.jar https://static.platonai.cn/repo/ai/platon/exotic/PulsarRPAPro.jar
+curl -L -o PulsarRPAPro.jar https://github.com/platonai/PulsarRPAPro/releases/download/v3.0.0/PulsarRPAPro.jar
 ```
 
 运行：
