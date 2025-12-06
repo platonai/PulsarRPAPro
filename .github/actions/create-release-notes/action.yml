@@ -49,7 +49,7 @@ runs:
         
         # Create release notes
         cat > ${{ inputs.output_file }} << EOF
-        # 🚀 PulsarRPA v${{ inputs.version }} Release Notes
+        # 🚀 Browser4 v${{ inputs.version }} Release Notes
 
         **Release Date:** $BUILD_DATE  
         **Java Version:** ${{ inputs.java_version }}
@@ -78,45 +78,33 @@ runs:
         
         #### 🧩 Download
         
-        ```bash
-        # For Linux/macOS/Windows (with curl)
+        
+        \`\`\`bash
         curl -L -o ${{ inputs.jar_name }} https://github.com/${{ github.repository }}/releases/download/v${{ inputs.version }}/${{ inputs.jar_name }}
-        ```
+        \`\`\`
         
         #### 🚀 Run
         
-        Linux/MacOS:
-        ```bash
-        echo $DEEPSEEK_API_KEY # make sure LLM api key is set
-        java -DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar ${{ inputs.jar_name }}
-        ```
+        \`\`\`shell
+        echo \$DEEPSEEK_API_KEY # make sure LLM api key is set. VOLCENGINE_API_KEY/OPENAI_API_KEY also supported.
+        java -D"DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY}" -jar Browser4.jar
+        \`\`\`
         
-        Windows:
-        ```powershell
-        echo $env:DEEPSEEK_API_KEY # make sure LLM api key is set
-        java -DEEPSEEK_API_KEY=$env:DEEPSEEK_API_KEY -jar ${{ inputs.jar_name }}
-        ```
+        > 🔍 **Tip:** Make sure \`DEEPSEEK_API_KEY\` or other LLM API key is set in your environment, or AI features will not be available.
         
-        > 🔍 **Tip:** Make sure `DEEPSEEK_API_KEY` or other LLM API key is set in your environment, or AI features will not be available.
-
+        > 🔍 **Tip:** Windows PowerShell syntax: \`\$env:DEEPSEEK_API_KEY\` (environment variable) vs \`\$DEEPSEEK_API_KEY\` (script variable).
         ### 🐳 Docker
 
-        Linux/MacOS:
-        ```bash
-        echo $DEEPSEEK_API_KEY # make sure LLM api key is set
-        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:${{ inputs.version }}
-        ```
-
-        Windows:
-        ```powershell
-        echo $env:DEEPSEEK_API_KEY # make sure LLM api key is set
-        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=$env:DEEPSEEK_API_KEY galaxyeye88/pulsar-rpa-pro:${{ inputs.version }}
-        ```
+        \`\`\`shell
+        # make sure LLM api key is set. VOLCENGINE_API_KEY/OPENAI_API_KEY also supported.
+        echo \$DEEPSEEK_API_KEY
+        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY} galaxyeye88/browser4:${{ inputs.version }}
+        \`\`\`
 
         GitHub Container Registry:
-        ```bash
-        docker pull ghcr.io/${{ github.repository_owner }}/pulsar-rpa-pro:${{ inputs.version }}
-        ```
+        \`\`\`shell
+        docker pull ghcr.io/${{ github.repository_owner }}/browser4:${{ inputs.version }}
+        \`\`\`
         ---
 
         ## 📄 Full Changelog
@@ -124,7 +112,7 @@ runs:
 
         ---
 
-        *Built with ❤️ by the PulsarRPA team*
+        *Built with ❤️ by the Browser4 team*
         EOF
         
         echo "✅ Release notes generated: ${{ inputs.output_file }}"
