@@ -49,6 +49,16 @@ jobs:
           java-version: ${{ env.JAVA_VERSION }}
           cache: maven
 
+      - name: Verify Dependencies
+        id: deps
+        if: success()
+        uses: ./.github/actions/verify-dependencies
+        with:
+          network_name: ${{ env.NETWORK_NAME }}
+          services_to_start: 'mongodb,redis'
+          startup_timeout: '120'
+          verify_network_connectivity: 'true'
+
       - name: Correct Permissions
         run: |
           find bin/ -name "*.sh" | xargs chmod +x
