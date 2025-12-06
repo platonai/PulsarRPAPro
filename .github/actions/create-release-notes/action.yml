@@ -49,7 +49,7 @@ runs:
         
         # Create release notes
         cat > ${{ inputs.output_file }} << EOF
-        # 🚀 Browser4 v${{ inputs.version }} Release Notes
+        # 🚀 pulsar-rpa-pro v${{ inputs.version }} Release Notes
 
         **Release Date:** $BUILD_DATE  
         **Java Version:** ${{ inputs.java_version }}
@@ -87,7 +87,7 @@ runs:
         
         \`\`\`shell
         echo \$DEEPSEEK_API_KEY # make sure LLM api key is set. VOLCENGINE_API_KEY/OPENAI_API_KEY also supported.
-        java -D"DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY}" -jar Browser4.jar
+        java -D"DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY}" -jar pulsar-rpa-pro.jar
         \`\`\`
         
         > 🔍 **Tip:** Make sure \`DEEPSEEK_API_KEY\` or other LLM API key is set in your environment, or AI features will not be available.
@@ -98,12 +98,12 @@ runs:
         \`\`\`shell
         # make sure LLM api key is set. VOLCENGINE_API_KEY/OPENAI_API_KEY also supported.
         echo \$DEEPSEEK_API_KEY
-        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY} galaxyeye88/browser4:${{ inputs.version }}
+        docker run -d -p 8182:8182 -e DEEPSEEK_API_KEY=\${DEEPSEEK_API_KEY} galaxyeye88/pulsar-rpa-pro:${{ inputs.version }}
         \`\`\`
 
         GitHub Container Registry:
         \`\`\`shell
-        docker pull ghcr.io/${{ github.repository_owner }}/browser4:${{ inputs.version }}
+        docker pull ghcr.io/${{ github.repository_owner }}/pulsar-rpa-pro:${{ inputs.version }}
         \`\`\`
         ---
 
@@ -112,7 +112,7 @@ runs:
 
         ---
 
-        *Built with ❤️ by the Browser4 team*
+        *Built with ❤️ by the pulsar-rpa-pro team*
         EOF
         
         echo "✅ Release notes generated: ${{ inputs.output_file }}"

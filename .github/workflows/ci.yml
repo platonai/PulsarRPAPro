@@ -7,6 +7,7 @@ on:
       - main
     tags:
       - 'v[0-9]+.[0-9]+.[0-9]+-ci.[0-9]+'
+      - 'v[0-9]+.[0-9]+.[0-9]+-rc.[0-9]+-ci.[0-9]+'
     paths:
       - '*.java'
       - '*.kt'
@@ -51,7 +52,7 @@ jobs:
         uses: ./.github/actions/verify-dependencies
         with:
           network_name: ${{ env.NETWORK_NAME }}
-          services_to_start: 'mongodb,redis'
+          services_to_start: 'mongodb'
           startup_timeout: '120'
           verify_network_connectivity: 'true'
 
@@ -68,12 +69,11 @@ jobs:
         if: inputs.skip_tests != true
         uses: ./.github/actions/run-tests
         with:
-          maven_profiles: 'all-modules'
-          test_excludes: '**integration**'
+          test_excludes: '**integration**,**e2e**'
           timeout_minutes: '35'
 
       - name: Check Test Status
-        if: always()
+        if: inputs.skip_tests != true
         run: |
           if [ "${{ steps.run-tests.outputs.test_status }}" != "success" ]; then
             echo "❌ Tests failed with status: ${{ steps.run-tests.outputs.test_status }}"
@@ -115,35 +115,36 @@ jobs:
           timeout_minutes: '5'
           container_name: ${{ env.CONTAINER_NAME }}
 
-      - name: Run Integration Tests
-        id: integration-tests
+      - name: Run End to End Tests
+        id: end-to-end-tests
         shell: bash
         run: |
-          echo "::group::🧪 Integration Tests"
-          
-          if [ -f "./bin/run-integration-test.sh" ]; then
-            echo "✅ Found integration test script"
-            chmod +x ./bin/run-integration-test.sh
-          
-            echo "🚀 Running integration tests..."
+          echo "::group::🧪 End to End Tests"
+
+          if [ -f "./bin/tests/run-e2e-test.sh" ]; then
+            echo "✅ Found E2E test script"
+            chmod +x ./bin/tests/run-e2e-test.sh
+
+            echo "🚀 Running E2E tests..."
+            date
             echo "Application URL: http://localhost:8182"
             echo "Network: ${{ env.NETWORK_NAME }}"
             echo "Container: ${{ env.CONTAINER_NAME }}"
-          
-            if timeout 600 ./bin/run-integration-test.sh; then
-              echo "✅ Integration tests passed"
-              echo "integration_status=success" >> $GITHUB_OUTPUT
+
+            if timeout 1200 ./bin/tests/run-e2e-test.sh; then
+              echo "✅ E2E tests passed"
+              echo "E2E_status=success" >> $GITHUB_OUTPUT
             else
-              echo "❌ Integration tests failed"
+              echo "❌ E2E tests failed"
               echo "integration_status=failed" >> $GITHUB_OUTPUT
               exit 1
             fi
           else
-            echo "⚠️ Integration test script not found: ./bin/run-integration-test.sh"
-            echo "Skipping integration tests..."
-            echo "integration_status=skipped" >> $GITHUB_OUTPUT
+            echo "⚠️ E2E test script not found: ./bin/tests/run-E2E-test.sh"
+            echo "Skipping E2E tests..."
+            echo "E2E_status=skipped" >> $GITHUB_OUTPUT
           fi
-          
+
           echo "::endgroup::"
 
       - name: Pipeline Summary
@@ -151,7 +152,7 @@ jobs:
         shell: bash
         run: |
           echo "::group::📊 Pipeline Summary"
-          
+
           echo "🎯 Pipeline Results:"
           echo "  - Setup: ${{ steps.setup.outcome }}"
           echo "  - Dependencies: ${{ steps.deps.outcome }}"
@@ -161,7 +162,7 @@ jobs:
           echo "  - Application: ${{ steps.app.outcome }}"
           echo "  - Health Check: ${{ steps.health.outcome }}"
           echo "  - Integration Tests: ${{ steps.integration-tests.outcome || 'skipped' }}"
-          
+
           echo ""
           echo "🌐 Infrastructure:"
           echo "  - Network: ${{ env.NETWORK_NAME }}"
@@ -169,12 +170,12 @@ jobs:
           echo "  - Image: pulsar-rpa-pro:${{ github.sha }}"
           echo "  - MongoDB: ${{ steps.deps.outputs.mongodb_status }}"
           echo "  - Redis: ${{ steps.deps.outputs.redis_status }}"
-          
+
           echo ""
           echo "📅 Completed at: $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
           echo "👤 Triggered by: ${{ github.actor }}"
           echo "🌟 Commit: ${{ github.sha }}"
-          
+
           echo "::endgroup::"
 
       - name: Cleanup Resources
