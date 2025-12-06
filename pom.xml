@@ -299,9 +299,8 @@
 
 		<version.maven-release-plugin>3.1.1</version.maven-release-plugin>
 
-		<platon.version>4.0.1</platon.version>
 		<!-- https://mvnrepository.com/artifact/ai.platon.pulsar -->
-		<platon-pulsar.version>3.0.12</platon-pulsar.version>
+		<platon-pulsar.version>3.0.16</platon-pulsar.version>
 		<!-- https://static.platonai.cn/repo/ai/platon/scent/ -->
 		<scent.version>3.0.3</scent.version>
 		<pulsar.kotlin.driver.version>1.7.4</pulsar.kotlin.driver.version>
