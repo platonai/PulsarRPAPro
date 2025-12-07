@@ -95,7 +95,7 @@ inputs:
   integration_test_script:
     description: 'Path to integration test script'
     required: false
-    default: './bin/tests/run-integration-test.sh'
+    default: './bin/tests/run-e2e-test.sh'
   integration_test_timeout:
     description: 'Integration test timeout in seconds'
     required: false
@@ -295,7 +295,7 @@ runs:
           export APPLICATION_URL="http://localhost:${{ inputs.service_port }}"
           export CONTAINER_NAME="${{ inputs.container_name }}"
           export NETWORK_NAME="${{ inputs.network_name }}"
-        
+
           # Run integration tests with timeout
           if timeout "$TIMEOUT_SECONDS" "$SCRIPT_PATH"; then
             echo "✅ Integration tests passed"
