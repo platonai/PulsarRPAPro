@@ -22,6 +22,7 @@ RUN --mount=type=cache,target=/root/.m2 mvn clean package -DskipTests -Dmaven.ja
 RUN JAR_FILE=$(find . -name "PulsarRPA*.jar" -type f | head -n 1) && \
     test -n "$JAR_FILE" || (echo "ERROR: PulsarRPA JAR file not found" && exit 1) && \
     cp "$JAR_FILE" /build/app.jar && \
+    find /build -name "*.jar" ! -path "/build/app.jar" -delete && \
     echo "Successfully copied JAR: $JAR_FILE"
 
 # Stage 2: Run stage

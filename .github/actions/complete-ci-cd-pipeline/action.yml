@@ -269,21 +269,21 @@ runs:
         timeout_minutes: ${{ inputs.health_timeout_minutes }}
         container_name: ${{ inputs.container_name }}
 
-    - name: Run Integration Tests
-      id: integration-tests
+    - name: Run E2E Tests
+      id: e2e-tests
       if: ${{ inputs.skip_integration_tests != 'true' }}
       shell: bash
       run: |
-        echo "::group::🧪 Integration Tests"
+        echo "::group::🧪 E2E Tests"
         
         SCRIPT_PATH="${{ inputs.integration_test_script }}"
         TIMEOUT_SECONDS="${{ inputs.integration_test_timeout }}"
         
         if [ -f "$SCRIPT_PATH" ]; then
-          echo "✅ Found integration test script: $SCRIPT_PATH"
+          echo "✅ Found E2E test script: $SCRIPT_PATH"
           chmod +x "$SCRIPT_PATH"
         
-          echo "🚀 Running integration tests..."
+          echo "🚀 Running E2E tests..."
           echo "📋 Configuration:"
           echo "  - Application URL: http://localhost:${{ inputs.service_port }}"
           echo "  - Network: ${{ inputs.network_name }}"
@@ -296,13 +296,14 @@ runs:
           export CONTAINER_NAME="${{ inputs.container_name }}"
           export NETWORK_NAME="${{ inputs.network_name }}"
 
-          # Run integration tests with timeout
+          # Run E2E tests with timeout
           if timeout "$TIMEOUT_SECONDS" "$SCRIPT_PATH"; then
-            echo "✅ Integration tests passed"
+            echo "✅ E2E tests passed"
             echo "integration_status=success" >> $GITHUB_OUTPUT
+            echo "e2e_status=success" >> $GITHUB_OUTPUT
           else
             exit_code=$?
-            echo "❌ Integration tests failed (exit code: $exit_code)"
+            echo "❌ E2E tests failed (exit code: $exit_code)"
         
             if [ "${{ inputs.debug_mode }}" = "true" ]; then
               echo ""
@@ -322,8 +323,8 @@ runs:
             exit 1
           fi
         else
-          echo "⚠️ Integration test script not found: $SCRIPT_PATH"
-          echo "Skipping integration tests..."
+          echo "⚠️ E2E test script not found: $SCRIPT_PATH"
+          echo "Skipping E2E tests..."
           echo "integration_status=skipped" >> $GITHUB_OUTPUT
         fi
         
@@ -391,7 +392,7 @@ runs:
         echo "  - Docker Build: ${{ steps.build-docker.outcome }}"
         echo "  - Start Application: ${{ steps.start-app.outcome }}"
         echo "  - Health Check: ${{ steps.health-check.outcome }}"
-        echo "  - Integration Tests: ${{ steps.integration-tests.outcome || 'skipped' }}"
+        echo "  - E2E Tests: ${{ steps.integration-tests.outcome || 'skipped' }}"
         
         if [ -n "$FAILED_STEPS" ]; then
           echo ""
