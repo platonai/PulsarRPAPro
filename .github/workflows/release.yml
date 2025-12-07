@@ -42,12 +42,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      - name: Set up JDK ${{ env.JAVA_VERSION }} For Deployment
-        uses: actions/setup-java@v4
+      - name: Setup Environment
+        id: setup
+        uses: ./.github/actions/setup-environment
         with:
-          distribution: 'temurin'
-          java-version: ${{ env.JAVA_VERSION }}
-          cache: maven
+          java_version: '17'
 
       - name: Verify Dependencies
         id: deps
