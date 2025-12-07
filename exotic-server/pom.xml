@@ -15,7 +15,12 @@
 	<description>The exotic server</description>
 
 	<dependencies>
-		<dependency>
+        <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-common</artifactId>
+        </dependency>
+
+        <dependency>
 			<groupId>ai.platon.pulsar</groupId>
 			<artifactId>pulsar-persist</artifactId>
 		</dependency>

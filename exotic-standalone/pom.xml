@@ -15,7 +15,13 @@
 	<description>Creates an executable jar to run everything</description>
 
 	<dependencies>
-		<dependency>
+
+        <dependency>
+            <groupId>ai.platon.pulsar</groupId>
+            <artifactId>pulsar-common</artifactId>
+        </dependency>
+
+        <dependency>
 			<groupId>ai.platon.exotic</groupId>
 			<artifactId>exotic-common</artifactId>
 		</dependency>
@@ -60,8 +66,6 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-actuator</artifactId>
 		</dependency>
-
-
 
 		<dependency>
 			<groupId>org.junit.jupiter</groupId>

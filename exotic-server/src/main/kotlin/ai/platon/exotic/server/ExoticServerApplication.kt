@@ -6,6 +6,7 @@ import ai.platon.pulsar.common.AppFiles
 import ai.platon.pulsar.common.AppPaths
 import ai.platon.pulsar.common.config.ImmutableConfig
 import ai.platon.pulsar.common.getLogger
+import ai.platon.pulsar.common.serialize.json.JSONExtractor
 import ai.platon.pulsar.common.urls.URLUtils
 import ai.platon.pulsar.external.ChatModelFactory
 import ai.platon.pulsar.protocol.browser.emulator.BrowserResponseEvents

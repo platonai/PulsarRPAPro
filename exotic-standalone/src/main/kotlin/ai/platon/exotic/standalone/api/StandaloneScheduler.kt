@@ -23,7 +23,7 @@ class StandaloneScheduler {
     @Scheduled(initialDelay = 10 * MILLIS_PER_SECOND, fixedDelay = 1000 * MILLIS_PER_DAY)
     fun openWebConsole() {
         val baseURL = "http://localhost:$port"
-        val url = baseURL + "/" + "$contextPath/api/hello/whoami".trimStart('/')
+        val url = baseURL + "/" + "$contextPath/api/system/hello".trimStart('/')
 
         ExoticUtils.openBrowser(url)
     }
