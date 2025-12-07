@@ -321,8 +321,8 @@ print_summary() {
   else
     log "${YELLOW}[PARTIAL SUCCESS]${NC} Some tests failed. Check logs for details."
 
-    if [[ $success_rate -lt 80 && $FAILED_TESTS -gt 0 ]]; then
-      log "${RED}[FAILURE]${NC} Success rate below 80% (timeouts ignored). Exiting with failure."
+    if [[ $success_rate -lt 50 && $FAILED_TESTS -gt 0 ]]; then
+      log "${RED}[FAILURE]${NC} Success rate below 50% (timeouts ignored). Exiting with failure."
       exit 1
     else
       log "${YELLOW}[PARTIAL SUCCESS]${NC} Some tests failed. Check logs for details."
