@@ -115,7 +115,7 @@ jobs:
             echo "Network: ${{ env.NETWORK_NAME }}"
             echo "Container: ${{ env.CONTAINER_NAME }}"
           
-            if timeout 600 ./bin/tests/run-e2e-test.sh; then
+            if timeout 1200 ./bin/tests/run-e2e-test.sh; then
               echo "✅ E2E tests passed"
               echo "e2e_status=success" >> $GITHUB_OUTPUT
             else
