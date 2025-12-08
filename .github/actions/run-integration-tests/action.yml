@@ -22,9 +22,9 @@ inputs:
     default: '600'
 
 outputs:
-  integration_status:
+  e2e_status:
     description: 'Status of the integration tests (success, failed, skipped)'
-    value: ${{ steps.run-tests.outputs.integration_status }}
+    value: ${{ steps.run-tests.outputs.e2e_status }}
   integration_exit_code:
     description: 'Exit code of the integration tests (if failed)'
     value: ${{ steps.run-tests.outputs.integration_exit_code }}
@@ -58,7 +58,7 @@ runs:
             end_time=$(date +%s)
             duration=$((end_time - start_time))
             echo "✅ Integration tests passed (completed in ${duration}s)"
-            echo "integration_status=success" >> $GITHUB_OUTPUT
+            echo "e2e_status=success" >> $GITHUB_OUTPUT
             echo "integration_duration=${duration}" >> $GITHUB_OUTPUT
             echo "integration_time=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
           else
@@ -66,7 +66,7 @@ runs:
             end_time=$(date +%s)
             duration=$((end_time - start_time))
             echo "❌ Integration tests failed with exit code: $EXIT_CODE (took ${duration}s)"
-            echo "integration_status=failed" >> $GITHUB_OUTPUT
+            echo "e2e_status=failed" >> $GITHUB_OUTPUT
             echo "integration_exit_code=$EXIT_CODE" >> $GITHUB_OUTPUT
             echo "integration_duration=${duration}" >> $GITHUB_OUTPUT
             echo "integration_time=$(date -u +'%Y-%m-%d %H:%M:%S UTC')" >> $GITHUB_OUTPUT
@@ -75,7 +75,7 @@ runs:
         else
           echo "⚠️ Integration test script not found: ${{ inputs.script_path }}"
           echo "Skipping integration tests..."
-          echo "integration_status=skipped" >> $GITHUB_OUTPUT
+          echo "e2e_status=skipped" >> $GITHUB_OUTPUT
         fi
         
         echo "::endgroup::"

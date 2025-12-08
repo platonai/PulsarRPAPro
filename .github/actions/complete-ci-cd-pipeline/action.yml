@@ -144,7 +144,7 @@ outputs:
     value: ${{ steps.run-tests.outputs.test_status || 'skipped' }}
   integration_tests_status:
     description: 'Integration tests status (success/failed/skipped)'
-    value: ${{ steps.integration-tests.outputs.integration_status }}
+    value: ${{ steps.integration-tests.outputs.e2e_status }}
 
   # Application Status
   health_check_status:
@@ -299,7 +299,7 @@ runs:
           # Run E2E tests with timeout
           if timeout "$TIMEOUT_SECONDS" "$SCRIPT_PATH"; then
             echo "✅ E2E tests passed"
-            echo "integration_status=success" >> $GITHUB_OUTPUT
+            echo "e2e_status=success" >> $GITHUB_OUTPUT
             echo "e2e_status=success" >> $GITHUB_OUTPUT
           else
             exit_code=$?
@@ -319,13 +319,13 @@ runs:
               docker network ls | grep "${{ inputs.network_name }}" || true
             fi
         
-            echo "integration_status=failed" >> $GITHUB_OUTPUT
+            echo "e2e_status=failed" >> $GITHUB_OUTPUT
             exit 1
           fi
         else
           echo "⚠️ E2E test script not found: $SCRIPT_PATH"
           echo "Skipping E2E tests..."
-          echo "integration_status=skipped" >> $GITHUB_OUTPUT
+          echo "e2e_status=skipped" >> $GITHUB_OUTPUT
         fi
         
         echo "::endgroup::"
@@ -411,7 +411,7 @@ runs:
         echo ""
         echo "📊 Test Results:"
         echo "  - Unit Tests: ${{ steps.run-tests.outputs.test_status || 'skipped' }}"
-        echo "  - Integration Tests: ${{ steps.integration-tests.outputs.integration_status }}"
+        echo "  - Integration Tests: ${{ steps.integration-tests.outputs.e2e_status }}"
         echo "  - Health Check: ${{ steps.health-check.outputs.health_status }}"
         
         echo ""
