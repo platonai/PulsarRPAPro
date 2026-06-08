@@ -7,7 +7,7 @@ Use the `command` API to interact with webpages using natural language instructi
 ### 🧾 Summary (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     Visit https://www.amazon.com/dp/B0C1H26C46
@@ -19,7 +19,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ### 🧾 Summary (Windows PowerShell)
 
 ```powershell
-Invoke-WebRequest -Uri "http://localhost:8182/api/ai/command" `
+Invoke-WebRequest -Uri "http://localhost:8582/api/ai/command" `
   -Method POST `
   -Headers @{ "Content-Type" = "text/plain" } `
   -Body '
@@ -34,7 +34,7 @@ Invoke-WebRequest -Uri "http://localhost:8182/api/ai/command" `
 ### 🧑‍🎨 Summary + Actions (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     Visit https://www.amazon.com/dp/B0C1H26C46
@@ -49,7 +49,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ### 📦 Summary + Data Extraction (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     Visit https://www.amazon.com/dp/B0C1H26C46
@@ -64,7 +64,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ### 🔗 Summary + Links + Actions (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     Visit https://www.amazon.com/dp/B0C1H26C46
@@ -81,7 +81,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ### 📄 JSON-Based Command (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: application/json" \
   -d '{
     "url": "https://www.amazon.com/dp/B0C1H26C46",
@@ -96,7 +96,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ### 📄 JSON-Based Command (Windows PowerShell)
 
 ```powershell
-Invoke-WebRequest -Uri "http://localhost:8182/api/ai/command" `
+Invoke-WebRequest -Uri "http://localhost:8582/api/ai/command" `
   -Method POST `
   -Headers @{ "Content-Type" = "application/json" } `
   -Body '{
@@ -118,14 +118,14 @@ Use the `chat` API to ask any question or test LLM capabilities.
 ### Ask via GET Request
 
 ```bash
-curl "http://localhost:8182/api/ai/chat?prompt=What-is-the-most-fantastical-technology-today"
+curl "http://localhost:8582/api/ai/chat?prompt=What-is-the-most-fantastical-technology-today"
 ```
 
 
 ### Ask via POST Request (Linux/macOS)
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/chat" \
+curl -X POST "http://localhost:8582/api/ai/chat" \
   -H "Content-Type: application/json" \
   -d '
     What is the most fantastical technology today?
@@ -145,7 +145,7 @@ Use structured SQL-like queries combined with LLM extraction.
 ### Example Query
 
 ```bash
-curl -X POST "http://localhost:8182/api/x/e" \
+curl -X POST "http://localhost:8582/api/x/e" \
   -H "Content-Type: text/plain" \
   -d "
     SELECT

@@ -47,7 +47,7 @@ ENV JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC"
 
 # 暴露端口（仅文档声明）
 EXPOSE 8082
-EXPOSE 8182
+EXPOSE 8582
 
 # 创建非 root 用户
 RUN addgroup --system --gid 1001 appuser \

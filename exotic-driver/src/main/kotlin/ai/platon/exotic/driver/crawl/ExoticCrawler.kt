@@ -24,7 +24,7 @@ class ExoticCrawler(val env: Environment? = null): AutoCloseable {
     val scrapeServerPort: Int
         get() = env?.getProperty("scrape.server.port")?.toIntOrNull()
             ?: System.getProperty("scrape.server.port")?.toIntOrNull()
-            ?: 8182
+            ?: 8582
     val scrapeServerContextPath: String
         get() = env?.getProperty("scrape.server.servlet.context-path")
             ?: System.getProperty("scrape.server.servlet.context-path")

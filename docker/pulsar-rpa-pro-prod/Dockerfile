@@ -41,7 +41,7 @@ COPY --from=builder /build/app.jar app.jar
 ENV JAVA_OPTS="-Xms2G -Xmx10G -XX:+UseG1GC"
 
 EXPOSE 8082
-EXPOSE 8182
+EXPOSE 8582
 
 # 创建非 root 用户运行
 RUN addgroup --system --gid 1001 appuser \

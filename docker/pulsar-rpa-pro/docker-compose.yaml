@@ -40,10 +40,10 @@ services:
       SPRING_DATA_REDIS_HOST: redis
       SPRING_DATA_REDIS_PORT: 6379
       BROWSER_DISPLAY_MODE: HEADLESS
-      SERVER_PORT: 8182
+      SERVER_PORT: 8582
       SERVER_ADDRESS: 0.0.0.0
     ports:
-      - "8182:8182"
+      - "8582:8582"
     networks:
       - backend
     ulimits:
@@ -51,7 +51,7 @@ services:
         soft: 65535
         hard: 65535
     healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:8182/health"]
+      test: ["CMD", "curl", "-f", "http://localhost:8582/health"]
       interval: 30s
       timeout: 10s
       retries: 3

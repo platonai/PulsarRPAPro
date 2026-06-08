@@ -98,7 +98,7 @@ java -DDEEPSEEK_API_KEY=${DEEPSEEK_API_KEY} -jar PulsarRPAPro.jar serve
 直接用自然语言控制浏览器行为：
 
 ```bash
-curl -X POST "http://localhost:8182/api/ai/command" \
+curl -X POST "http://localhost:8582/api/ai/command" \
   -H "Content-Type: text/plain" \
   -d '
     访问 https://www.amazon.com/dp/B0C1H26C46
@@ -114,7 +114,7 @@ curl -X POST "http://localhost:8182/api/ai/command" \
 ## 🔍 LLM + X-SQL：既简单又强大
 
 ```bash
-curl -X POST "http://localhost:8182/api/x/e" -H "Content-Type: text/plain" -d "
+curl -X POST "http://localhost:8582/api/x/e" -H "Content-Type: text/plain" -d "
 select
   llm_extract(dom, 'product name, price, ratings') as llm_extracted_data,
   dom_base_uri(dom) as url,
